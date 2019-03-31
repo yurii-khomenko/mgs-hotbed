@@ -24,11 +24,6 @@ DHT dht(16, DHT22);
 /*===========================================================================
 | HTTP Handlers
 =============================================================================*/
-String getMetrics()
-{
-  return getDhtMetrics();
-}
-
 String getDhtMetrics()
 {
 
@@ -47,6 +42,11 @@ String getDhtMetrics()
   return String(metricPrefix + "temperature ") + t + "\n" +
          metricPrefix + "heatindex " + hic + "\n" +
          metricPrefix + "humidity " + h + "\n";
+}
+
+String getMetrics()
+{
+  return getDhtMetrics();
 }
 
 void setupWifi(String ssid, String password)
