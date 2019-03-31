@@ -20,8 +20,8 @@ const String metricPrefix = groupName + "_" + systemName + "_" + serviceName + "
 
 ESP8266WebServer server(serverPort);
 
-#define P1 16
-DHT dht(P1, DHT22);
+#define P2 14
+DHT dht(P2, DHT22);
 
 /*===========================================================================
 | HTTP Handlers
