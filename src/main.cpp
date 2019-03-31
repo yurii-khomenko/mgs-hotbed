@@ -19,7 +19,9 @@ const int serverPort = 80;
 const String metricPrefix = groupName + "_" + systemName + "_" + serviceName + "_";
 
 ESP8266WebServer server(serverPort);
-DHT dht(16, DHT22);
+
+#define P1 16
+DHT dht(P1, DHT22);
 
 /*===========================================================================
 | HTTP Handlers
@@ -46,7 +48,7 @@ String getDhtMetrics()
 
 String getMetrics()
 {
-  return getDhtMetrics();
+  return getDhtMetrics(); 
 }
 
 void setupWifi(String ssid, String password)
