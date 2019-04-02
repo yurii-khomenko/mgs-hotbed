@@ -48,7 +48,7 @@ String getDhtMetrics()
 
 String getMetrics()
 {
-  return getDhtMetrics(); 
+  return getDhtMetrics();
 }
 
 void setupWifi(String ssid, String password)
