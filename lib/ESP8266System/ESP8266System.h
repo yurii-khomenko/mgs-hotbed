@@ -19,8 +19,6 @@ struct Conf {
 
   String ssid;
   String password;
-
-  uint8_t ledPin;
 };
 
 class ESP8266System {
@@ -29,12 +27,13 @@ class ESP8266System {
     void setupDHT(u8 pin, u8 type);
     void ledOn();
     void ledOff();
+    void withBlink(std::function<void(void)> body);
     void setup();
     void loop();
   private:
     Conf conf;
     void _setupLED();
-    void _setupWifi(String ssid, String password);
+    void _setupWifi();
     void _setupOTA();
     void _setupWebServer();
     String _getDhtMetrics();

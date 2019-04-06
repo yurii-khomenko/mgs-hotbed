@@ -12,7 +12,8 @@
 ESP8266WebServer *server;
 DHT *dht;
 
-ESP8266System::ESP8266System(Conf conf) {
+ESP8266System::ESP8266System(const Conf conf) {
+  this->conf = conf;
   Serial.begin(115200);
 }
 
@@ -21,27 +22,25 @@ void ESP8266System::_setupLED() {
   ledOff();
 }
 
-void ESP8266System::_setupWifi(String ssid, String password) {
+void ESP8266System::_setupWifi() {
 
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(conf.ssid, conf.password);
   Serial.print("[Wifi] Try to connect, ssid: " + WiFi.SSID() + " ");
 
-  ledOn();
-
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(">");
-    delay(250);
-  }
-  
-  ledOff();
+  withBlink([] {
+    while (WiFi.status() != WL_CONNECTED) {
+      Serial.print(">");
+      delay(100);
+    }
+  });
 
   Serial.println("\n[Wifi] Connected, ip: " + WiFi.localIP().toString());
 }
 
 void ESP8266System::_setupOTA() {
 
-  const String hostname = String(conf.groupName) + "-" + conf.systemName;
+  const String hostname = conf.systemName + "-" + conf.serviceName;
 
   Serial.println("[OTA] Start server");
   ArduinoOTA.setHostname(const_cast<char*> (hostname.c_str()));
@@ -55,8 +54,10 @@ void ESP8266System::_setupOTA() {
     Serial.println("\n[OTA] End uploading");
   });
   
-  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    Serial.printf("[OTA] Upload firmware: %u%%\n", (progress / (total / 100)));
+  ArduinoOTA.onProgress([this](unsigned int progress, unsigned int total) {
+    withBlink([&] {
+      Serial.printf("[OTA] Upload firmware: %u%%\n", (progress / (total / 100)));
+    });
   });
   
   ArduinoOTA.onError([](ota_error_t error) {
@@ -69,7 +70,6 @@ void ESP8266System::_setupOTA() {
   });
   
   ArduinoOTA.begin();
-  
   Serial.println("[OTA] Ready, hostname: " + hostname);
 }
 
@@ -102,16 +102,16 @@ void ESP8266System::_setupWebServer() {
   server = new ESP8266WebServer();
   
   server->on("/metrics", [this] {
-    ledOn();
-    server->send(200, "text/plain", _getMetrics());
-    ledOff();
+    withBlink([&] {
+      server->send(200, "text/plain", _getMetrics());
+    });
   });
 
   server->begin();
   Serial.println("[HTTP] Started, port: 80");
 }
 
-void ESP8266System::setupDHT(u8 pin, u8 type) {
+void ESP8266System::setupDHT(const u8 pin, const u8 type) {
   dht = new DHT(pin, type);
 }
 
@@ -123,9 +123,15 @@ void ESP8266System::ledOff() {
   digitalWrite(LED_BUILTIN, HIGH);
 }
 
+void ESP8266System::withBlink(std::function<void(void)> body) {
+  ledOn();
+  body();
+  ledOff();
+}
+
 void ESP8266System::setup() {
   _setupLED();
-  _setupWifi(conf.ssid, conf.password);
+  _setupWifi();
   _setupOTA();
   _setupWebServer();
 }
