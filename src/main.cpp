@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include <ESP8266IOT.h>
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
@@ -20,8 +20,7 @@ const String metricPrefix = groupName + "_" + systemName + "_" + serviceName + "
 
 ESP8266WebServer server(serverPort);
 
-#define P7 4
-DHT dht(P7, DHT22);
+DHT dht(D2, DHT22);
 
 /*===========================================================================
 | HTTP Handlers
