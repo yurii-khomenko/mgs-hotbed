@@ -49,15 +49,15 @@ void ESP8266System::_setupOTA() {
   ArduinoOTA.onStart([] {
     Serial.println("\n[OTA] Start uploading");
   });
-
-  ArduinoOTA.onEnd([] {
-    Serial.println("\n[OTA] End uploading");
-  });
   
   ArduinoOTA.onProgress([this](unsigned int progress, unsigned int total) {
     withBlink([&] {
       Serial.printf("[OTA] Upload firmware: %u%%\n", (progress / (total / 100)));
     });
+  });
+
+  ArduinoOTA.onEnd([] {
+    Serial.println("\n[OTA] End uploading");
   });
   
   ArduinoOTA.onError([](ota_error_t error) {
@@ -137,6 +137,6 @@ void ESP8266System::setup() {
 }
 
 void ESP8266System::loop() {
-  server->handleClient();
   ArduinoOTA.handle();
+  server->handleClient();
 }
