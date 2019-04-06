@@ -68,6 +68,7 @@ void ESP8266System::setup() {
 }
 
 void ESP8266System::loop() {
+    
     server->handleClient();
 
     Serial.println("ip: " + WiFi.localIP().toString());
