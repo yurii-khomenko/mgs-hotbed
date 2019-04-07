@@ -24,6 +24,8 @@ class ESP8266System {
   public:
     ESP8266System(Conf conf);
     void setupDHT(u8 pin, u8 type);
+    void on(u8 pin);
+    void off(u8 pin);
     void ledOn();
     void ledOff();
     void withBlink(std::function<void(void)> body);

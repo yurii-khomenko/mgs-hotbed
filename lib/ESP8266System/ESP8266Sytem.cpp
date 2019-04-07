@@ -113,14 +113,23 @@ void ESP8266System::_setupWebServer() {
 
 void ESP8266System::setupDHT(const u8 pin, const u8 type) {
   dht = new DHT(pin, type);
+  dht->begin();
+}
+
+void ESP8266System::on(const u8 pin) {
+  digitalWrite(pin, LOW);
+}
+
+void ESP8266System::off(const u8 pin) {
+  digitalWrite(pin, HIGH);
 }
 
 void ESP8266System::ledOn() {
-  digitalWrite(LED_BUILTIN, LOW);
+  on(LED_BUILTIN);
 }
 
 void ESP8266System::ledOff() {
-  digitalWrite(LED_BUILTIN, HIGH);
+  off(LED_BUILTIN);
 }
 
 void ESP8266System::withBlink(std::function<void(void)> body) {
