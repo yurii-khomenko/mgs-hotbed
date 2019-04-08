@@ -18,7 +18,6 @@ ESP8266System::ESP8266System(const Conf conf) {
 }
 
 void ESP8266System::_setupLED() {
-  metricPrefix = "";
   pinMode(LED_BUILTIN, OUTPUT);
   offLed();
 }

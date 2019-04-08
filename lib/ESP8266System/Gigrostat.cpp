@@ -14,9 +14,9 @@ void Gigrostat::setup(const float humidity, const float accuracy) {
 
 void Gigrostat::loop() {
   
-  const float actualHumidity = dht->readHumidity();
+  const float current = dht->readHumidity();
   
-  if(isnan(actualHumidity)) {
+  if(isnan(current)) {
     Serial.println("[Gigrostat] Failed to read humidity from DHT sensor!");
     return;
   }
@@ -24,10 +24,13 @@ void Gigrostat::loop() {
   const float min = humidity - accuracy; 
   const float max = humidity + accuracy;
 
-  // if()
-  //   sys.offPin(HUMIDIFIER);
-  // else
-  //   sys.onPin(HUMIDIFIER);
-
-  Serial.println("[Gigrostat] Hold method is invoked, min: " + String(min) + ", max: " + String(max));
+  if(current < min) {
+    humidifier->on();
+    Serial.println("[Gigrostat] humidifier->on()");
+  } else if (current > max) {
+    humidifier->off();
+    Serial.println("[Gigrostat] humidifier->off()");
+  } else {
+    Serial.println("[Gigrostat] humidity ok, min: " + String(min) + ", max: " + String(max));
+  }
 }
