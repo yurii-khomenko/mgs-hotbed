@@ -10,8 +10,6 @@ ESP8266System sys({
   "scalable"
 });
 
-
-
 void setup(void) {
   sys.setup();
   sys.setupDHT(D3, DHT22);
@@ -20,6 +18,5 @@ void setup(void) {
 }
 
 void loop(void) {
-  sys.humidifier->on();
   sys.loop();
 }

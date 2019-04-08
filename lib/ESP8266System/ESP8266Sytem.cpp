@@ -9,17 +9,16 @@
 #include <ESP8266WebServer.h>
 #include <DHT.h>
 #include <Humidifier.h>
-
-ESP8266WebServer *server;
-DHT *dht;
-Humidifier humidifier;
+#include <Gigrostat.h>
 
 ESP8266System::ESP8266System(const Conf conf) {
   this->conf = conf;
+  this->metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_";
   Serial.begin(115200);
 }
 
 void ESP8266System::_setupLED() {
+  metricPrefix = "";
   pinMode(LED_BUILTIN, OUTPUT);
   offLed();
 }
@@ -46,13 +45,12 @@ void ESP8266System::_setupOTA() {
 
   Serial.println("[OTA] Start server");
   ArduinoOTA.setHostname(const_cast<char*> (hostname.c_str()));
-  // ArduinoOTA.setPassword((const char *)"123");
 
   ArduinoOTA.onStart([] {
     Serial.println("\n[OTA] Start uploading");
   });
   
-  ArduinoOTA.onProgress([this](unsigned int progress, unsigned int total) {
+  ArduinoOTA.onProgress([this](u32 progress, u32 total) {
     withBlink([&] {
       Serial.printf("[OTA] Upload firmware: %u%%\n", (progress / (total / 100)));
     });
@@ -90,7 +88,9 @@ void ESP8266System::_setupWebServer() {
 }
 
 String ESP8266System::_getMetrics() {
-  return dht ? _getDhtMetrics() : "";
+  return 
+  (dht ? _getDhtMetrics() : "") +
+  (humidifier ? humidifier->getMetrics() : "");
 }
 
 String ESP8266System::_getDhtMetrics() {
@@ -106,30 +106,9 @@ String ESP8266System::_getDhtMetrics() {
 
   const float hic = dht->computeHeatIndex(t, h, false);
 
-  const String metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_";
-
   return String(metricPrefix + "temperature ") + t + "\n" +
           metricPrefix + "heatindex " + hic + "\n" +
           metricPrefix + "humidity " + h + "\n";
-}
-
-void ESP8266System::_gigrostatHold(const float level, const float accuracy) {
-  
-  const float actualHumidity = dht->readHumidity();
-  
-  if(isnan(actualHumidity)) {
-    Serial.println("[DHT] Failed to read humidity from DHT sensor!");
-    return;
-  }
-  
-  const float min = level - accuracy; 
-  const float max = level + accuracy;
-
-
-  if()
-    sys.offPin(HUMIDIFIER);
-  else
-    sys.onPin(HUMIDIFIER);
 }
 
 void ESP8266System::setup() {
@@ -142,7 +121,7 @@ void ESP8266System::setup() {
 void ESP8266System::loop() {
   ArduinoOTA.handle();
   server->handleClient();
-  if(enable)
+  if(gigrostat) gigrostat->loop();
 }
 
 void ESP8266System::setupPin(const u8 pin, const u8 mode) {
@@ -156,11 +135,12 @@ void ESP8266System::setupDHT(const u8 pin, const u8 type) {
 
 void ESP8266System::setupHumidifier(const u8 pin) {
   setupPin(pin, OUTPUT);
-  humidifier = new Humidifier(pin);
+  humidifier = new Humidifier(pin, metricPrefix);
 }
 
-void setupGigrostat(const float humidityLevel, const float humidityLevelAccuracy) {
-
+void ESP8266System::setupGigrostat(const float humidity, const float accuracy) {
+  gigrostat = new Gigrostat(dht, humidifier, metricPrefix);
+  gigrostat->setup(humidity, accuracy);
 }
 
 void ESP8266System::onPin(const u8 pin) {

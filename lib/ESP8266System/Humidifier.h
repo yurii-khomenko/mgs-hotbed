@@ -5,13 +5,14 @@
 
 class Humidifier {
   public:
-    Humidifier(u8 pin);
+    Humidifier(u8 pin, String metricPrefix);
     void on();
     void off();
-    void getMetrics();
+    String getMetrics();
   private:
     u8 pin;
     bool enable;
+    String metricPrefix;
 };
 
 #endif

@@ -10,6 +10,7 @@
 #include <ESP8266WebServer.h>
 #include <DHT.h>
 #include <Humidifier.h>
+#include <Gigrostat.h>
 
 struct Conf {
 
@@ -26,8 +27,9 @@ class ESP8266System {
     ESP8266System(Conf conf);
     
     ESP8266WebServer *server;
-    DHT *dht;
-    Humidifier *humidifier;
+    DHT          *dht;
+    Humidifier   *humidifier;
+    Gigrostat    *gigrostat;
     
     void setup();
     void loop();
@@ -40,15 +42,17 @@ class ESP8266System {
     void onLed();
     void offLed();
     void withBlink(std::function<void(void)> body);
+
   private:
     Conf conf;
+    String metricPrefix;
+
     void _setupLED();
     void _setupWifi();
     void _setupOTA();
     void _setupWebServer();
     String _getMetrics();
     String _getDhtMetrics();
-    void _gigrostatHold(const float level, const float accuracy);
 };
 
 #endif
