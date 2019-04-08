@@ -20,5 +20,6 @@ void setup(void) {
 }
 
 void loop(void) {
+  sys.humidifier->on();
   sys.loop();
 }

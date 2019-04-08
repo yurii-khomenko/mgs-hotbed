@@ -8,8 +8,10 @@ class Humidifier {
     Humidifier(u8 pin);
     void on();
     void off();
+    void getMetrics();
   private:
     u8 pin;
+    bool enable;
 };
 
 #endif

@@ -90,7 +90,7 @@ void ESP8266System::_setupWebServer() {
 }
 
 String ESP8266System::_getMetrics() {
-  return dht ? _getDhtMetrics() : ""; 
+  return dht ? _getDhtMetrics() : "";
 }
 
 String ESP8266System::_getDhtMetrics() {

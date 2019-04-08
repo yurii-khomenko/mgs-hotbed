@@ -24,9 +24,11 @@ struct Conf {
 class ESP8266System {
   public:
     ESP8266System(Conf conf);
+    
     ESP8266WebServer *server;
     DHT *dht;
     Humidifier *humidifier;
+    
     void setup();
     void loop();
     void setupPin(u8 pin, u8 mode);
