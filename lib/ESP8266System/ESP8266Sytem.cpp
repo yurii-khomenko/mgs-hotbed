@@ -8,9 +8,11 @@
 
 #include <ESP8266WebServer.h>
 #include <DHT.h>
+#include <Humidifier.h>
 
 ESP8266WebServer *server;
 DHT *dht;
+Humidifier humidifier;
 
 ESP8266System::ESP8266System(const Conf conf) {
   this->conf = conf;
@@ -19,7 +21,7 @@ ESP8266System::ESP8266System(const Conf conf) {
 
 void ESP8266System::_setupLED() {
   pinMode(LED_BUILTIN, OUTPUT);
-  ledOff();
+  offLed();
 }
 
 void ESP8266System::_setupWifi() {
@@ -73,6 +75,24 @@ void ESP8266System::_setupOTA() {
   Serial.println("[OTA] Ready, hostname: " + hostname);
 }
 
+void ESP8266System::_setupWebServer() {
+
+  server = new ESP8266WebServer();
+  
+  server->on("/metrics", [this] {
+    withBlink([&] {
+      server->send(200, "text/plain", _getMetrics());
+    });
+  });
+
+  server->begin();
+  Serial.println("[HTTP] Started, port: 80");
+}
+
+String ESP8266System::_getMetrics() {
+  return dht ? _getDhtMetrics() : ""; 
+}
+
 String ESP8266System::_getDhtMetrics() {
 
   const float t = dht->readTemperature();
@@ -93,49 +113,23 @@ String ESP8266System::_getDhtMetrics() {
           metricPrefix + "humidity " + h + "\n";
 }
 
-String ESP8266System::_getMetrics() {
-  return dht ? _getDhtMetrics() : ""; 
-}
-
-void ESP8266System::_setupWebServer() {
-
-  server = new ESP8266WebServer();
+void ESP8266System::_gigrostatHold(const float level, const float accuracy) {
   
-  server->on("/metrics", [this] {
-    withBlink([&] {
-      server->send(200, "text/plain", _getMetrics());
-    });
-  });
+  const float actualHumidity = dht->readHumidity();
+  
+  if(isnan(actualHumidity)) {
+    Serial.println("[DHT] Failed to read humidity from DHT sensor!");
+    return;
+  }
+  
+  const float min = level - accuracy; 
+  const float max = level + accuracy;
 
-  server->begin();
-  Serial.println("[HTTP] Started, port: 80");
-}
 
-void ESP8266System::setupDHT(const u8 pin, const u8 type) {
-  dht = new DHT(pin, type);
-  dht->begin();
-}
-
-void ESP8266System::on(const u8 pin) {
-  digitalWrite(pin, LOW);
-}
-
-void ESP8266System::off(const u8 pin) {
-  digitalWrite(pin, HIGH);
-}
-
-void ESP8266System::ledOn() {
-  on(LED_BUILTIN);
-}
-
-void ESP8266System::ledOff() {
-  off(LED_BUILTIN);
-}
-
-void ESP8266System::withBlink(std::function<void(void)> body) {
-  ledOn();
-  body();
-  ledOff();
+  if()
+    sys.offPin(HUMIDIFIER);
+  else
+    sys.onPin(HUMIDIFIER);
 }
 
 void ESP8266System::setup() {
@@ -148,4 +142,45 @@ void ESP8266System::setup() {
 void ESP8266System::loop() {
   ArduinoOTA.handle();
   server->handleClient();
+  if(enable)
+}
+
+void ESP8266System::setupPin(const u8 pin, const u8 mode) {
+  pinMode(pin, mode);
+}
+
+void ESP8266System::setupDHT(const u8 pin, const u8 type) {
+  dht = new DHT(pin, type);
+  dht->begin();
+}
+
+void ESP8266System::setupHumidifier(const u8 pin) {
+  setupPin(pin, OUTPUT);
+  humidifier = new Humidifier(pin);
+}
+
+void setupGigrostat(const float humidityLevel, const float humidityLevelAccuracy) {
+
+}
+
+void ESP8266System::onPin(const u8 pin) {
+  digitalWrite(pin, LOW);
+}
+
+void ESP8266System::offPin(const u8 pin) {
+  digitalWrite(pin, HIGH);
+}
+
+void ESP8266System::onLed() {
+  onPin(LED_BUILTIN);
+}
+
+void ESP8266System::offLed() {
+  offPin(LED_BUILTIN);
+}
+
+void ESP8266System::withBlink(const std::function<void(void)> body) {
+  onLed();
+  body();
+  offLed();
 }

@@ -9,6 +9,7 @@
 
 #include <ESP8266WebServer.h>
 #include <DHT.h>
+#include <Humidifier.h>
 
 struct Conf {
 
@@ -23,22 +24,29 @@ struct Conf {
 class ESP8266System {
   public:
     ESP8266System(Conf conf);
-    void setupDHT(u8 pin, u8 type);
-    void on(u8 pin);
-    void off(u8 pin);
-    void ledOn();
-    void ledOff();
-    void withBlink(std::function<void(void)> body);
+    ESP8266WebServer *server;
+    DHT *dht;
+    Humidifier *humidifier;
     void setup();
     void loop();
+    void setupPin(u8 pin, u8 mode);
+    void setupDHT(u8 pin, u8 type);
+    void setupHumidifier(u8 pin);
+    void setupGigrostat(const float level, const float accuracy);
+    void onPin(u8 pin);
+    void offPin(u8 pin);
+    void onLed();
+    void offLed();
+    void withBlink(std::function<void(void)> body);
   private:
     Conf conf;
     void _setupLED();
     void _setupWifi();
     void _setupOTA();
     void _setupWebServer();
-    String _getDhtMetrics();
     String _getMetrics();
+    String _getDhtMetrics();
+    void _gigrostatHold(const float level, const float accuracy);
 };
 
 #endif

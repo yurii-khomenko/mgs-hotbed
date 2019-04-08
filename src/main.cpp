@@ -10,9 +10,13 @@ ESP8266System sys({
   "scalable"
 });
 
+
+
 void setup(void) {
   sys.setup();
   sys.setupDHT(D3, DHT22);
+  sys.setupHumidifier(D4);
+  sys.setupGigrostat(90, 5);
 }
 
 void loop(void) {
