@@ -25,14 +25,19 @@ void Gigrostat::loop() {
   const float max = humidity + accuracy;
 
   if(current < min) {
+
     humidifier->on();
     Serial.print("[Gigrostat] humidifier->on(), current: ");
     Serial.println(current);
+
   } else if (current > max) {
+
     humidifier->off();
     Serial.print("[Gigrostat] humidifier->off(), current: ");
     Serial.println(current);
+
   } else {
+    
     Serial.print("[Gigrostat] humidity ok, min: ");
     Serial.print(min);
 
