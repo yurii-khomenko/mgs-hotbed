@@ -10,11 +10,14 @@ ESP8266System sys({
   "scalable"
 });
 
+#define DHT_SENSOR D3
+#define HUMIDIFIER D4
+
 void setup(void) {
   sys.setup();
-  sys.setupDHT(D3, DHT22);
-  sys.setupHumidifier(D4);
-  sys.setupGigrostat(90, 5);
+  sys.setupDHT(DHT_SENSOR, DHT22);
+  sys.setupHumidifier(HUMIDIFIER);
+  sys.setupGigrostat(80, 5);
 }
 
 void loop(void) {

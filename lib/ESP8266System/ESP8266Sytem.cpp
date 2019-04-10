@@ -143,11 +143,11 @@ void ESP8266System::setupGigrostat(const float humidity, const float accuracy) {
 }
 
 void ESP8266System::onPin(const u8 pin) {
-  digitalWrite(pin, LOW);
+  digitalWrite(pin, HIGH);
 }
 
 void ESP8266System::offPin(const u8 pin) {
-  digitalWrite(pin, HIGH);
+  digitalWrite(pin, LOW);
 }
 
 void ESP8266System::onLed() {

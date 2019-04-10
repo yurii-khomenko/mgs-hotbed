@@ -8,15 +8,21 @@ Humidifier::Humidifier(const u8 pin, String metricPrefix) {
 }
 
 void Humidifier::on() {
-  digitalWrite(pin, LOW);
+  digitalWrite(pin, HIGH);
   enable = true;
 }
 
 void Humidifier::off() {
-  digitalWrite(pin, HIGH);
+  digitalWrite(pin, LOW);
   enable = false;
 }
 
 String Humidifier::getMetrics() {
   return String(metricPrefix + "humidifier_enable ") + (enable ? 1 : 0) + "\n";
+}
+
+std::vector<String> Humidifier::getMetricsList() {
+  return {
+    String("humidifier_enable ") + (enable ? 1 : 0) + "\n"
+  };
 }

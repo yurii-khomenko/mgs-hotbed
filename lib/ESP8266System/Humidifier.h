@@ -9,6 +9,7 @@ class Humidifier {
     void on();
     void off();
     String getMetrics();
+    std::vector<String> getMetricsList();
   private:
     u8 pin;
     bool enable;

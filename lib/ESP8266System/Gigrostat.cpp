@@ -26,11 +26,20 @@ void Gigrostat::loop() {
 
   if(current < min) {
     humidifier->on();
-    Serial.println("[Gigrostat] humidifier->on()");
+    Serial.print("[Gigrostat] humidifier->on(), current: ");
+    Serial.println(current);
   } else if (current > max) {
     humidifier->off();
-    Serial.println("[Gigrostat] humidifier->off()");
+    Serial.print("[Gigrostat] humidifier->off(), current: ");
+    Serial.println(current);
   } else {
-    Serial.println("[Gigrostat] humidity ok, min: " + String(min) + ", max: " + String(max));
+    Serial.print("[Gigrostat] humidity ok, min: ");
+    Serial.print(min);
+
+    Serial.print(" current: ");
+    Serial.print(current);
+
+    Serial.print(" max: ");
+    Serial.println(max);
   }
 }
