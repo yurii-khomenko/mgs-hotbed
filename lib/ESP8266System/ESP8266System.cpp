@@ -121,6 +121,7 @@ void ESP8266System::loop() {
   ArduinoOTA.handle();
   server->handleClient();
   if(gigrostat) gigrostat->loop();
+  delay(100);
 }
 
 void ESP8266System::setupPin(const u8 pin, const u8 mode) {
