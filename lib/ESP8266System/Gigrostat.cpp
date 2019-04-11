@@ -94,9 +94,6 @@ void Gigrostat::loop() {
     Serial.println("[Gigrostat] Failed to read humidity from DHT sensor!");
     return;
   }
-  
-  const float min = humidity - accuracy; 
-  const float max = humidity + accuracy;
 
   if(current < min) {
 

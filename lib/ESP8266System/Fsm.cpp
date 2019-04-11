@@ -15,10 +15,6 @@ Fsm::Fsm(State* initial_state)
 
 Fsm::~Fsm()
 {
-  // free(m_transitions);
-  free(m_timed_transitions);
-  // m_transitions = NULL;
-  m_timed_transitions = NULL;
 }
 
 void Fsm::add_transition(State* state_from, State* state_to, int event, std::function<void(void)> on_transition) {
@@ -40,17 +36,14 @@ void Fsm::add_timed_transition(State* state_from, State* state_to, unsigned long
   
   if (state_from == NULL || state_to == NULL) return;
 
-  const Transition transition = Fsm::create_transition(state_from, state_to, 0, on_transition);
-  // const Transition transition = Fsm::create_transition(state_from, state_to, 0);
+  const Transition transition = create_transition(state_from, state_to, 0, on_transition);
 
-  TimedTransition timed_transition;
-  timed_transition.transition = transition;
-  timed_transition.start = 0;
-  timed_transition.interval = interval;
+  m_timed_transitions.push_back({
+    transition,
+    0,
+    interval
+  });
 
-  m_timed_transitions = (TimedTransition*) realloc(
-      m_timed_transitions, (m_num_timed_transitions + 1) * sizeof(TimedTransition));
-  m_timed_transitions[m_num_timed_transitions] = timed_transition;
   m_num_timed_transitions++;
 }
 

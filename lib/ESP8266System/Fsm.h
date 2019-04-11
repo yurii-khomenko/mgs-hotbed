@@ -50,7 +50,7 @@ private:
   std::vector<Transition> m_transitions;
   int m_num_transitions;
 
-  TimedTransition* m_timed_transitions;
+  std::vector<TimedTransition> m_timed_transitions;
   int m_num_timed_transitions;
   bool m_initialized;
 };
