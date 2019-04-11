@@ -81,11 +81,9 @@ void Fsm::makeTransition(Transition* t) {
   
   currentState = t->stateTo;
 
-  const u64 now = millis();
-
   for (auto &t : timedTransitions) 
     if (t.transition.stateFrom == currentState) 
-      t.start = now;
+      t.start = millis();
 }
 
 void Fsm::loop() {
