@@ -103,11 +103,8 @@ String ESP8266System::getDhtMetrics() {
     return msg;
   }
 
-  const float hic = dht->computeHeatIndex(t, h, false);
-
   return String(metricPrefix + "temperature ") + t + "\n" +
-          metricPrefix + "heatindex " + hic + "\n" +
-          metricPrefix + "humidity " + h + "\n";
+                metricPrefix + "humidity "     + h + "\n";
 }
 
 void ESP8266System::setup() {
