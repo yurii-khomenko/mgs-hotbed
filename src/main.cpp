@@ -1,5 +1,4 @@
 #include <ESP8266System.h>
-// #include <TimerOne.h>
 
 ESP8266System sys({
 
