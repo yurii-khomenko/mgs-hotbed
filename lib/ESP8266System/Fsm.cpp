@@ -1,106 +1,86 @@
 #include <Fsm.h>
 
-State::State(std::function<void(void)> on_enter, std::function<void(void)> on_state, std::function<void(void)> on_exit)
-: on_enter(on_enter),
-  on_state(on_state),
-  on_exit(on_exit) {}
+State::State(std::function<void(void)> onEnter, std::function<void(void)> onState, std::function<void(void)> onExit)
+: onEnter(onEnter),
+  onState(onState),
+  onExit(onExit) {}
 
-Fsm::Fsm(State* initial_state)
-: m_current_state(initial_state),
-  m_transitions(NULL),
-  m_num_transitions(0),
-  m_num_timed_transitions(0),
-  m_initialized(false) {}
+Fsm::Fsm(State* initialState)
+: currentState(initialState),
+  transitions(NULL),
+  initialized(false) {}
 
-Fsm::~Fsm()
-{
-}
+void Fsm::addTransition(State* stateFrom, State* stateTo, u8 event, std::function<void(void)> onTransition) {
 
-void Fsm::add_transition(State* state_from, State* state_to, int event, std::function<void(void)> on_transition) {
+  if (stateFrom == NULL || stateTo == NULL) return;
 
-  if (state_from == NULL || state_to == NULL) return;
-
-  m_transitions.push_back({
-    state_from,
-    state_to,
+  transitions.push_back({
+    stateFrom,
+    stateTo,
     event,
-    on_transition
+    onTransition
   });
-
-  m_num_transitions++;
 }
 
-
-void Fsm::add_timed_transition(State* state_from, State* state_to, unsigned long interval, std::function<void(void)> on_transition) {
+void Fsm::addTimedTransition(State* stateFrom, State* stateTo, u64 interval, std::function<void(void)> onTransition) {
   
-  if (state_from == NULL || state_to == NULL) return;
+  if (stateFrom == NULL || stateTo == NULL) return;
 
-  const Transition transition = create_transition(state_from, state_to, 0, on_transition);
-
-  m_timed_transitions.push_back({
-    transition,
-    0,
+  timedTransitions.push_back({
+    {
+      stateFrom,
+      stateTo,
+      IDLE,
+      onTransition
+    },
+    IDLE,
     interval
   });
-
-  m_num_timed_transitions++;
 }
 
-Fsm::Transition Fsm::create_transition(State* state_from, State* state_to, int event, std::function<void(void)> on_transition) {
-
-  Transition t;
-  t.state_from = state_from;
-  t.state_to = state_to;
-  t.event = event;
-  t.on_transition = on_transition;
-
-  return t;
-}
-
-void Fsm::trigger(int event) {
-  if (m_initialized)
-    for (int i = 0; i < m_num_transitions; ++i)
-      if (m_transitions[i].state_from == m_current_state &&
-          m_transitions[i].event == event) {
-        Fsm::make_transition(&(m_transitions[i]));
+void Fsm::trigger(const int event) {
+  if (initialized)
+    for (u32 i = 0; i < transitions.size(); ++i)
+      if (transitions[i].stateFrom == currentState && transitions[i].event == event) {
+        Fsm::makeTransition(&(transitions[i]));
         return;
       }
 }
 
-void Fsm::check_timed_transitions() {
+void Fsm::checkTimedTransitions() {
 
-  for (int i = 0; i < m_num_timed_transitions; ++i) {
+  for (u32 i = 0; i < timedTransitions.size(); ++i) {
 
-    TimedTransition* transition = &m_timed_transitions[i];
-    if (transition->transition.state_from == m_current_state) {
-      if (transition->start == 0)
-        transition->start = millis();
-      else {
-        const unsigned long now = millis();
-        if (now - transition->start >= transition->interval) {
-          Fsm::make_transition(&(transition->transition));
-          transition->start = 0;
-        }
+    TimedTransition* transition = &timedTransitions[i];
+
+    if (transition->transition.stateFrom != currentState) continue;
+
+    if (transition->start == 0) transition->start = millis();
+    else {
+      const u64 now = millis();
+      if (now - transition->start >= transition->interval) {
+        Fsm::makeTransition(&(transition->transition));
+        transition->start = 0;
       }
     }
   }
 }
 
-void Fsm::run_machine() {
+void Fsm::loop() {
 
-  if (!m_initialized) {
-    m_initialized = true;
-    if (m_current_state->on_enter != NULL)
-      m_current_state->on_enter();
+  if (!initialized) {
+    initialized = true;
+    if (currentState->onEnter != NULL)
+      currentState->onEnter();
   }
   
-  if (m_current_state->on_state != NULL)
-    m_current_state->on_state();
+  if (currentState->onState != NULL)
+    currentState->onState();
     
   Fsm::check_timed_transitions();
 }
 
-void Fsm::make_transition(Transition* transition) {
+void Fsm::makeTransition(Transition* transition) {
 
   if (transition->state_from->on_exit != NULL)
     transition->state_from->on_exit();
@@ -114,7 +94,7 @@ void Fsm::make_transition(Transition* transition) {
   m_current_state = transition->state_to;
 
   unsigned long now = millis();
-  for (int i = 0; i < m_num_timed_transitions; ++i) {
+  for (u32 i = 0; i < m_timed_transitions.size(); ++i) {
     TimedTransition* ttransition = &m_timed_transitions[i];
     if (ttransition->transition.state_from == m_current_state)
       ttransition->start = now;

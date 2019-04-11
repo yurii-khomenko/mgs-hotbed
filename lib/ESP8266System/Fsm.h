@@ -3,54 +3,45 @@
 
 #include <Arduino.h>
 
-struct State
-{
-  State(std::function<void(void)> on_enter, std::function<void(void)> on_state, std::function<void(void)> on_exit);
-  std::function<void(void)> on_enter;
-  std::function<void(void)> on_state;
-  std::function<void(void)> on_exit;
+struct State {
+  State(std::function<void(void)> onEnter, std::function<void(void)> onState, std::function<void(void)> onExit);
+  std::function<void(void)> onEnter;
+  std::function<void(void)> onState;
+  std::function<void(void)> onExit;
 };
 
-class Fsm
-{
-public:
-  Fsm(State* initial_state);
-  ~Fsm();
+class Fsm {
+  public:
+    Fsm(State* initialState);
 
-  void add_transition(State* state_from, State* state_to, int event, std::function<void(void)> on_transition);
-  void add_timed_transition(State* state_from, State* state_to, unsigned long interval, std::function<void(void)> on_transition);
+    void addTransition(State* stateFrom, State* stateTo, u32 event, std::function<void(void)> onTransition);
+    void addTimedTransition(State* stateFrom, State* stateTo, u64 interval, std::function<void(void)> onTransition);
 
-  void check_timed_transitions();
+    void checkTimedTransitions();
 
-  void trigger(int event);
-  void run_machine();
+    void trigger(int event);
+    void loop();
 
-private:
-  struct Transition
-  {
-    State* state_from;
-    State* state_to;
-    int event;
-    std::function<void(void)> on_transition;
-  };
-  struct TimedTransition
-  {
-    Transition transition;
-    unsigned long start;
-    unsigned long interval;
-  };
+  private:
+    struct Transition {
+      State* stateFrom;
+      State* stateTo;
+      u8 event;
+      std::function<void(void)> onTransition;
+    };
+    
+    struct TimedTransition {
+      Transition transition;
+      u64 start;
+      u64 interval;
+    };
 
-  Transition create_transition(State* state_from, State* state_to, int event, std::function<void(void)> on_transition);
-  void make_transition(Transition *transition);
+    void makeTransition(Transition *transition);
 
-private:
-  State* m_current_state;
-  std::vector<Transition> m_transitions;
-  int m_num_transitions;
-
-  std::vector<TimedTransition> m_timed_transitions;
-  int m_num_timed_transitions;
-  bool m_initialized;
+    State* currentState;
+    std::vector<Transition> transitions;
+    std::vector<TimedTransition> timedTransitions;
+    bool initialized;
 };
 
 #endif

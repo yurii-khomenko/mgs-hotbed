@@ -52,6 +52,8 @@ void Gigrostat::setup(const float min, const float max) {
   this->min = min;
   this->max = max;
 
+  // fsm.
+
   fsm.add_transition(&stateIdle, &stateIncHumidity, INC_HUMIDITY, [this] () {
     Serial.println("Transitioning from stateIdle to stateIncHumidity");
     // ventilation->off();
