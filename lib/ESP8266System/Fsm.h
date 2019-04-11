@@ -41,8 +41,6 @@ private:
   };
 
   Transition create_transition(State* state_from, State* state_to, int event, std::function<void(void)> on_transition);
-  // Transition create_transition(State* state_from, State* state_to, int event);
-
   void make_transition(Transition *transition);
 
 private:

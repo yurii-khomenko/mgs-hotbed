@@ -1,5 +1,4 @@
 #include <Fsm.h>
-#include <Arduino.h>
 
 State::State(std::function<void(void)> on_enter, std::function<void(void)> on_state, std::function<void(void)> on_exit)
 : on_enter(on_enter),
