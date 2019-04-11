@@ -2,7 +2,6 @@
 #include <Arduino.h>
 #include <Fsm.h>
 
-// State machine variables
 #define IDLE 0
 #define INC_HUMIDITY 1
 #define DEC_HUMIDITY 2
@@ -48,10 +47,10 @@ Gigrostat::Gigrostat(DHT *dht, Humidifier *humidifier, String metricPrefix) {
   this->metricPrefix = metricPrefix;
 }
 
-void Gigrostat::setup(const float humidity, const float accuracy) {
+void Gigrostat::setup(const float min, const float max) {
   
-  this->humidity = humidity;
-  this->accuracy = accuracy;
+  this->min = min;
+  this->max = max;
 
   fsm.add_transition(&stateIdle, &stateIncHumidity, INC_HUMIDITY, [this] () {
     Serial.println("Transitioning from stateIdle to stateIncHumidity");
@@ -127,8 +126,6 @@ void Gigrostat::loop() {
     Serial.print(" max: ");
     Serial.println(max);
   }
-
-
 
   fsm.run_machine();
 }

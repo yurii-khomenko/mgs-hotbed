@@ -133,9 +133,8 @@ void ESP8266System::setupDHT(const u8 pin, const u8 type) {
   dht->begin();
 }
 
-void ESP8266System::setupHumidifier(const u8 pin) {
-  setupPin(pin, OUTPUT_OPEN_DRAIN);
-  humidifier = new Humidifier(pin, metricPrefix);
+void ESP8266System::setupHumidifier(const u8 pin, const u8 statePin) {
+  humidifier = new Humidifier(pin, statePin, metricPrefix);
 }
 
 void ESP8266System::setupGigrostat(const float humidity, const float accuracy) {

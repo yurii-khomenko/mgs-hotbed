@@ -25,12 +25,6 @@ void Fsm::add_transition(State* state_from, State* state_to, int event, std::fun
 
   if (state_from == NULL || state_to == NULL) return;
 
-  // Transition transition = create_transition(state_from, state_to, event, on_transition);
-  // Transition transition = create_transition(state_from, state_to, event);
-
-  // Serial.println(sizeof(Transition));
-
-  // m_transitions = (Transition*) malloc((m_num_transitions + 1) * sizeof(Transition));
   m_transitions.push_back({
     state_from,
     state_to,
@@ -70,17 +64,6 @@ Fsm::Transition Fsm::create_transition(State* state_from, State* state_to, int e
 
   return t;
 }
-
-// Fsm::Transition Fsm::create_transition(State* state_from, State* state_to, int event) {
-
-//   Transition t;
-//   t.state_from = state_from;
-//   t.state_to = state_to;
-//   t.event = event;
-//   // t.on_transition = on_transition;
-
-//   return t;
-// }
 
 void Fsm::trigger(int event) {
   if (m_initialized)

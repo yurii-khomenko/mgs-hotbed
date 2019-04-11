@@ -9,13 +9,13 @@
 class Gigrostat {
   public:
     Gigrostat(DHT *dht, Humidifier *humidifier, String metricPrefix);
-    void setup(float humidity, float accuracy);
+    void setup(float min, float max);
     void loop();
   private:
     DHT *dht;
     Humidifier *humidifier;
-    float humidity;
-    float accuracy;
+    float min;
+    float max;
     String metricPrefix;
 };
 

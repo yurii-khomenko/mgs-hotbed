@@ -1,32 +1,38 @@
 #include <Humidifier.h>
 #include <Arduino.h>
 
-Humidifier::Humidifier(const u8 pin, String metricPrefix) {
+Humidifier::Humidifier(u8 pin, u8 statePin, String metricPrefix) {
   this->pin = pin;
+  this->statePin = statePin;
   this->metricPrefix = metricPrefix;
-  this->enable = false;
+  pinMode(pin, OUTPUT_OPEN_DRAIN);
+  pinMode(statePin, INPUT);
 }
 
 void Humidifier::on() {
-  digitalWrite(pin, LOW);
-  delay(200);
-  digitalWrite(pin, HIGH);
-  enable = true;
+  if (!isOn()) click();
 }
 
 void Humidifier::off() {
-  digitalWrite(pin, LOW);
-  delay(200);
-  digitalWrite(pin, HIGH);
-  enable = false;
+  if (isOn()) click();
+}
+
+bool Humidifier::isOn() {
+  return digitalRead(statePin);
 }
 
 String Humidifier::getMetrics() {
-  return String(metricPrefix + "humidifier_enable ") + (enable ? 1 : 0) + "\n";
+  return String(metricPrefix + "humidifier_enable ") + (isOn() ? 1 : 0) + "\n";
 }
 
 std::vector<String> Humidifier::getMetricsList() {
   return {
-    String("humidifier_enable ") + (enable ? 1 : 0) + "\n"
+    String("humidifier_enable ") + (isOn() ? 1 : 0) + "\n"
   };
+}
+
+void Humidifier::click() {
+  digitalWrite(pin, LOW);
+  delay(200);
+  digitalWrite(pin, HIGH);
 }
