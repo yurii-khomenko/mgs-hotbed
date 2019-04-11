@@ -17,7 +17,7 @@ void setup(void) {
   sys.setup();
   sys.setupDHT(DHT_SENSOR, DHT22);
   sys.setupHumidifier(HUMIDIFIER);
-  sys.setupGigrostat(96, 3);
+  sys.setupGigrostat(98, 1);
 }
 
 void loop(void) {

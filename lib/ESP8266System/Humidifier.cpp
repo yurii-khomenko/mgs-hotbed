@@ -8,12 +8,16 @@ Humidifier::Humidifier(const u8 pin, String metricPrefix) {
 }
 
 void Humidifier::on() {
+  digitalWrite(pin, LOW);
+  delay(200);
   digitalWrite(pin, HIGH);
   enable = true;
 }
 
 void Humidifier::off() {
   digitalWrite(pin, LOW);
+  delay(200);
+  digitalWrite(pin, HIGH);
   enable = false;
 }
 

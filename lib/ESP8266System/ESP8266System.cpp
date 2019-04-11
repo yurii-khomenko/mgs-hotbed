@@ -152,11 +152,11 @@ void ESP8266System::offPin(const u8 pin) {
 }
 
 void ESP8266System::onLed() {
-  onPin(LED_BUILTIN);
+  offPin(LED_BUILTIN);
 }
 
 void ESP8266System::offLed() {
-  offPin(LED_BUILTIN);
+  onPin(LED_BUILTIN);
 }
 
 void ESP8266System::withBlink(const std::function<void(void)> body) {
