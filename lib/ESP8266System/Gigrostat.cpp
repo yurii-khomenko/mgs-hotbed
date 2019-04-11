@@ -17,7 +17,7 @@ State idle(
   Serial.println("[Gigrostat] Exiting idle");
 });
 
-State increaseHumidity(
+State increase(
 [] {
   Serial.println("[Gigrostat] Entering increase");
 },
@@ -28,7 +28,7 @@ State increaseHumidity(
   Serial.println("[Gigrostat] Exiting increase");
 });
 
-State decreaseHumidity(
+State decrease(
 [] {
   Serial.println("[Gigrostat] Entering decrease");
 },
@@ -54,34 +54,34 @@ void Gigrostat::setup(const real32 min, const real32 max) {
 
   fsm.clearTransition();
 
-  fsm.addTransition(&idle, &increaseHumidity, INCREASE, [this] () {
+  fsm.addTransition(&idle, &increase, INCREASE, [this] () {
     Serial.println("[Gigrostat] Transitioning from idle to increase");
     // ventilation->off();
     humidifier->on();
   });
-  fsm.addTransition(&increaseHumidity, &idle, IDLE, [this] {
+  fsm.addTransition(&increase, &idle, IDLE, [this] {
     Serial.println("[Gigrostat] Transitioning from increase to idle");
     // ventilation->off();
     humidifier->off();
   });
 
-  fsm.addTransition(&increaseHumidity, &decreaseHumidity, DECREASE, [this] {
+  fsm.addTransition(&increase, &decrease, DECREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from increase to decrease");
     humidifier->off();
     // ventilation->on();
   });
-  fsm.addTransition(&decreaseHumidity, &increaseHumidity, INCREASE, [this] {
+  fsm.addTransition(&decrease, &increase, INCREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from decrease to increase");
     // ventilation->off();
     humidifier->on();
   });
 
-  fsm.addTransition(&decreaseHumidity, &idle, IDLE, [this] {
+  fsm.addTransition(&decrease, &idle, IDLE, [this] {
     Serial.println("[Gigrostat] Transitioning from decrease to idle");
     humidifier->off();
     // ventilation->off();
   });
-  fsm.addTransition(&idle, &decreaseHumidity, DECREASE, [this] {
+  fsm.addTransition(&idle, &decrease, DECREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from idle to decrease");
     humidifier->off();
     // ventilation->on();
