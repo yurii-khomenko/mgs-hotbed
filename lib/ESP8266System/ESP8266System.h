@@ -26,10 +26,10 @@ class ESP8266System {
   public:
     ESP8266System(Conf conf);
     
-    ESP8266WebServer *server;
-    DHT          *dht;
-    Humidifier   *humidifier;
-    Gigrostat    *gigrostat;
+    ESP8266WebServer* server;
+    DHT*              dht;
+    Humidifier*       humidifier;
+    Gigrostat*        gigrostat;
     
     void setup();
     void loop();
@@ -47,12 +47,12 @@ class ESP8266System {
     Conf conf;
     String metricPrefix;
 
-    void _setupLED();
-    void _setupWifi();
-    void _setupOTA();
-    void _setupWebServer();
-    String _getMetrics();
-    String _getDhtMetrics();
+    void setupLED();
+    void setupWifi();
+    void setupOTA();
+    void setupWebServer();
+    String getMetrics();
+    String getDhtMetrics();
 };
 
 #endif

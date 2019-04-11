@@ -17,12 +17,12 @@ ESP8266System::ESP8266System(const Conf conf) {
   Serial.begin(115200);
 }
 
-void ESP8266System::_setupLED() {
+void ESP8266System::setupLED() {
   pinMode(LED_BUILTIN, OUTPUT);
   offLed();
 }
 
-void ESP8266System::_setupWifi() {
+void ESP8266System::setupWifi() {
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(conf.ssid, conf.password);
@@ -38,7 +38,7 @@ void ESP8266System::_setupWifi() {
   Serial.println("\n[Wifi] Connected, ip: " + WiFi.localIP().toString());
 }
 
-void ESP8266System::_setupOTA() {
+void ESP8266System::setupOTA() {
 
   const String hostname = conf.systemName + "-" + conf.serviceName;
 
@@ -72,13 +72,13 @@ void ESP8266System::_setupOTA() {
   Serial.println("[OTA] Ready, hostname: " + hostname);
 }
 
-void ESP8266System::_setupWebServer() {
+void ESP8266System::setupWebServer() {
 
   server = new ESP8266WebServer();
   
   server->on("/metrics", [this] {
     withBlink([&] {
-      server->send(200, "text/plain", _getMetrics());
+      server->send(200, "text/plain", getMetrics());
     });
   });
 
@@ -86,13 +86,13 @@ void ESP8266System::_setupWebServer() {
   Serial.println("[HTTP] Started, port: 80");
 }
 
-String ESP8266System::_getMetrics() {
+String ESP8266System::getMetrics() {
   return 
-  (dht ? _getDhtMetrics() : "") +
+  (dht ? getDhtMetrics() : "") +
   (humidifier ? humidifier->getMetrics() : "");
 }
 
-String ESP8266System::_getDhtMetrics() {
+String ESP8266System::getDhtMetrics() {
 
   const float t = dht->readTemperature();
   const float h = dht->readHumidity();
@@ -111,10 +111,10 @@ String ESP8266System::_getDhtMetrics() {
 }
 
 void ESP8266System::setup() {
-  _setupLED();
-  _setupWifi();
-  _setupOTA();
-  _setupWebServer();
+  setupLED();
+  setupWifi();
+  setupOTA();
+  setupWebServer();
 }
 
 void ESP8266System::loop() {
@@ -137,9 +137,9 @@ void ESP8266System::setupHumidifier(const u8 pin, const u8 statePin) {
   humidifier = new Humidifier(pin, statePin, metricPrefix);
 }
 
-void ESP8266System::setupGigrostat(const float humidity, const float accuracy) {
+void ESP8266System::setupGigrostat(const real32 min, const real32 max) {
   gigrostat = new Gigrostat(dht, humidifier, metricPrefix);
-  gigrostat->setup(humidity, accuracy);
+  gigrostat->setup(min, max);
 }
 
 void ESP8266System::onPin(const u8 pin) {

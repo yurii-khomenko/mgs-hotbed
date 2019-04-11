@@ -47,7 +47,7 @@ Gigrostat::Gigrostat(DHT *dht, Humidifier *humidifier, String metricPrefix) {
   this->metricPrefix = metricPrefix;
 }
 
-void Gigrostat::setup(const float min, const float max) {
+void Gigrostat::setup(const real32 min, const real32 max) {
   
   this->min = min;
   this->max = max;
