@@ -134,7 +134,7 @@ void ESP8266System::setupDHT(const u8 pin, const u8 type) {
 }
 
 void ESP8266System::setupHumidifier(const u8 pin) {
-  setupPin(pin, OUTPUT);
+  setupPin(pin, OUTPUT_OPEN_DRAIN);
   humidifier = new Humidifier(pin, metricPrefix);
 }
 

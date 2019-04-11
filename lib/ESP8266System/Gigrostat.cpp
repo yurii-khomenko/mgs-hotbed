@@ -4,40 +4,40 @@
 
 // State machine variables
 #define IDLE 0
-#define INCREASE_HUMIDITY 1
-#define DECREASE_HUMIDITY 2
+#define INC_HUMIDITY 1
+#define DEC_HUMIDITY 2
 
 State stateIdle(
 [] {
   Serial.println("Entering stateIdle");
 },
 [] {
-  Serial.println("In stateIdle");
+  Serial.print("In stateIdle");
 }, 
 [] {
   Serial.println("Exiting stateIdle");
 });
 
-State stateIncreaceHumidity(
+State stateIncHumidity(
 [] {
-  Serial.println("Entering stateIncreaceHumidity");
+  Serial.println("Entering stateIncHumidity");
 },
 [] {
-  Serial.println("In stateIncreaceHumidity");
+  Serial.print("In stateIncHumidity");
 }, 
 [] {
-  Serial.println("Exiting stateIncreaceHumidity");
+  Serial.println("Exiting stateIncHumidity");
 });
 
-State stateDecreaceHumidity(
+State stateDecHumidity(
 [] {
-  Serial.println("Entering stateDecreaceHumidity");
+  Serial.println("Entering stateDecHumidity");
 },
 [] {
-  Serial.println("In stateDecreaceHumidity");
+  Serial.print("In stateDecHumidity");
 }, 
 [] {
-  Serial.println("Exiting stateDecreaceHumidity");
+  Serial.println("Exiting stateDecHumidity");
 });
 
 Fsm fsm(&stateIdle);
@@ -53,36 +53,36 @@ void Gigrostat::setup(const float humidity, const float accuracy) {
   this->humidity = humidity;
   this->accuracy = accuracy;
 
-  fsm.add_transition(&stateIdle, &stateIncreaceHumidity, INCREASE_HUMIDITY, [this] () {
-    Serial.println("Transitioning from stateIdle to stateIncreaceHumidity");
+  fsm.add_transition(&stateIdle, &stateIncHumidity, INC_HUMIDITY, [this] () {
+    Serial.println("Transitioning from stateIdle to stateIncHumidity");
     // ventilation->off();
     humidifier->on();
   });
-  fsm.add_transition(&stateIncreaceHumidity, &stateIdle, IDLE, [this] {
-    Serial.println("Transitioning from stateIncreaceHumidity to stateIdle");
+  fsm.add_transition(&stateIncHumidity, &stateIdle, IDLE, [this] {
+    Serial.println("Transitioning from stateIncHumidity to stateIdle");
     // ventilation->off();
     humidifier->off();
   });
 
-  fsm.add_transition(&stateIncreaceHumidity, &stateDecreaceHumidity, DECREASE_HUMIDITY, [this] {
-    Serial.println("Transitioning from stateIncreaceHumidity to stateDecreaceHumidity");
+  fsm.add_transition(&stateIncHumidity, &stateDecHumidity, DEC_HUMIDITY, [this] {
+    Serial.println("Transitioning from stateIncHumidity to stateDecHumidity");
     humidifier->off();
     // ventilation->on();
   });
-  fsm.add_transition(&stateDecreaceHumidity, &stateIncreaceHumidity, INCREASE_HUMIDITY, [this] {
-    Serial.println("Transitioning from stateDecreaceHumidity to stateIncreaceHumidity");
+  fsm.add_transition(&stateDecHumidity, &stateIncHumidity, INC_HUMIDITY, [this] {
+    Serial.println("Transitioning from stateDecHumidity to stateIncHumidity");
     // ventilation->off();
     humidifier->on();
   });
 
-  fsm.add_transition(&stateDecreaceHumidity, &stateIdle, IDLE, [this] {
-    Serial.println("Transitioning from stateDecreaceHumidity to stateIdle");
+  fsm.add_transition(&stateDecHumidity, &stateIdle, IDLE, [this] {
+    Serial.println("Transitioning from stateDecHumidity to stateIdle");
     humidifier->off();
     // ventilation->off();
   });
-  fsm.add_transition(&stateIdle, &stateDecreaceHumidity, DECREASE_HUMIDITY, [this] {
-    Serial.println("Transitioning from stateIdle to stateDecreaceHumidity");
-    // humidifier->off();
+  fsm.add_transition(&stateIdle, &stateDecHumidity, DEC_HUMIDITY, [this] {
+    Serial.println("Transitioning from stateIdle to stateDecHumidity");
+    humidifier->off();
     // ventilation->on();
   });
 }
@@ -102,13 +102,13 @@ void Gigrostat::loop() {
   if(current < min) {
 
     // humidifier->on();
-    fsm.trigger(INCREASE_HUMIDITY);
+    fsm.trigger(INC_HUMIDITY);
     Serial.print("[Gigrostat] humidifier->on(), current: ");
     Serial.println(current);
 
   } else if (current > max) {
 
-    fsm.trigger(DECREASE_HUMIDITY);
+    fsm.trigger(DEC_HUMIDITY);
 
     // humidifier->off();
     Serial.print("[Gigrostat] humidifier->off(), current: ");
