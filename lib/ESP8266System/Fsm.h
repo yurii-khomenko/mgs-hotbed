@@ -16,7 +16,8 @@ class Fsm {
     
     void addTransition(State* stateFrom, State* stateTo, u8 event, std::function<void(void)> onTransition);
     void addTimedTransition(State* stateFrom, State* stateTo, u64 interval, std::function<void(void)> onTransition);
-    
+    void clearTransition();
+
     void trigger(u8 event);
     void loop();
   

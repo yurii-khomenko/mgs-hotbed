@@ -19,10 +19,9 @@ void setup(void) {
   sys.setup();
   sys.setupDHT(DHT_SENSOR_PIN, DHT22);
   sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
-  sys.setupGigrostat(98, 1);
+  sys.setupGigrostat(96, 99);
 }
 
 void loop(void) {
-  Serial.println(digitalRead(D5));
   sys.loop();
 }
