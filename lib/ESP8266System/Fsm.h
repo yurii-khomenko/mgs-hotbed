@@ -13,15 +13,13 @@ struct State {
 class Fsm {
   public:
     Fsm(State* initialState);
-
-    void addTransition(State* stateFrom, State* stateTo, u32 event, std::function<void(void)> onTransition);
+    
+    void addTransition(State* stateFrom, State* stateTo, u8 event, std::function<void(void)> onTransition);
     void addTimedTransition(State* stateFrom, State* stateTo, u64 interval, std::function<void(void)> onTransition);
-
-    void checkTimedTransitions();
-
+    
     void trigger(int event);
     void loop();
-
+  
   private:
     struct Transition {
       State* stateFrom;
@@ -36,12 +34,13 @@ class Fsm {
       u64 interval;
     };
 
-    void makeTransition(Transition *transition);
-
+    bool initialized;
     State* currentState;
     std::vector<Transition> transitions;
     std::vector<TimedTransition> timedTransitions;
-    bool initialized;
+    
+    void checkTimedTransitions();
+    void makeTransition(Transition *transition);
 };
 
 #endif

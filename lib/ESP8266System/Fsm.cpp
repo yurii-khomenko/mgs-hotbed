@@ -6,9 +6,8 @@ State::State(std::function<void(void)> onEnter, std::function<void(void)> onStat
   onExit(onExit) {}
 
 Fsm::Fsm(State* initialState)
-: currentState(initialState),
-  transitions(NULL),
-  initialized(false) {}
+: initialized(false), 
+  currentState(initialState) {}
 
 void Fsm::addTransition(State* stateFrom, State* stateTo, u8 event, std::function<void(void)> onTransition) {
 
@@ -30,21 +29,30 @@ void Fsm::addTimedTransition(State* stateFrom, State* stateTo, u64 interval, std
     {
       stateFrom,
       stateTo,
-      IDLE,
+      0,
       onTransition
     },
-    IDLE,
+    0,
     interval
   });
 }
 
 void Fsm::trigger(const int event) {
-  if (initialized)
-    for (u32 i = 0; i < transitions.size(); ++i)
-      if (transitions[i].stateFrom == currentState && transitions[i].event == event) {
-        Fsm::makeTransition(&(transitions[i]));
-        return;
-      }
+  if (!initialized) return;
+
+  for (auto &t : transitions) {
+    if (t.stateFrom == currentState && t.event == event) {
+      Fsm::makeTransition(&t);
+      return;
+    }
+  }
+
+
+  // for (u32 i = 0; i < transitions.size(); ++i)
+  //   if (transitions[i].stateFrom == currentState && transitions[i].event == event) {
+  //     Fsm::makeTransition(&(transitions[i]));
+  //     return;
+  //   }
 }
 
 void Fsm::checkTimedTransitions() {
@@ -66,6 +74,27 @@ void Fsm::checkTimedTransitions() {
   }
 }
 
+void Fsm::makeTransition(Transition* transition) {
+
+  if (transition->stateFrom->onExit != NULL)
+    transition->stateFrom->onExit();
+
+  if (transition->onTransition != NULL)
+    transition->onTransition();
+
+  if (transition->stateTo->onEnter != NULL)
+    transition->stateTo->onEnter();
+  
+  currentState = transition->stateTo;
+
+  unsigned long now = millis();
+  for (u32 i = 0; i < timedTransitions.size(); ++i) {
+    TimedTransition* ttransition = &timedTransitions[i];
+    if (ttransition->transition.stateFrom == currentState)
+      ttransition->start = now;
+  }
+}
+
 void Fsm::loop() {
 
   if (!initialized) {
@@ -77,26 +106,5 @@ void Fsm::loop() {
   if (currentState->onState != NULL)
     currentState->onState();
     
-  Fsm::check_timed_transitions();
-}
-
-void Fsm::makeTransition(Transition* transition) {
-
-  if (transition->state_from->on_exit != NULL)
-    transition->state_from->on_exit();
-
-  if (transition->on_transition != NULL)
-    transition->on_transition();
-
-  if (transition->state_to->on_enter != NULL)
-    transition->state_to->on_enter();
-  
-  m_current_state = transition->state_to;
-
-  unsigned long now = millis();
-  for (u32 i = 0; i < m_timed_transitions.size(); ++i) {
-    TimedTransition* ttransition = &m_timed_transitions[i];
-    if (ttransition->transition.state_from == m_current_state)
-      ttransition->start = now;
-  }
+  Fsm::checkTimedTransitions();
 }
