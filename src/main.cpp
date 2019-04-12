@@ -10,9 +10,9 @@ ESP8266System sys({
   "scalable"
 });
 
-#define DHT_SENSOR_PIN D3
-#define HUMIDIFIER_PIN D4
-#define HUMIDIFIER_STATE_PIN D5
+#define DHT_SENSOR_PIN        D3
+#define HUMIDIFIER_PIN        D4
+#define HUMIDIFIER_STATE_PIN  D5
 
 void setup(void) {
   sys.setup();
