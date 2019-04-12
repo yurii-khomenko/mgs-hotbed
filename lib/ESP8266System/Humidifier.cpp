@@ -25,12 +25,6 @@ String Humidifier::getMetrics() {
   return String(metricPrefix + "humidifier_enable ") + (isOn() ? 1 : 0) + "\n";
 }
 
-std::vector<String> Humidifier::getMetricsList() {
-  return {
-    String("humidifier_enable ") + (isOn() ? 1 : 0) + "\n"
-  };
-}
-
 void Humidifier::click() {
   digitalWrite(pin, LOW);
   delay(200);
