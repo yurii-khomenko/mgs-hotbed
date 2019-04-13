@@ -4,7 +4,7 @@
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 
-OTA::OTA(String systemName, String serviceName, std::function<void(void)> onProgress) {
+OTA::OTA(String systemName, String serviceName) {
 
   const String hostname = systemName + "-" + serviceName;
 
@@ -16,7 +16,6 @@ OTA::OTA(String systemName, String serviceName, std::function<void(void)> onProg
   });
   
   ArduinoOTA.onProgress([&](u32 progress, u32 total) {
-    onProgress();
     Serial.printf("[OTA] %u%%\n", (progress / (total / 100))); 
   });
 

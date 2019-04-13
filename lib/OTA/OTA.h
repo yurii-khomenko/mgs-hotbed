@@ -5,7 +5,7 @@
 
 class OTA {
   public:
-    OTA(String systemName, String serviceName, std::function<void(void)> onProgress);
+    OTA(String systemName, String serviceName);
     void loop();
 };
 

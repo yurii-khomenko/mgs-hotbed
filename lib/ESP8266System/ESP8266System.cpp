@@ -11,13 +11,7 @@
 ESP8266System::ESP8266System(const Conf conf) {
 
   this->conf = conf;
-  
   metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_"; 
-  ota = new OTA(conf.systemName, conf.serviceName, [&] {
-    onLed();
-    offLed();
-  });
-  Serial.begin(115200);
 }
 
 void ESP8266System::setupLED() {
@@ -62,10 +56,10 @@ String ESP8266System::getMetrics() {
 }
 
 void ESP8266System::setup() {
+  Serial.begin(115200);
   setupLED();
+  ota = new OTA(conf.systemName, conf.serviceName);
   setupWifi();
-
-  // setupOTA();
   setupWebServer();
 }
 
