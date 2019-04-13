@@ -8,7 +8,7 @@
 #include <WiFiUdp.h>
 
 #include <ESP8266WebServer.h>
-#include <DHT.h>
+#include <DhtSensor.h>
 #include <Humidifier.h>
 #include <Gigrostat.h>
 
@@ -27,7 +27,7 @@ class ESP8266System {
     ESP8266System(Conf conf);
     
     ESP8266WebServer* server;
-    DHT*              dht;
+    DhtSensor*        dhtSensor;
     Humidifier*       humidifier;
     Gigrostat*        gigrostat;
     

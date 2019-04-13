@@ -10,9 +10,7 @@ State idle(
 [] {
   Serial.println("[Gigrostat] Entering idle");
 },
-[] {
-  //Serial.println("[Gigrostat] In idle");
-}, 
+NULL, 
 [] {
   Serial.println("[Gigrostat] Exiting idle");
 });
@@ -21,9 +19,7 @@ State increase(
 [] {
   Serial.println("[Gigrostat] Entering increase");
 },
-[] {
-  //Serial.println("[Gigrostat] In increase");
-}, 
+NULL, 
 [] {
   Serial.println("[Gigrostat] Exiting increase");
 });
@@ -32,17 +28,15 @@ State decrease(
 [] {
   Serial.println("[Gigrostat] Entering decrease");
 },
-[] {
- // Serial.println("In decrease");
-}, 
+NULL, 
 [] {
   Serial.println("[Gigrostat] Exiting decrease");
 });
 
 Fsm fsm(&idle);
 
-Gigrostat::Gigrostat(DHT* dht, Humidifier* humidifier, String metricPrefix) {
-  this->dht = dht;
+Gigrostat::Gigrostat(DhtSensor* dhtSensor, Humidifier* humidifier, String metricPrefix) {
+  this->dhtSensor = dhtSensor;
   this->humidifier = humidifier;
   this->metricPrefix = metricPrefix;
 }
@@ -90,7 +84,7 @@ void Gigrostat::setup(const real32 min, const real32 max) {
 
 void Gigrostat::loop() {
 
-  const float current = dht->readHumidity();
+  const float current = dhtSensor->getHumidity();
   
   if(isnan(current)) {
     Serial.println("[Gigrostat] Failed to read humidity from DHT sensor!");

@@ -7,7 +7,7 @@
 #include <WiFiUdp.h>
 
 #include <ESP8266WebServer.h>
-#include <DHT.h>
+#include <DhtSensor.h>
 #include <Humidifier.h>
 #include <Gigrostat.h>
 
@@ -88,7 +88,7 @@ void ESP8266System::setupWebServer() {
 
 String ESP8266System::getMetrics() {
   return 
-  (dht ? getDhtMetrics() : "") +
+  (dhtSensor ? getDhtMetrics() : "") +
   (humidifier ? humidifier->getMetrics() : "");
 }
 
@@ -126,8 +126,7 @@ void ESP8266System::setupPin(const u8 pin, const u8 mode) {
 }
 
 void ESP8266System::setupDHT(const u8 pin, const u8 type) {
-  dht = new DHT(pin, type);
-  dht->begin();
+  dht = new DhtSensor(pin, type);
 }
 
 void ESP8266System::setupHumidifier(const u8 pin, const u8 statePin) {
@@ -135,7 +134,7 @@ void ESP8266System::setupHumidifier(const u8 pin, const u8 statePin) {
 }
 
 void ESP8266System::setupGigrostat(const real32 min, const real32 max) {
-  gigrostat = new Gigrostat(dht, humidifier, metricPrefix);
+  gigrostat = new Gigrostat(dhtSensor, humidifier, metricPrefix);
   gigrostat->setup(min, max);
 }
 

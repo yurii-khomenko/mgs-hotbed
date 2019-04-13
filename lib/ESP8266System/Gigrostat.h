@@ -3,16 +3,16 @@
 
 #include <Arduino.h>
 #include <Fsm.h>
-#include <DHT.h>
+#include <DhtSensor.h>
 #include <Humidifier.h>
 
 class Gigrostat {
   public:
-    Gigrostat(DHT* dht, Humidifier* humidifier, String metricPrefix);
+    Gigrostat(DhtSensor* dhtSensor, Humidifier* humidifier, String metricPrefix);
     void setup(real32 min, real32 max);
     void loop();
   private:
-    DHT* dht;
+    DhtSensor* dhtSensor;
     Humidifier* humidifier;
     float min;
     float max;
