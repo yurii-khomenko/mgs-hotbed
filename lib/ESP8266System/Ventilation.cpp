@@ -8,12 +8,12 @@ Ventilation::Ventilation(u8 pin, String metricPrefix) {
 
 void Ventilation::setup(u8 level) {
   this->level = level;
-  if (level == 0) 
-    digitalWrite(pin, HIGH);
-  else
+  if (level <= 0) 
     digitalWrite(pin, LOW);
+  else
+    digitalWrite(pin, HIGH);
 }
 
 String Ventilation::metrics() {
-  return String(metricPrefix) + "ventilation_level " + (level ? 1 : 0) + "\n";
+  return String(metricPrefix) + "ventilation_level " + level + "\n";
 }
