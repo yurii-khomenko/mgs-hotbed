@@ -8,8 +8,6 @@
 #include <Humidifier.h>
 #include <Gigrostat.h>
 
-
-
 ESP8266System::ESP8266System(const Conf conf) {
 
   this->conf = conf;

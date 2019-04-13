@@ -17,7 +17,7 @@ OTA::OTA(String systemName, String serviceName, std::function<void(void)> onProg
   
   ArduinoOTA.onProgress([&](u32 progress, u32 total) {
     onProgress();
-    Serial.printf("[OTA] Upload firmware: %u%%\n", (progress / (total / 100)));
+    Serial.printf("[OTA] %u%%\n", (progress / (total / 100))); 
   });
 
   ArduinoOTA.onEnd([] {

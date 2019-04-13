@@ -86,10 +86,7 @@ void Gigrostat::loop() {
 
   const float current = dhtSensor->getHumidity();
   
-  if(isnan(current)) {
-    Serial.println("[Gigrostat] Failed to read humidity from DHT sensor!");
-    return;
-  }
+  if(isnan(current)) return;
 
   if(current < min)
     fsm.trigger(INCREASE);
