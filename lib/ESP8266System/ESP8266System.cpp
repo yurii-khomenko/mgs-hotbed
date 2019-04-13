@@ -11,8 +11,9 @@ ESP8266System::ESP8266System(const Conf conf) {
 
 String ESP8266System::metrics() {
   return 
-    (dhtSensor  ? dhtSensor->metrics()  : "") +
-    (humidifier ? humidifier->metrics() : "");
+    (dhtSensor    ? dhtSensor->metrics()    : "") +
+    (humidifier   ? humidifier->metrics()   : "") +
+    (ventilation  ? ventilation->metrics()  : "");
 }
 
 void ESP8266System::setup() {
@@ -64,8 +65,12 @@ void ESP8266System::setupHumidifier(const u8 pin, const u8 statePin) {
   humidifier = new Humidifier(pin, statePin, metricPrefix);
 }
 
+void ESP8266System::setupVentilation(const u8 pin) {
+  ventilation = new Ventilation(pin, metricPrefix);
+}
+
 void ESP8266System::setupGigrostat(const real32 min, const real32 max) {
-  gigrostat = new Gigrostat(dhtSensor, humidifier, metricPrefix);
+  gigrostat = new Gigrostat(dhtSensor, humidifier, ventilation, metricPrefix);
   gigrostat->setup(min, max);
 }
 

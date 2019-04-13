@@ -28,8 +28,11 @@ class ESP8266System {
     WifiDevice*         wifi;
     OTA*                ota;
     ESP8266WebServer*   server;
+    
     DhtSensor*          dhtSensor;
     Humidifier*         humidifier;
+    Ventilation*        ventilation;
+
     Gigrostat*          gigrostat;
     
     String metrics();
@@ -39,7 +42,8 @@ class ESP8266System {
     void setupPin(u8 pin, u8 mode);
     void setupDHT(u8 pin, u8 type);
     void setupHumidifier(u8 pin, u8 pinStatus);
-    void setupGigrostat(real32 level, real32 accuracy);
+    void setupVentilation(u8 pin);
+    void setupGigrostat(real32 min, real32 max);
 
     void onPin(u8 pin);
     void offPin(u8 pin);

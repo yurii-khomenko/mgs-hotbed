@@ -7,7 +7,7 @@
 
 class Gigrostat {
   public:
-    Gigrostat(DhtSensor* dhtSensor, Humidifier* humidifier, String metricPrefix);
+    Gigrostat(DhtSensor* dhtSensor, Humidifier* humidifier, Ventilation* ventilation, String metricPrefix);
     void setup(real32 min, real32 max);
     void loop();
   private:
