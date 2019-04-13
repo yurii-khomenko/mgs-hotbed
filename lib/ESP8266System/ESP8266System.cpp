@@ -1,19 +1,24 @@
 #include <ESP8266System.h>
-
 #include <Arduino.h>
+#include <OTA.h>
 
-#include <ArduinoOTA.h>
-#include <ESP8266mDNS.h>
-#include <WiFiUdp.h>
 
 #include <ESP8266WebServer.h>
 #include <DhtSensor.h>
 #include <Humidifier.h>
 #include <Gigrostat.h>
 
+
+
 ESP8266System::ESP8266System(const Conf conf) {
+
   this->conf = conf;
-  this->metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_";
+  
+  metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_"; 
+  ota = new OTA(conf.systemName, conf.serviceName, [&] {
+    onLed();
+    offLed();
+  });
   Serial.begin(115200);
 }
 
@@ -36,40 +41,6 @@ void ESP8266System::setupWifi() {
   });
 
   Serial.println("\n[Wifi] Connected, ip: " + WiFi.localIP().toString());
-}
-
-void ESP8266System::setupOTA() {
-
-  const String hostname = conf.systemName + "-" + conf.serviceName;
-
-  Serial.println("[OTA] Start server");
-  ArduinoOTA.setHostname(const_cast<char*> (hostname.c_str()));
-
-  ArduinoOTA.onStart([] {
-    Serial.println("\n[OTA] Start uploading");
-  });
-  
-  ArduinoOTA.onProgress([this](u32 progress, u32 total) {
-    withBlink([&] {
-      Serial.printf("[OTA] Upload firmware: %u%%\n", (progress / (total / 100)));
-    });
-  });
-
-  ArduinoOTA.onEnd([] {
-    Serial.println("\n[OTA] End uploading");
-  });
-  
-  ArduinoOTA.onError([](ota_error_t error) {
-    Serial.printf("\n[OTA] Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR) Serial.println("[OTA] Auth Failed");
-    else if (error == OTA_BEGIN_ERROR) Serial.println("[OTA] Begin Failed");
-    else if (error == OTA_CONNECT_ERROR) Serial.println("[OTA] Connect Failed");
-    else if (error == OTA_RECEIVE_ERROR) Serial.println("[OTA] Receive Failed");
-    else if (error == OTA_END_ERROR) Serial.println("[OTA] End Failed");
-  });
-  
-  ArduinoOTA.begin();
-  Serial.println("[OTA] Ready, hostname: " + hostname);
 }
 
 void ESP8266System::setupWebServer() {
@@ -95,12 +66,13 @@ String ESP8266System::getMetrics() {
 void ESP8266System::setup() {
   setupLED();
   setupWifi();
-  setupOTA();
+
+  // setupOTA();
   setupWebServer();
 }
 
 void ESP8266System::loop() {
-  ArduinoOTA.handle();
+  ota->loop();
   server->handleClient();
   if(gigrostat) gigrostat->loop();
   delay(100);

@@ -1,9 +1,9 @@
 #ifndef ESP8266System_h
 #define ESP8266System_h
 
-#include <Arduino.h>
+// #include <Arduino.h>
+#include <OTA.h>
 
-#include <ArduinoOTA.h>
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 
@@ -25,6 +25,7 @@ struct Conf {
 class ESP8266System {
   public:
     ESP8266System(Conf conf);
+    OTA*              ota;
     
     ESP8266WebServer* server;
     DhtSensor*        dhtSensor;
@@ -45,6 +46,8 @@ class ESP8266System {
     void offLed();
     void withBlink(std::function<void(void)> body);
 
+    String getMetrics();
+
   private:
     Conf conf;
     String metricPrefix;
@@ -53,8 +56,6 @@ class ESP8266System {
     void setupWifi();
     void setupOTA();
     void setupWebServer();
-
-    String getMetrics();
 };
 
 #endif
