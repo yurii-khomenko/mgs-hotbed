@@ -22,7 +22,7 @@ bool Humidifier::isOn() {
 }
 
 String Humidifier::getMetrics() {
-  return String(metricPrefix + "humidifier_enable ") + (isOn() ? 1 : 0) + "\n";
+  return String(metricPrefix) + "humidifier_enable " + (isOn() ? 1 : 0) + "\n";
 }
 
 void Humidifier::click() {

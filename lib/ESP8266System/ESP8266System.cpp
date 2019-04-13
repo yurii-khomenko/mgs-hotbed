@@ -88,23 +88,8 @@ void ESP8266System::setupWebServer() {
 
 String ESP8266System::getMetrics() {
   return 
-  (dhtSensor ? getDhtMetrics() : "") +
-  (humidifier ? humidifier->getMetrics() : "");
-}
-
-String ESP8266System::getDhtMetrics() {
-
-  const float t = dht->readTemperature();
-  const float h = dht->readHumidity();
-
-  if (isnan(h) || isnan(t)) {
-    const String msg = "[DHT] Failed to read from DHT sensor!";
-    Serial.println(msg);
-    return msg;
-  }
-
-  return String(metricPrefix + "temperature ") + t + "\n" +
-                metricPrefix + "humidity "     + h + "\n";
+    (dhtSensor  ? dhtSensor->getMetrics()  : "") +
+    (humidifier ? humidifier->getMetrics() : "");
 }
 
 void ESP8266System::setup() {
@@ -126,7 +111,7 @@ void ESP8266System::setupPin(const u8 pin, const u8 mode) {
 }
 
 void ESP8266System::setupDHT(const u8 pin, const u8 type) {
-  dht = new DhtSensor(pin, type);
+  dhtSensor = new DhtSensor(pin, type, metricPrefix);
 }
 
 void ESP8266System::setupHumidifier(const u8 pin, const u8 statePin) {

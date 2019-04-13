@@ -11,6 +11,8 @@ class DhtSensor {
     String getMetrics();
   private:
     DHT* dht;
+    u8 pin;
+    u8 type;
     String metricPrefix;
 };
 
