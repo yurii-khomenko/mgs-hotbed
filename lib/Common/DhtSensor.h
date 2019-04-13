@@ -6,9 +6,9 @@
 class DhtSensor {
   public:
     DhtSensor(u8 pin, u8 type, String metricPrefix);
-    real32 getTemperature();
-    real32 getHumidity();
-    String getMetrics();
+    real32 temperature();
+    real32 humidity();
+    String metrics();
   private:
     DHT* dht;
     u8 pin;

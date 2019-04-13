@@ -8,21 +8,22 @@ Humidifier::Humidifier(u8 pin, u8 statePin, String metricPrefix) {
   pinMode(statePin, INPUT);
 }
 
-void Humidifier::on() {
-  if (!isOn()) click();
+u8 Humidifier::getLevel() {
+  return digitalRead(statePin) ? 100 : 0;
 }
 
-void Humidifier::off() {
-  if (isOn()) click();
+void Humidifier::setup(const u8 level) {
+  if (level <= 0 && getLevel() >= 100) click();
+  else
+  if (level >  0 && getLevel() <= 0) click();  
 }
 
-bool Humidifier::isOn() {
-  return digitalRead(statePin);
+String Humidifier::metrics() {
+  return String(metricPrefix) + "humidifier_level " + (getLevel() == 100 ? 1 : 0) + "\n";
 }
 
-String Humidifier::getMetrics() {
-  return String(metricPrefix) + "humidifier_enable " + (isOn() ? 1 : 0) + "\n";
-}
+// PRIVATE
+//============================================================================>
 
 void Humidifier::click() {
   digitalWrite(pin, LOW);

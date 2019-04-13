@@ -1,21 +1,17 @@
-#ifndef Humidifier_h
-#define Humidifier_h
+#ifndef Ventilation_h
+#define Ventilation_h
 
 #include <Arduino.h>
 
-class Humidifier {
+class Ventilation {
   public:
-    Humidifier(u8 pin, u8 statePin, String metricPrefix);
-    void on();
-    void off();
-    bool isOn();
-    String getMetrics();
-    std::vector<String> getMetricsList();
+    Ventilation(u8 pin, String metricPrefix);
+    u8 level;
+    void setup(u8 level);
+    String metrics();
   private:
     u8 pin;
-    u8 statePin;
     String metricPrefix;
-    void click();
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <DhtSensor.h>
 #include <Humidifier.h>
+#include <Ventilation.h>
 
 class Gigrostat {
   public:
@@ -12,9 +13,10 @@ class Gigrostat {
   private:
     DhtSensor* dhtSensor;
     Humidifier* humidifier;
+    Ventilation* ventilation;
+    String metricPrefix;
     real32 min;
     real32 max;
-    String metricPrefix;
 };
 
 #endif

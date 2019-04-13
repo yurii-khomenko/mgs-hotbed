@@ -9,9 +9,9 @@ WifiDevice::WifiDevice(String ssid, String password, std::function<void(bool)> o
 
   while (WiFi.status() != WL_CONNECTED) {
     if (onProgress) onProgress(true);
-    delay(50);
+    delay(200);
     if (onProgress) onProgress(false);
-    delay(50);
+    delay(200);
   };
 
   Serial.println(" connected, ip: " + WiFi.localIP().toString());

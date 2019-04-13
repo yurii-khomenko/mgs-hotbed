@@ -9,24 +9,24 @@ DhtSensor::DhtSensor(u8 pin, u8 type, String metricPrefix) {
   dht->begin();
 }
 
-real32 DhtSensor::getTemperature() {
+real32 DhtSensor::temperature() {
   const real32 t = dht->readTemperature();
   if (isnan(t)) Serial.println((String)"[DhtSensor] Failed to read temperature, pin: " + pin + ", type: " + type);
   return t;
 }
 
-real32 DhtSensor::getHumidity() {
+real32 DhtSensor::humidity() {
   const real32 h = dht->readHumidity();
   if (isnan(h)) Serial.println((String)"[DhtSensor] Failed to read humidity, pin: " + pin + ", type: " + type);
   return h;
 }
 
-String DhtSensor::getMetrics() {
+String DhtSensor::metrics() {
 
-  const real32 t = getTemperature();
-  const real32 h = getHumidity();
+  const real32 t = temperature();
+  const real32 h = humidity();
 
   return String("") + 
-          !isnan(t) ? (metricPrefix + "temperature " + t + "\n") : "" +
-          !isnan(h) ? (metricPrefix + "humidity " + h + "\n") : "";
+          !isnan(t) ? (metricPrefix + "temperature_level " + t + "\n") : "" +
+          !isnan(h) ? (metricPrefix + "humidity_level " + h + "\n") : "";
 }

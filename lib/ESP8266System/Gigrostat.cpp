@@ -49,41 +49,41 @@ void Gigrostat::setup(const real32 min, const real32 max) {
 
   fsm.addTransition(&idle, &increase, INCREASE, [this] () {
     Serial.println("[Gigrostat] Transitioning from idle to increase");
-    // ventilation->off();
-    humidifier->on();
+    // ventilation->setup(0);
+    humidifier->setup(100);
   });
   fsm.addTransition(&increase, &idle, IDLE, [this] {
     Serial.println("[Gigrostat] Transitioning from increase to idle");
-    // ventilation->off();
-    humidifier->off();
+    // ventilation->setup(0);
+    humidifier->setup(0);
   });
 
   fsm.addTransition(&increase, &decrease, DECREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from increase to decrease");
-    humidifier->off();
-    // ventilation->on();
+    // ventilation->setup(100);
+    humidifier->setup(0);
   });
   fsm.addTransition(&decrease, &increase, INCREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from decrease to increase");
-    // ventilation->off();
-    humidifier->on();
+    // ventilation->setup(0);
+    humidifier->setup(100);
   });
 
   fsm.addTransition(&decrease, &idle, IDLE, [this] {
     Serial.println("[Gigrostat] Transitioning from decrease to idle");
-    humidifier->off();
-    // ventilation->off();
+    // ventilation->setup(0);
+    humidifier->setup(0);
   });
   fsm.addTransition(&idle, &decrease, DECREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from idle to decrease");
-    humidifier->off();
     // ventilation->on();
+    humidifier->setup(0);
   });
 }
 
 void Gigrostat::loop() {
 
-  const float current = dhtSensor->getHumidity();
+  const float current = dhtSensor->humidity();
   
   if(isnan(current)) return;
 

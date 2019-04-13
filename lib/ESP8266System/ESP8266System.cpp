@@ -9,14 +9,14 @@ ESP8266System::ESP8266System(const Conf conf) {
   metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_";
 }
 
-String ESP8266System::getMetrics() {
+String ESP8266System::metrics() {
   return 
-    (dhtSensor  ? dhtSensor->getMetrics()  : "") +
-    (humidifier ? humidifier->getMetrics() : "");
+    (dhtSensor  ? dhtSensor->metrics()  : "") +
+    (humidifier ? humidifier->metrics() : "");
 }
 
 void ESP8266System::setup() {
-  
+
   Serial.begin(115200);
 
   pinMode(LED_BUILTIN, OUTPUT);
@@ -33,7 +33,7 @@ void ESP8266System::setup() {
   server = new ESP8266WebServer();
   server->on("/metrics", [this] {
     withBlink([&] {
-      server->send(200, "text/plain", getMetrics());
+      server->send(200, "text/plain", metrics());
     });
   });
   server->begin();

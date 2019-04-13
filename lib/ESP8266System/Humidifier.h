@@ -6,11 +6,9 @@
 class Humidifier {
   public:
     Humidifier(u8 pin, u8 statePin, String metricPrefix);
-    void on();
-    void off();
-    bool isOn();
-    String getMetrics();
-    std::vector<String> getMetricsList();
+    void setup(u8 level);
+    u8 getLevel();
+    String metrics();
   private:
     u8 pin;
     u8 statePin;

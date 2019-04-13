@@ -32,7 +32,7 @@ class ESP8266System {
     Humidifier*         humidifier;
     Gigrostat*          gigrostat;
     
-    String getMetrics();
+    String metrics();
     void setup();
     void loop();
     
