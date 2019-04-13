@@ -47,11 +47,10 @@ void ESP8266System::setupLED() {
 }
 
 void ESP8266System::setupWifi() {
-  wifi = new WifiDevice(conf.ssid, conf.password, [this] {
-    onLed();
+  wifi = new WifiDevice(conf.ssid, conf.password, [this] (bool in) {
     Serial.print(".");
-    delay(50);
-    offLed();
+    if (in) onLed();
+    else offLed();
   }); 
 }
 

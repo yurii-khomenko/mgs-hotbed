@@ -5,7 +5,7 @@
 
 class WifiDevice {
   public:
-    WifiDevice(String ssid, String password, std::function<void(void)> onProgress);
+    WifiDevice(String ssid, String password, std::function<void(bool)> onProgress);
 };
 
 #endif

@@ -40,7 +40,7 @@ class ESP8266System {
     void setupPin(u8 pin, u8 mode);
     void setupDHT(u8 pin, u8 type);
     void setupHumidifier(u8 pin, u8 pinStatus);
-    void setupGigrostat(const float level, const float accuracy);
+    void setupGigrostat(real32 level, real32 accuracy);
 
     void onPin(u8 pin);
     void offPin(u8 pin);
