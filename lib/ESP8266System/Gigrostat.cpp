@@ -1,5 +1,4 @@
 #include <Gigrostat.h>
-#include <Arduino.h>
 #include <Fsm.h>
 
 #define IDLE 0

@@ -1,5 +1,4 @@
 #include <Humidifier.h>
-#include <Arduino.h>
 
 Humidifier::Humidifier(u8 pin, u8 statePin, String metricPrefix) {
   this->pin = pin;

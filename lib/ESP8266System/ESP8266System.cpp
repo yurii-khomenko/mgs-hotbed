@@ -1,7 +1,4 @@
 #include <ESP8266System.h>
-#include <Arduino.h>
-#include <OTA.h>
-
 
 #include <ESP8266WebServer.h>
 #include <DhtSensor.h>
@@ -10,7 +7,35 @@
 
 ESP8266System::ESP8266System(const Conf conf) {
   this->conf = conf;
-  metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_"; 
+  metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_";
+}
+
+String ESP8266System::getMetrics() {
+  return 
+    (dhtSensor  ? dhtSensor->getMetrics()  : "") +
+    (humidifier ? humidifier->getMetrics() : "");
+}
+
+void ESP8266System::setup() {
+  setupSerial();
+  setupLED();
+  setupWifi();
+  ota = new OTA(conf.systemName, conf.serviceName);
+  setupWebServer();
+}
+
+void ESP8266System::loop() {
+  ota->loop();
+  server->handleClient();
+  if(gigrostat) gigrostat->loop();
+  delay(100);
+}
+
+// PRIVATE
+//============================================================================>
+
+void ESP8266System::setupSerial() {
+  Serial.begin(115200);
 }
 
 void ESP8266System::setupLED() {
@@ -26,12 +51,12 @@ void ESP8266System::setupWifi() {
 
   withBlink([] {
     while (WiFi.status() != WL_CONNECTED) {
-      Serial.print(">");
+      Serial.print(".");
       delay(100);
     }
   });
 
-  Serial.println("\n[Wifi] Connected, ip: " + WiFi.localIP().toString());
+  Serial.println(" connected, ip: " + WiFi.localIP().toString());
 }
 
 void ESP8266System::setupWebServer() {
@@ -46,27 +71,6 @@ void ESP8266System::setupWebServer() {
 
   server->begin();
   Serial.println("[HTTP] Started, port: 80");
-}
-
-String ESP8266System::getMetrics() {
-  return 
-    (dhtSensor  ? dhtSensor->getMetrics()  : "") +
-    (humidifier ? humidifier->getMetrics() : "");
-}
-
-void ESP8266System::setup() {
-  Serial.begin(115200);
-  setupLED();
-  ota = new OTA(conf.systemName, conf.serviceName);
-  setupWifi();
-  setupWebServer();
-}
-
-void ESP8266System::loop() {
-  ota->loop();
-  server->handleClient();
-  if(gigrostat) gigrostat->loop();
-  delay(100);
 }
 
 void ESP8266System::setupPin(const u8 pin, const u8 mode) {

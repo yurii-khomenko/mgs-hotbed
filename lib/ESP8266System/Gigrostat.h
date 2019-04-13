@@ -2,7 +2,6 @@
 #define Gigrostat_h
 
 #include <Arduino.h>
-#include <Fsm.h>
 #include <DhtSensor.h>
 #include <Humidifier.h>
 

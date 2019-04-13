@@ -5,7 +5,7 @@ OTA::OTA(String systemName, String serviceName) {
 
   const String hostname = systemName + "-" + serviceName;
 
-  Serial.println("[OTA] Start server");
+  Serial.print("[OTA] Start server ... ");
   ArduinoOTA.setHostname(const_cast<char*> (hostname.c_str()));
 
   ArduinoOTA.onStart([] {
@@ -30,7 +30,7 @@ OTA::OTA(String systemName, String serviceName) {
   });
   
   ArduinoOTA.begin();
-  Serial.println("[OTA] Ready, hostname: " + hostname);
+  Serial.println("ready, hostname: " + hostname);
 }
 
 void OTA::loop() {

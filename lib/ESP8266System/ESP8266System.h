@@ -1,13 +1,13 @@
 #ifndef ESP8266System_h
 #define ESP8266System_h
 
-// #include <Arduino.h>
+#include <Arduino.h>
+
+#include <Wifi.h>
 #include <OTA.h>
 
-#include <ESP8266mDNS.h>
-#include <WiFiUdp.h>
-
 #include <ESP8266WebServer.h>
+
 #include <DhtSensor.h>
 #include <Humidifier.h>
 #include <Gigrostat.h>
@@ -25,6 +25,7 @@ struct Conf {
 class ESP8266System {
   public:
     ESP8266System(Conf conf);
+    Wifi*             wifi;
     OTA*              ota;
     
     ESP8266WebServer* server;
@@ -32,6 +33,7 @@ class ESP8266System {
     Humidifier*       humidifier;
     Gigrostat*        gigrostat;
     
+    String getMetrics();
     void setup();
     void loop();
     
@@ -46,12 +48,11 @@ class ESP8266System {
     void offLed();
     void withBlink(std::function<void(void)> body);
 
-    String getMetrics();
-
   private:
     Conf conf;
     String metricPrefix;
 
+    void setupSerial();
     void setupLED();
     void setupWifi();
     void setupOTA();
