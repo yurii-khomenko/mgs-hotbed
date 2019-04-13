@@ -1,7 +1,6 @@
 #ifndef Gigrostat_h
 #define Gigrostat_h
 
-#include <Arduino.h>
 #include <DhtSensor.h>
 #include <Humidifier.h>
 
@@ -13,8 +12,8 @@ class Gigrostat {
   private:
     DhtSensor* dhtSensor;
     Humidifier* humidifier;
-    float min;
-    float max;
+    real32 min;
+    real32 max;
     String metricPrefix;
 };
 

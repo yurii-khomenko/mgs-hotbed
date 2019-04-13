@@ -1,7 +1,5 @@
 #include <ESP8266System.h>
 
-#include <ESP8266WebServer.h>
-
 #include <DhtSensor.h>
 #include <Humidifier.h>
 #include <Gigrostat.h>
@@ -18,11 +16,27 @@ String ESP8266System::getMetrics() {
 }
 
 void ESP8266System::setup() {
-  setupSerial();
-  setupLED();
-  setupWifi();
-  setupOTA();
-  setupWebServer();
+  Serial.begin(115200);
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  offLed();
+  
+  wifi = new WifiDevice(conf.ssid, conf.password, [this] (bool in) {
+    Serial.print(".");
+    if (in) onLed();
+    else offLed();
+  }); 
+
+  ota = new OTA(conf.systemName, conf.serviceName);
+
+  server = new ESP8266WebServer();
+  server->on("/metrics", [this] {
+    withBlink([&] {
+      server->send(200, "text/plain", getMetrics());
+    });
+  });
+  server->begin();
+  Serial.println("[HTTP] Started, port: 80");
 }
 
 void ESP8266System::loop() {
@@ -36,41 +50,6 @@ void ESP8266System::loop() {
 
 // PRIVATE
 //============================================================================>
-
-void ESP8266System::setupSerial() {
-  Serial.begin(115200);
-}
-
-void ESP8266System::setupLED() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  offLed();
-}
-
-void ESP8266System::setupWifi() {
-  wifi = new WifiDevice(conf.ssid, conf.password, [this] (bool in) {
-    Serial.print(".");
-    if (in) onLed();
-    else offLed();
-  }); 
-}
-
-void ESP8266System::setupOTA() {
-  ota = new OTA(conf.systemName, conf.serviceName);
-}
-
-void ESP8266System::setupWebServer() {
-
-  server = new ESP8266WebServer();
-  
-  server->on("/metrics", [this] {
-    withBlink([&] {
-      server->send(200, "text/plain", getMetrics());
-    });
-  });
-
-  server->begin();
-  Serial.println("[HTTP] Started, port: 80");
-}
 
 void ESP8266System::setupPin(const u8 pin, const u8 mode) {
   pinMode(pin, mode);

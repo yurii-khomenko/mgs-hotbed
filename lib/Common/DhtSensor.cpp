@@ -28,5 +28,5 @@ String DhtSensor::getMetrics() {
 
   return String("") + 
           !isnan(t) ? (metricPrefix + "temperature " + t + "\n") : "" +
-                metricPrefix + "humidity "     + h + "\n";
+          !isnan(h) ? (metricPrefix + "humidity " + h + "\n") : "";
 }

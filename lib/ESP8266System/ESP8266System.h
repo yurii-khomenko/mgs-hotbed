@@ -5,7 +5,6 @@
 
 #include <WifiDevice.h>
 #include <OTA.h>
-
 #include <ESP8266WebServer.h>
 
 #include <DhtSensor.h>
@@ -25,13 +24,13 @@ struct Conf {
 class ESP8266System {
   public:
     ESP8266System(Conf conf);
-    WifiDevice*       wifi;
-    OTA*              ota;
-    
-    ESP8266WebServer* server;
-    DhtSensor*        dhtSensor;
-    Humidifier*       humidifier;
-    Gigrostat*        gigrostat;
+
+    WifiDevice*         wifi;
+    OTA*                ota;
+    ESP8266WebServer*   server;
+    DhtSensor*          dhtSensor;
+    Humidifier*         humidifier;
+    Gigrostat*          gigrostat;
     
     String getMetrics();
     void setup();
@@ -51,12 +50,6 @@ class ESP8266System {
   private:
     Conf conf;
     String metricPrefix;
-
-    void setupSerial();
-    void setupLED();
-    void setupWifi();
-    void setupOTA();
-    void setupWebServer();
 };
 
 #endif
