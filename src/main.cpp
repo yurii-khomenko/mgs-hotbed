@@ -1,13 +1,8 @@
 #include <ESP8266System.h>
 
 ESP8266System sys({
-
-  "greenhouse",
-  "mgs",
-  "hotbed",
-
-  "INSIDIUS 2.4GHz",
-  "scalable"
+  "greenhouse", "mgs", "hotbed",
+  "INSIDIUS 2.4GHz", "scalable"
 });
 
 #define DHT_SENSOR_PIN        D3

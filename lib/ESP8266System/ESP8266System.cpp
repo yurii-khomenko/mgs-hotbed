@@ -16,6 +16,7 @@ String ESP8266System::getMetrics() {
 }
 
 void ESP8266System::setup() {
+  
   Serial.begin(115200);
 
   pinMode(LED_BUILTIN, OUTPUT);
