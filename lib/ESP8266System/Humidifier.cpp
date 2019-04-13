@@ -19,7 +19,7 @@ void Humidifier::setup(const u8 level) {
 }
 
 String Humidifier::metrics() {
-  return String(metricPrefix) + "humidifier_level " + (getLevel() == 100 ? 1 : 0) + "\n";
+  return String(metricPrefix) + "humidifier_level " + getLevel() + "\n";
 }
 
 // PRIVATE
