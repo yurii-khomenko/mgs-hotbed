@@ -1,8 +1,5 @@
 #include <OTA.h>
-#include <Arduino.h>
 #include <ArduinoOTA.h>
-#include <ESP8266mDNS.h>
-#include <WiFiUdp.h>
 
 OTA::OTA(String systemName, String serviceName) {
 
