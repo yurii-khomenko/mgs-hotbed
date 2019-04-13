@@ -9,7 +9,6 @@
 #include <Gigrostat.h>
 
 ESP8266System::ESP8266System(const Conf conf) {
-
   this->conf = conf;
   metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_"; 
 }
