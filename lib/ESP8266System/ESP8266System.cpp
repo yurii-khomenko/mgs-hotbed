@@ -1,6 +1,7 @@
 #include <ESP8266System.h>
 
 #include <ESP8266WebServer.h>
+
 #include <DhtSensor.h>
 #include <Humidifier.h>
 #include <Gigrostat.h>
@@ -20,14 +21,16 @@ void ESP8266System::setup() {
   setupSerial();
   setupLED();
   setupWifi();
-  ota = new OTA(conf.systemName, conf.serviceName);
+  setupOTA();
   setupWebServer();
 }
 
 void ESP8266System::loop() {
-  ota->loop();
-  server->handleClient();
+
+  if(ota) ota->loop();
+  if(server) server->handleClient();
   if(gigrostat) gigrostat->loop();
+  
   delay(100);
 }
 
@@ -44,19 +47,16 @@ void ESP8266System::setupLED() {
 }
 
 void ESP8266System::setupWifi() {
+  wifi = new WifiDevice(conf.ssid, conf.password, [this] {
+    onLed();
+    Serial.print(".");
+    delay(50);
+    offLed();
+  }); 
+}
 
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(conf.ssid, conf.password);
-  Serial.print("[Wifi] Try to connect, ssid: " + WiFi.SSID() + " ");
-
-  withBlink([] {
-    while (WiFi.status() != WL_CONNECTED) {
-      Serial.print(".");
-      delay(100);
-    }
-  });
-
-  Serial.println(" connected, ip: " + WiFi.localIP().toString());
+void ESP8266System::setupOTA() {
+  ota = new OTA(conf.systemName, conf.serviceName);
 }
 
 void ESP8266System::setupWebServer() {

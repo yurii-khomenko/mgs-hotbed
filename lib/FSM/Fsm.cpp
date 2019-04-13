@@ -53,6 +53,23 @@ void Fsm::trigger(const u8 event) {
     }
 }
 
+void Fsm::loop() {
+
+  if (!initialized) {
+    initialized = true;
+    if (currentState->onEnter != NULL)
+      currentState->onEnter();
+  }
+  
+  if (currentState->onState != NULL)
+    currentState->onState();
+    
+  checkTimedTransitions();
+}
+
+// PRIVATE
+//============================================================================>
+
 void Fsm::checkTimedTransitions() {
 
   for (auto &t : timedTransitions) {
@@ -84,18 +101,4 @@ void Fsm::makeTransition(Transition* t) {
   for (auto &t : timedTransitions) 
     if (t.transition.stateFrom == currentState) 
       t.start = millis();
-}
-
-void Fsm::loop() {
-
-  if (!initialized) {
-    initialized = true;
-    if (currentState->onEnter != NULL)
-      currentState->onEnter();
-  }
-  
-  if (currentState->onState != NULL)
-    currentState->onState();
-    
-  checkTimedTransitions();
 }

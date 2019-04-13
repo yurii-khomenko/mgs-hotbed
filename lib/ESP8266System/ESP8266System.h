@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#include <Wifi.h>
+#include <WifiDevice.h>
 #include <OTA.h>
 
 #include <ESP8266WebServer.h>
@@ -25,7 +25,7 @@ struct Conf {
 class ESP8266System {
   public:
     ESP8266System(Conf conf);
-    Wifi*             wifi;
+    WifiDevice*       wifi;
     OTA*              ota;
     
     ESP8266WebServer* server;
