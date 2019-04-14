@@ -86,9 +86,9 @@ void Gigrostat::loop() {
 
   const float current = dhtSensor->humidity();
   
-  if(isnan(current)) return;
+  if (isnan(current)) return;
 
-  if(current < min)
+  if (current < min)
     fsm.trigger(INCREASE);
   else if (current > max)
     fsm.trigger(DECREASE);
