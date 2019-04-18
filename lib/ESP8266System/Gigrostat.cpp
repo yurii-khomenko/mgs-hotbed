@@ -48,7 +48,7 @@ void Gigrostat::setup(const real32 min, const real32 max) {
 
   fsm.clearTransition();
 
-  fsm.addTransition(&idle, &increase, INCREASE, [this] () {
+  fsm.addTransition(&idle, &increase, INCREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from idle to increase");
     ventilation->setup(0);
     humidifier->setup(100);
