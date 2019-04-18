@@ -8,6 +8,7 @@ public:
     DhtSensor(u8 pin, u8 type, String metricPrefix);
 
     real32 temperature();
+
     real32 humidity();
 
     String metrics();

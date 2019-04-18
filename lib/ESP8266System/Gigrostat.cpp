@@ -34,11 +34,10 @@ State decrease(
 
 Fsm fsm(&idle);
 
-Gigrostat::Gigrostat(DhtSensor *dhtSensor, Humidifier *humidifier, Ventilation *ventilation, String metricPrefix) {
+Gigrostat::Gigrostat(DhtSensor *dhtSensor, Humidifier *humidifier, Ventilation *ventilation) {
     this->dhtSensor = dhtSensor;
     this->humidifier = humidifier;
     this->ventilation = ventilation;
-    this->metricPrefix = metricPrefix;
 }
 
 void Gigrostat::setup(const real32 min, const real32 max) {

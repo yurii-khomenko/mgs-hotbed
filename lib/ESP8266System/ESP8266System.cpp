@@ -70,7 +70,7 @@ void ESP8266System::setupVentilation(const u8 pin) {
 }
 
 void ESP8266System::setupGigrostat(const real32 min, const real32 max) {
-    gigrostat = new Gigrostat(dhtSensor, humidifier, ventilation, metricPrefix);
+    gigrostat = new Gigrostat(dhtSensor, humidifier, ventilation);
     gigrostat->setup(min, max);
 }
 
