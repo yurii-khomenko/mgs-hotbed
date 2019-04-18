@@ -7,19 +7,19 @@
 
 class Gigrostat {
 public:
-    Gigrostat(DhtSensor *dhtSensor, Humidifier *humidifier, Ventilation *ventilation);
+  Gigrostat(DhtSensor *dhtSensor, Humidifier *humidifier, Ventilation *ventilation);
 
-    void setup(real32 min, real32 max);
+  void setup(real32 min, real32 max);
 
-    void loop();
+  void loop();
 
 private:
-    DhtSensor *dhtSensor;
-    Humidifier *humidifier;
-    Ventilation *ventilation;
+  DhtSensor *dhtSensor;
+  Humidifier *humidifier;
+  Ventilation *ventilation;
 
-    real32 min;
-    real32 max;
+  real32 min;
+  real32 max;
 };
 
 #endif

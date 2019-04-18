@@ -100,7 +100,7 @@ void Fsm::makeTransition(Transition *t) {
 
   currentState = t->stateTo;
 
-  for (auto &t : timedTransitions)
-    if (t.transition.stateFrom == currentState)
-      t.start = millis();
+  for (auto &tr : timedTransitions)
+    if (tr.transition.stateFrom == currentState)
+      tr.start = millis();
 }
