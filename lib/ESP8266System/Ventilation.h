@@ -4,12 +4,13 @@
 #include <Arduino.h>
 
 class Ventilation {
-  public:
+public:
     Ventilation(u8 pin, String metricPrefix);
-    u8 level;
+    u8 level = 0;
     void setup(u8 level);
     String metrics();
-  private:
+
+private:
     u8 pin;
     String metricPrefix;
 };

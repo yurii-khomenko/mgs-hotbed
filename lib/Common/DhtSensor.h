@@ -4,13 +4,16 @@
 #include <DHT.h>
 
 class DhtSensor {
-  public:
+public:
     DhtSensor(u8 pin, u8 type, String metricPrefix);
+
     real32 temperature();
     real32 humidity();
+
     String metrics();
-  private:
-    DHT* dht;
+
+private:
+    DHT *dht;
     u8 pin;
     u8 type;
     String metricPrefix;

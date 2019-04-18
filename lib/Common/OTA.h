@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 class OTA {
-  public:
+public:
     OTA(String systemName, String serviceName);
     void loop();
 };

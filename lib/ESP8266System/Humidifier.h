@@ -4,15 +4,19 @@
 #include <Arduino.h>
 
 class Humidifier {
-  public:
+public:
     Humidifier(u8 pin, u8 statePin, String metricPrefix);
+
     void setup(u8 level);
+
     u8 getLevel();
     String metrics();
-  private:
+
+private:
     u8 pin;
     u8 statePin;
     String metricPrefix;
+
     void click();
 };
 

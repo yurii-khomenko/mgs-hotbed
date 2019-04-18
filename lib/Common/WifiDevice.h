@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 class WifiDevice {
-  public:
+public:
     WifiDevice(String ssid, String password, std::function<void(bool)> onProgress);
 };
 

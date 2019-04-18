@@ -6,17 +6,19 @@
 #include <Ventilation.h>
 
 class Gigrostat {
-  public:
-    Gigrostat(DhtSensor* dhtSensor, Humidifier* humidifier, Ventilation* ventilation, String metricPrefix);
+public:
+    Gigrostat(DhtSensor *dhtSensor, Humidifier *humidifier, Ventilation *ventilation, String metricPrefix);
     void setup(real32 min, real32 max);
     void loop();
-  private:
-    DhtSensor* dhtSensor;
-    Humidifier* humidifier;
-    Ventilation* ventilation;
-    String metricPrefix;
-    real32 min;
-    real32 max;
+
+private:
+    DhtSensor*      dhtSensor;
+    Humidifier*     humidifier;
+    Ventilation*    ventilation;
+    String          metricPrefix;
+
+    real32          min;
+    real32          max;
 };
 
 #endif
