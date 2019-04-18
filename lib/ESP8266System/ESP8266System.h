@@ -13,50 +13,57 @@
 
 struct Conf {
 
-    String groupName;
-    String systemName;
-    String serviceName;
+  String groupName;
+  String systemName;
+  String serviceName;
 
-    String ssid;
-    String password;
+  String ssid;
+  String password;
 };
 
 class ESP8266System {
 public:
-    ESP8266System(const Conf &conf);
+  ESP8266System(const Conf &conf);
 
-    WifiDevice*         wifi;
-    OTA*                ota;
-    ESP8266WebServer*   server;
+  WifiDevice *wifi;
+  OTA *ota;
+  ESP8266WebServer *server;
 
-    DhtSensor*          dhtSensor;
-    Humidifier*         humidifier;
-    Ventilation*        ventilation;
+  DhtSensor *dhtSensor;
+  Humidifier *humidifier;
+  Ventilation *ventilation;
 
-    Gigrostat*          gigrostat;
+  Gigrostat *gigrostat;
 
-    void setup();
-    void loop();
+  void setup();
 
-    void setupPin(u8 pin, u8 mode);
-    void setupDHT(u8 pin, u8 type);
-    void setupHumidifier(u8 pin, u8 pinStatus);
-    void setupVentilation(u8 pin);
-    void setupGigrostat(real32 min, real32 max);
+  void loop();
 
-    void onPin(u8 pin);
-    void offPin(u8 pin);
+  void setupPin(u8 pin, u8 mode);
 
-    void onLed();
-    void offLed();
+  void setupDHT(u8 pin, u8 type);
 
-    void withBlink(const std::function<void(void)> &body);
+  void setupHumidifier(u8 pin, u8 pinStatus);
 
-    String metrics();
+  void setupVentilation(u8 pin);
+
+  void setupGigrostat(real32 min, real32 max);
+
+  void onPin(u8 pin);
+
+  void offPin(u8 pin);
+
+  void onLed();
+
+  void offLed();
+
+  void withBlink(const std::function<void(void)> &body);
+
+  String metrics();
 
 private:
-    Conf conf;
-    String metricPrefix;
+  Conf conf;
+  String metricPrefix;
 };
 
 #endif

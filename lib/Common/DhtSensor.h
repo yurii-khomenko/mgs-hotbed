@@ -5,19 +5,19 @@
 
 class DhtSensor {
 public:
-    DhtSensor(u8 pin, u8 type, String metricPrefix);
+  DhtSensor(u8 pin, u8 type, String metricPrefix);
 
-    real32 temperature();
+  real32 temperature();
 
-    real32 humidity();
+  real32 humidity();
 
-    String metrics();
+  String metrics();
 
 private:
-    DHT *dht;
-    u8 pin;
-    u8 type;
-    String metricPrefix;
+  DHT *dht;
+  u8 pin;
+  u8 type;
+  String metricPrefix;
 };
 
 #endif

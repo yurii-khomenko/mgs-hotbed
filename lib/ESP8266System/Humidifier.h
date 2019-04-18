@@ -5,19 +5,20 @@
 
 class Humidifier {
 public:
-    Humidifier(u8 pin, u8 statePin, String metricPrefix);
+  Humidifier(u8 pin, u8 statePin, String metricPrefix);
 
-    void setup(u8 level);
+  void setup(u8 level);
 
-    u8 getLevel();
-    String metrics();
+  u8 getLevel();
+
+  String metrics();
 
 private:
-    u8 pin;
-    u8 statePin;
-    String metricPrefix;
+  u8 pin;
+  u8 statePin;
+  String metricPrefix;
 
-    void click();
+  void click();
 };
 
 #endif

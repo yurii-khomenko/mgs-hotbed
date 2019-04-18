@@ -5,9 +5,9 @@
 
 class OTA {
 public:
-    OTA(String systemName, String serviceName);
+  OTA(String systemName, String serviceName);
 
-    void loop();
+  void loop();
 };
 
 #endif

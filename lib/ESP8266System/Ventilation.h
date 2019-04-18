@@ -5,14 +5,17 @@
 
 class Ventilation {
 public:
-    Ventilation(u8 pin, String metricPrefix);
-    u8 level = 0;
-    void setup(u8 level);
-    String metrics();
+  Ventilation(u8 pin, String metricPrefix);
+
+  u8 level = 0;
+
+  void setup(u8 level);
+
+  String metrics();
 
 private:
-    u8 pin;
-    String metricPrefix;
+  u8 pin;
+  String metricPrefix;
 };
 
 #endif
