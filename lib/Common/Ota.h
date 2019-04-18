@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-class OTA {
+class Ota {
 public:
-  OTA(String systemName, String serviceName);
+  Ota(String systemName, String serviceName);
 
   void loop();
 };

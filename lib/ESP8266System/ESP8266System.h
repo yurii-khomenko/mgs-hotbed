@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 #include <WifiDevice.h>
-#include <OTA.h>
+#include <Ota.h>
 #include <ESP8266WebServer.h>
 
 #include <DhtSensor.h>
@@ -21,12 +21,12 @@ struct Conf {
   String password;
 };
 
-class ESP8266System {
+class Esp8266System {
 public:
-  ESP8266System(const Conf &conf);
+  Esp8266System(const Conf &conf);
 
   WifiDevice *wifi;
-  OTA *ota;
+  Ota *ota;
   ESP8266WebServer *server;
 
   DhtSensor *dhtSensor;

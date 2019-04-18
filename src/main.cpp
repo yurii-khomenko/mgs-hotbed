@@ -1,6 +1,6 @@
-#include <ESP8266System.h>
+#include <Esp8266System.h>
 
-ESP8266System sys({
+Esp8266System sys({
                       "greenhouse", "mgs", "hotbed",
                       "INSIDIUS 2.4GHz", "scalable"
                   });

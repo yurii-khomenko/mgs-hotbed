@@ -1,7 +1,7 @@
-#include <OTA.h>
+#include <Ota.h>
 #include <ArduinoOTA.h>
 
-OTA::OTA(String systemName, String serviceName) {
+Ota::Ota(String systemName, String serviceName) {
 
   const String hostname = systemName + "-" + serviceName;
 
@@ -33,6 +33,6 @@ OTA::OTA(String systemName, String serviceName) {
   Serial.println("ready, hostname: " + hostname);
 }
 
-void OTA::loop() {
+void Ota::loop() {
   ArduinoOTA.handle();
 }
