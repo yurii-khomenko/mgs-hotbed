@@ -1,3 +1,5 @@
+#include <utility>
+
 #include <WiFiClient.h>
 #include <MqttClient.h>
 
@@ -13,7 +15,7 @@ MqttClient::MqttClient(
   this->user = password;
 
   client.setServer(host.c_str(), port);
-  client.setCallback(onMessage);
+  client.setCallback(std::move(onMessage));
 
   while (!client.connected()) {
 
@@ -44,12 +46,6 @@ void MqttClient::loop() {
     }
   } else
     client.loop();
-
-  delay(200);
-  client.publish("greenhouse/mgs/hotbed-test/metrics",
-                 (String("greenhouse/mgs/hotbed-test temperature=") + String(latency)).c_str());
-
-  delay(200);
 }
 
 // PRIVATE

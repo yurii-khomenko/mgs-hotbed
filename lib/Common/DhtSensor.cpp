@@ -27,6 +27,10 @@ String DhtSensor::metrics() {
   const real32 h = humidity();
 
   return String("") +
-         (!isnan(t) ? (metricPrefix + "temperature_level " + t + "\n") : "") +
-         (!isnan(h) ? (metricPrefix + "humidity_level " + h + "\n") : "");
+         (!isnan(t) ? (String("dhtSensor/temperature=") + t + ",") : "") +
+         (!isnan(h) ? (String("dhtSensor/humidity=")    + h + ",") : "");
+
+//  return String("") + //TODO group/system/service/object/field
+//         (!isnan(t) ? (metricPrefix + "temperature_level " + t + "\n") : "") +
+//         (!isnan(h) ? (metricPrefix + "humidity_level " + h + "\n") : "");
 }

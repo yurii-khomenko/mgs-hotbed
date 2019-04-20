@@ -11,7 +11,6 @@ private:
   String user;
   String password;
   long lastReconnectAttempt = 0;
-  long latency = 250;
   bool reconnect();
 };
 
