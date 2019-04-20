@@ -1,6 +1,6 @@
 #include <Esp8266System.h>
-
 //#include <PubSubClient.h>
+#include "../.piolibdeps/PubSubClient_ID89/src/PubSubClient.h"
 
 Esp8266System sys({
                       "greenhouse", "mgs", "hotbed-test",
@@ -13,62 +13,98 @@ const u8 HUMIDIFIER_STATE_PIN = D5;
 const u8 VENTILATION_PIN = D6;
 
 
-//const char* mqttServer = "m11.cloudmqtt.com";
-//const int mqttPort = 12948;
-//const char* mqttUser = "YourMqttUser";
-//const char* mqttPassword = "YourMqttUserPassword";
+const char* mqttServer = "m24.cloudmqtt.com";
+const int mqttPort = 14338;
+const char* mqttUser = "clctfcra";
+const char* mqttPassword = "4zqsFa4wUppB";
+long lastReconnectAttempt = 0;
 
+int latency = 250;
 
+WiFiClient espClient;
+PubSubClient client(espClient);
 
-//PubSubClient *client;
-//
-//void callback(char* topic, byte* payload, u32 length) {
-//
-//  Serial.print("Message arrived in topic: ");
-//  Serial.println(topic);
-//
-//  Serial.print("Message:");
-//  for (u32 i = 0; i < length; i++)
-//    Serial.print((char)payload[i]);
-//
-//  Serial.println();
-//  Serial.println("-----------------------");
-//}
+void callback(char* topic, byte* payload, u32 length) {
+
+  Serial.print("Message arrived in topic: ");
+  Serial.println(topic);
+
+  Serial.print("Message:");
+  for (u32 i = 0; i < length; i++)
+    Serial.print((char)payload[i]);
+
+  Serial.println();
+  Serial.println("-----------------------");
+
+  latency = (payload[0] - 48) * 100;
+
+  Serial.print("set latency to: ");
+  Serial.println(latency);
+}
 
 void setup(void) {
   sys.setup();
-  sys.setupDHT(DHT_SENSOR_PIN, DHT22);
-  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
-  sys.setupVentilation(VENTILATION_PIN);
-  sys.setupGigrostat(96, 99);
+//  sys.setupDHT(DHT_SENSOR_PIN, DHT22);
+//  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
+//  sys.setupVentilation(VENTILATION_PIN);
+//  sys.setupGigrostat(96, 99);
 
-//  WiFiClient espClient;
-//  client = new PubSubClient(espClient);
-//
-//  client->setServer(mqttServer, mqttPort);
-//  client->setCallback(callback);
-//
-//  while (!client->connected()) {
-//    Serial.println("Connecting to MQTT...");
-//
-//    if (client->connect("ESP8266Client", mqttUser, mqttPassword )) {
-//
-//      Serial.println("connected");
-//
-//    } else {
-//
-//      Serial.print("failed with state ");
-//      Serial.print(client->state());
-//      delay(2000);
-//
-//    }
-//  }
-//
-//  client->publish("esp/test", "Hello from ESP8266");
-//  client->subscribe("esp/test");
+
+
+  client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
+
+  while (!client.connected()) {
+    Serial.println("Connecting to MQTT...");
+
+    if (client.connect("ESP8266Client", mqttUser, mqttPassword)) {
+
+      Serial.println("connected");
+
+    } else {
+
+      Serial.print("failed with state ");
+      Serial.print(client.state());
+      delay(2000);
+
+    }
+  }
+
+//  client.publish("greenhouse/mgs/hotbed-test/logs", "Hello from ESP8266");
+
+  client.subscribe("greenhouse/mgs/hotbed-test/commands");
+
+}
+
+boolean reconnect() {
+  if (client.connect(mqttUser))
+    client.subscribe("greenhouse/mgs/hotbed-test/commands");
+  return client.connected();
 }
 
 void loop(void) {
   sys.loop();
-//  client->loop();
+
+  if (!client.connected()) {
+    long now = millis();
+    if (now - lastReconnectAttempt > 5000) {
+      lastReconnectAttempt = now;
+      // Attempt to reconnect
+      if (reconnect()) {
+        lastReconnectAttempt = 0;
+      }
+    }
+  } else {
+    // Client connected
+
+    client.loop();
+  }
+
+  sys.onLed();
+  delay(latency);
+  sys.offLed();
+  client.publish("greenhouse/mgs/hotbed-test/metrics", (String("greenhouse/mgs/hotbed-test temperature=") + String(latency)).c_str());
+
+//  client.publish("greenhouse/mgs/hotbed-test/logs", String(latency).c_str());
+  delay(latency);
 }
