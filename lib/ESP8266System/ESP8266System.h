@@ -5,6 +5,7 @@
 
 #include <WifiDevice.h>
 #include <Ota.h>
+#include <MqttClient.h>
 #include <ESP8266WebServer.h>
 
 #include <DhtSensor.h>
@@ -27,6 +28,7 @@ public:
 
   WifiDevice *wifi;
   Ota *ota;
+  MqttClient *mqttClient;
   ESP8266WebServer *server;
 
   DhtSensor *dhtSensor;

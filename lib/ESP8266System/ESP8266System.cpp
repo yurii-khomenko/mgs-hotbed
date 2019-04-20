@@ -31,6 +31,27 @@ void Esp8266System::setup() {
 
   ota = new Ota(conf.systemName, conf.serviceName);
 
+  mqttClient = new MqttClient(
+      "m24.cloudmqtt.com", 14338,
+      "clctfcra", "4zqsFa4wUppB",
+      [this] (char* topic, u8* payload, u32 length) {
+
+    Serial.print("[MqttClient] Message arrived in topic: ");
+    Serial.println(topic);
+
+    Serial.print("[MqttClient] Message:");
+    for (u32 i = 0; i < length; i++)
+      Serial.print((char)payload[i]);
+
+    Serial.println();
+    Serial.println("-----------------------");
+
+    const u16 latency = (payload[0] - 48) * 100;
+
+    Serial.print("[Mqtt] set latency to: ");
+    Serial.println(latency);
+  });
+
   server = new ESP8266WebServer();
   server->on("/metrics", [this] {
     withBlink([&] {
@@ -44,6 +65,7 @@ void Esp8266System::setup() {
 void Esp8266System::loop() {
 
   if (ota) ota->loop();
+  if (mqttClient) mqttClient->loop();
   if (server) server->handleClient();
   if (gigrostat) gigrostat->loop();
 

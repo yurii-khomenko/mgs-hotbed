@@ -5,7 +5,7 @@
 
 class MqttClient {
 public:
-  MqttClient(String host, u16 port, String user, String password);
+  MqttClient(String host, u16 port, String user, String password, std::function<void(char*, u8*, u32)> onMessage);
   void loop();
 private:
   String user;
@@ -13,7 +13,6 @@ private:
   long lastReconnectAttempt = 0;
   long latency = 250;
   bool reconnect();
-//  void callback(char* topic, byte* payload, u32 length);
 };
 
 #endif
