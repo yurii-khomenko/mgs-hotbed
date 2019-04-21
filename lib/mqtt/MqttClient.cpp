@@ -1,7 +1,5 @@
-#include <utility>
-
-#include <WiFiClient.h>
 #include "MqttClient.h"
+#include <WiFiClient.h>
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);

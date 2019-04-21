@@ -1,7 +1,7 @@
 #ifndef MqttClient_h
 #define MqttClient_h
 
-#include "PubSubClient.h"
+#include "../../.piolibdeps/PubSubClient_ID89/src/PubSubClient.h"
 
 class MqttClient {
 public:
