@@ -39,7 +39,7 @@ void System::setup() {
     Serial.print("[MqttClient] Message arrived in topic: "); Serial.print(topic);
 
     payload[length] = 0;
-    const String message = String(((char*) payload)).);
+    const String message = String((char*) payload);
     Serial.println(", message:" + message);
 
 //    Serial.println(String(metricPrefix) + " " + dhtSensor->metrics());
