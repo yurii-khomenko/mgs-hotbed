@@ -1,19 +1,13 @@
 #include <Esp8266System.h>
 
-#include <DhtSensor.h>
-#include <Humidifier.h>
+#include "DhtSensor.h"
+#include "MqttClient.h"
+#include "Humidifier.h"
 #include <Gigrostat.h>
 
 Esp8266System::Esp8266System(const Conf &conf) {
   this->conf = conf;
-  metricPrefix = conf.groupName + "_" + conf.systemName + "_" + conf.serviceName + "_";
-}
-
-String Esp8266System::metrics() {
-  return
-      (dhtSensor ? dhtSensor->metrics() : "") +
-      (humidifier ? humidifier->metrics() : "") +
-      (ventilation ? ventilation->metrics() : "");
+  metricPrefix = conf.groupName + "/" + conf.systemName + "/" + conf.serviceName;
 }
 
 void Esp8266System::setup() {
@@ -31,25 +25,32 @@ void Esp8266System::setup() {
 
   ota = new Ota(conf.systemName, conf.serviceName);
 
+//  delay(200);
+//  client.publish("greenhouse/mgs/hotbed-test/metrics",
+//                 (String("greenhouse/mgs/hotbed-test temperature=") + String(latency)).c_str());
+//
+//  delay(200);
+
+//TODO Realise metrics
   mqttClient = new MqttClient(
       "m24.cloudmqtt.com", 14338,
       "clctfcra", "4zqsFa4wUppB",
       [this] (char* topic, u8* payload, u32 length) {
 
     Serial.print("[MqttClient] Message arrived in topic: ");
-    Serial.println(topic);
+    Serial.print(topic);
 
-    Serial.print("[MqttClient] Message:");
+    Serial.print(", message:");
     for (u32 i = 0; i < length; i++)
       Serial.print((char)payload[i]);
 
     Serial.println();
-    Serial.println("-----------------------");
 
-    const u16 latency = (payload[0] - 48) * 100;
+    const u16 command = (payload[0] - 48) * 100;
 
-    Serial.print("[Mqtt] set latency to: ");
-    Serial.println(latency);
+    Serial.println(String(metricPrefix) + " " + dhtSensor->metrics());
+
+    //TODO NTP Server
   });
 
   server = new ESP8266WebServer();
@@ -72,8 +73,15 @@ void Esp8266System::loop() {
   delay(100);
 }
 
-// PRIVATE
+//
 //============================================================================>
+
+String Esp8266System::metrics() {
+  return
+//      (dhtSensor ? dhtSensor->metrics() : "") +
+      (humidifier ? humidifier->metrics() : "") +
+      (ventilation ? ventilation->metrics() : "");
+}
 
 void Esp8266System::setupPin(const u8 pin, const u8 mode) {
   pinMode(pin, mode);

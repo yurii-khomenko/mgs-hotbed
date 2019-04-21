@@ -9,8 +9,7 @@ Fsm::Fsm(State *initialState)
     : initialized(false),
       currentState(initialState) {}
 
-void
-Fsm::addTransition(State *stateFrom, State *stateTo, const u8 event, const std::function<void(void)> onTransition) {
+void Fsm::addTransition(State *stateFrom, State *stateTo, const u8 event, const std::function<void(void)> onTransition) {
 
   if (stateFrom == NULL || stateTo == NULL) return;
 
@@ -22,8 +21,7 @@ Fsm::addTransition(State *stateFrom, State *stateTo, const u8 event, const std::
                         });
 }
 
-void Fsm::addTimedTransition(State *stateFrom, State *stateTo, const u64 interval,
-                             const std::function<void(void)> onTransition) {
+void Fsm::addTimedTransition(State *stateFrom, State *stateTo, const u64 interval, const std::function<void(void)> onTransition) {
 
   if (stateFrom == NULL || stateTo == NULL) return;
 

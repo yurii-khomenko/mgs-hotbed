@@ -1,5 +1,4 @@
 #include <Esp8266System.h>
-#include <PubSubClient.h>
 
 Esp8266System sys({
                       "greenhouse", "mgs", "hotbed-test",
