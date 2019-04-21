@@ -1,7 +1,7 @@
 #include "System.h"
 
 #include "actuators/humidifier/Humidifier.h"
-#include "control/gigrostat/Gigrostat.h"
+#include "controls/gigrostat/Gigrostat.h"
 
 System::System(const Conf &conf) {
   this->conf = conf;

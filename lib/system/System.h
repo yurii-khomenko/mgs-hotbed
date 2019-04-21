@@ -3,13 +3,13 @@
 
 #include <Arduino.h>
 
-#include "infra/wifi/WifiDevice.h"
-#include "infra/ota/Ota.h"
-#include "infra/mqtt/MqttClient.h"
+#include "infras/wifi/WifiDevice.h"
+#include "infras/ota/Ota.h"
+#include "infras/mqtt/MqttClient.h"
 
 #include "sensors/dht/DhtSensor.h"
 #include "actuators/humidifier/Humidifier.h"
-#include "control/gigrostat/Gigrostat.h"
+#include "controls/gigrostat/Gigrostat.h"
 
 struct Conf {
 
