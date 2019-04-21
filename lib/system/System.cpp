@@ -59,9 +59,6 @@ void System::loop() {
   delay(100);
 }
 
-//
-//============================================================================>
-
 void System::setupPin(const u8 pin, const u8 mode) {
   pinMode(pin, mode);
 }
