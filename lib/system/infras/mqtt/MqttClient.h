@@ -5,16 +5,21 @@
 
 class MqttClient {
 public:
-  MqttClient(String host, u16 port, String user, String password, std::function<void(char*, u8*, u32)> onMessage);
+  MqttClient(
+      const String& host, u16 port,
+      const String& user, const String& password,
+      const String& queuePrefix,
+      std::function<void(char*, u8*, u32)> onMessage);
 
-  void publish(String topic, String message);
+  void publish(const String& topic, const String& message);
 
   void loop();
 
 private:
   String user;
   String password;
-  long lastReconnectAttempt = 0;
+  String queuePrefix;
+  u64 lastReconnectAttempt = 0;
   bool reconnect();
 };
 

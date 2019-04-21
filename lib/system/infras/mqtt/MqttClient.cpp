@@ -5,12 +5,14 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 
 MqttClient::MqttClient(
-    String host, u16 port,
-    String user, String password,
+    const String& host, u16 port,
+    const String& user, const String& password,
+    const String& queuePrefix,
     std::function<void(char*, u8*, u32)> onMessage) {
 
   this->user = user;
-  this->user = password;
+  this->password = password;
+  this->queuePrefix = queuePrefix;
 
   client.setServer(host.c_str(), port);
   client.setCallback(std::move(onMessage));
@@ -19,7 +21,7 @@ MqttClient::MqttClient(
 
     Serial.println("[MqttClient] Connecting to MQTT...");
 
-    if (client.connect("ESP8266Client", user.c_str(), password.c_str()))
+    if (reconnect())
       Serial.println("[MqttClient] Connected");
     else {
       Serial.print("[MqttClient] failed with state ");
@@ -27,13 +29,9 @@ MqttClient::MqttClient(
       delay(500);
     }
   }
-
-//  client.publish("greenhouse/mgs/hotbed-test/logs", "Start ");
-
-  client.subscribe("greenhouse/mgs/hotbed-test/commands");
 }
 
-void MqttClient::publish(String topic, String message) {
+void MqttClient::publish(const String& topic, const String& message) {
   client.publish(topic.c_str(), message.c_str());
 }
 
@@ -56,7 +54,7 @@ void MqttClient::loop() {
 bool MqttClient::reconnect() {
 
   if (!client.connected() && client.connect("ESP8266Client", user.c_str(), password.c_str()))
-    client.subscribe("greenhouse/mgs/hotbed-test/commands");
+    client.subscribe((String(queuePrefix) + "/commands").c_str());
 
   return client.connected();
 }

@@ -6,7 +6,7 @@
 
 System::System(const Conf &conf) {
   this->conf = conf;
-  metricPrefix = conf.group + "/" + conf.system + "/" + conf.service;
+  prefix = conf.group + "/" + conf.system + "/" + conf.service;
 }
 
 void System::setup() {
@@ -35,6 +35,7 @@ void System::setup() {
   mqttClient = new MqttClient(
       "m24.cloudmqtt.com", 14338,
       "clctfcra", "4zqsFa4wUppB",
+      prefix,
       [this] (char* topic, u8* payload, u32 length) {
 
     Serial.print("[MqttClient] Message arrived in topic: "); Serial.print(topic);
@@ -45,9 +46,9 @@ void System::setup() {
 
     //TODO right handle if metrics are empty
 
-    Serial.println(String(metricPrefix)  + " " + dhtSensor->metrics());
-//    mqttClient->publish(String(metricPrefix) + "/metrics", String(metricPrefix)  + " " + dhtSensor->metrics());
-    mqttClient->publish(String(metricPrefix) + "/metrics", dhtSensor->metrics());
+    Serial.println(String(prefix)  + " " + dhtSensor->metrics());
+//    mqttClient->publish(String(prefix) + "/metrics", String(prefix)  + " " + dhtSensor->metrics());
+    mqttClient->publish(String(prefix) + "/metrics", dhtSensor->metrics());
 
 //    Serial.println(message.toInt());
 //    mqttClient.

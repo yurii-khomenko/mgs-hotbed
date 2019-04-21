@@ -10,7 +10,10 @@ public:
   void loop();
 
 private:
-
+  MqttClient *client;
+  u16 period;
+  std::function<void(void)> body;
+  u64 lastReconnectAttempt = 0;
 };
 
 #endif

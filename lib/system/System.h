@@ -65,7 +65,7 @@ public:
 
 private:
   Conf conf;
-  String metricPrefix;
+  String prefix;
 };
 
 #endif
