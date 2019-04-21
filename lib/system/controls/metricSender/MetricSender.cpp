@@ -16,6 +16,7 @@ void MetricSender::loop() {
   const long now = millis();
 
   if(now - lastSentTime >= period) {
+
     lastSentTime = now;
 
     for (auto &m : metrics())
