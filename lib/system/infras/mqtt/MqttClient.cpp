@@ -38,7 +38,7 @@ void MqttClient::publish(const String& topic, const String& message) {
 void MqttClient::loop() {
 
   if (!client.connected()) {
-    long now = millis();
+    const long now = millis();
     if (now - lastReconnectAttempt > 2000) {
       lastReconnectAttempt = now;
       if (reconnect())
