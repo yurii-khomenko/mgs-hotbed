@@ -5,7 +5,7 @@
 
 class MetricSender {
 public:
-  MetricSender(MqttClient *client, u16 period, const String& queuePrefix, std::function<std::vector<String>(void)> metrics);
+  MetricSender(MqttClient *client, u16 period, const String& queuePrefix, const std::function<std::vector<String>(void)> &metrics);
 
   void loop();
 

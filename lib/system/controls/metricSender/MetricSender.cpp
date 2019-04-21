@@ -2,7 +2,8 @@
 
 MetricSender::MetricSender(
     MqttClient *client, u16 period,
-    const String& queuePrefix, std::function<std::vector<String>(void)> metrics) {
+    const String& queuePrefix,
+    const std::function<std::vector<String>(void)> &metrics) {
 
   this->client = client;
   this->period = period;
