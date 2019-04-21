@@ -6,7 +6,6 @@
 
 System::System(const Conf &conf) {
   this->conf = conf;
-  prefix = conf.group + "/" + conf.system + "/" + conf.service;
 }
 
 void System::setup() {
@@ -24,59 +23,44 @@ void System::setup() {
 
   ota = new Ota(conf.system, conf.service);
 
-//  delay(200);
-//  client.publish("greenhouse/mgs/hotbed-test/metrics",
-//                 (String("greenhouse/mgs/hotbed-test temperature=") + String(latency)).c_str());
-//
-//  delay(200);
+  const String queuePrefix = conf.group + "/" + conf.system + "/" + conf.service;
 
-//TODO NTP Server
-//TODO Realise metrics
   mqttClient = new MqttClient(
-      "m24.cloudmqtt.com", 14338,
-      "clctfcra", "4zqsFa4wUppB",
-      prefix,
-      [this] (char* topic, u8* payload, u32 length) {
+      "m24.cloudmqtt.com", 14338, "clctfcra", "4zqsFa4wUppB",
+      queuePrefix,
+      [&] (char* topic, u8* payload, u32 length) {
 
     Serial.print("[MqttClient] Message arrived in topic: "); Serial.print(topic);
 
     payload[length] = 0;
     const String message = String((char*) payload);
     Serial.println(", message:" + message);
-
-    //TODO right handle if metrics are empty
-
-    Serial.println(String(prefix)  + " " + dhtSensor->metrics());
-//    mqttClient->publish(String(prefix) + "/metrics", String(prefix)  + " " + dhtSensor->metrics());
-    mqttClient->publish(String(prefix) + "/metrics", dhtSensor->metrics());
-
-//    Serial.println(message.toInt());
-//    mqttClient.
   });
 
-  metricSender = new MetricSender(mqttClient, 2000, [] {
+  metricSender = new MetricSender(mqttClient, 2000, queuePrefix, [this] {
 
+    std::vector<String> metrics;
+
+    if (dhtSensor) metrics.push_back(dhtSensor->metrics());
+    if (humidifier) metrics.push_back(humidifier->metrics());
+    if (ventilation) metrics.push_back(ventilation->metrics());
+
+    return metrics;
   });
 }
 
 void System::loop() {
 
-  if (ota) ota->loop();
-  if (mqttClient) mqttClient->loop();
-  if (gigrostat) gigrostat->loop();
+  if (ota)          ota->loop();
+  if (mqttClient)   mqttClient->loop();
+  if (metricSender) metricSender->loop();
+  if (gigrostat)    gigrostat->loop();
 
   delay(100);
 }
 
 //
 //============================================================================>
-
-String System::metrics() {
-  return
-      (dhtSensor ? dhtSensor->metrics() : "") +
-      (humidifier ? humidifier->metrics() : "") +
-      (ventilation ? ventilation->metrics() : "");
-}
 
 void System::setupPin(const u8 pin, const u8 mode) {
   pinMode(pin, mode);

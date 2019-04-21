@@ -65,7 +65,6 @@ public:
 
 private:
   Conf conf;
-  String prefix;
 };
 
 #endif

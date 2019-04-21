@@ -5,15 +5,16 @@
 
 class MetricSender {
 public:
-  MetricSender(MqttClient *client, u16 period, std::function<void(void)> body);
+  MetricSender(MqttClient *client, u16 period, const String& queuePrefix, std::function<std::vector<String>(void)> metrics);
 
   void loop();
 
 private:
   MqttClient *client;
   u16 period;
-  std::function<void(void)> body;
-  u64 lastReconnectAttempt = 0;
+  String queuePrefix;
+  std::function<std::vector<String>(void)> metrics;
+  u64 lastSentTime = 0;
 };
 
 #endif

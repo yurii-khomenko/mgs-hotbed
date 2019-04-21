@@ -1,20 +1,23 @@
 #include "MetricSender.h"
 
-MetricSender::MetricSender(MqttClient *client, u16 period, std::function<void(void)> body) {
+MetricSender::MetricSender(
+    MqttClient *client, u16 period,
+    const String& queuePrefix, std::function<std::vector<String>(void)> metrics) {
+
   this->client = client;
   this->period = period;
-  this->body = body;
+  this->queuePrefix = queuePrefix;
+  this->metrics = metrics;
 }
 
 void MetricSender::loop() {
 
-//    long now = millis();
-//    if (now - lastReconnectAttempt > 2000) {
-//      lastReconnectAttempt = now;
-//      if (reconnect())
-//        lastReconnectAttempt = 0;
-//    }
-//  } else
-//    client.loop();
-}
+  const long now = millis();
 
+  if(now - lastSentTime >= period) {
+    lastSentTime = now;
+
+    for (auto &m : metrics())
+      client->publish(queuePrefix + "/metrics", m);
+  }
+}
