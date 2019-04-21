@@ -13,9 +13,9 @@
 
 struct Conf {
 
-  String groupName;
-  String systemName;
-  String serviceName;
+  String group;
+  String system;
+  String service;
 
   String ssid;
   String password;

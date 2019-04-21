@@ -1,8 +1,7 @@
 #include "Ventilation.h"
 
-Ventilation::Ventilation(u8 pin, String metricPrefix) {
+Ventilation::Ventilation(u8 pin) {
   this->pin = pin;
-  this->metricPrefix = metricPrefix;
   pinMode(pin, OUTPUT);
 }
 
@@ -17,5 +16,5 @@ void Ventilation::setup(u8 level) {
 }
 
 String Ventilation::metrics() {
-  return String(metricPrefix) + "ventilation_level " + level + "\n";
+  return String("actuators/ventilation level=") + level;
 }

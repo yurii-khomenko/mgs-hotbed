@@ -5,7 +5,7 @@
 
 class Ventilation {
 public:
-  Ventilation(u8 pin, String metricPrefix);
+  Ventilation(u8 pin);
 
   u8 level = 0;
 
@@ -15,7 +15,6 @@ public:
 
 private:
   u8 pin;
-  String metricPrefix;
 };
 
 #endif

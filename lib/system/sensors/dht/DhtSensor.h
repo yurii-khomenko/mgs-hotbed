@@ -5,7 +5,7 @@
 
 class DhtSensor {
 public:
-  DhtSensor(u8 pin, u8 type, String metricPrefix);
+  DhtSensor(u8 pin, u8 type);
 
   real32 temperature();
 
@@ -17,7 +17,6 @@ private:
   DHT *dht;
   u8 pin;
   u8 type;
-  String metricPrefix;
 };
 
 #endif

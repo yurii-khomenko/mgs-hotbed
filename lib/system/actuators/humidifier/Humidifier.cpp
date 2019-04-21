@@ -1,9 +1,8 @@
 #include "Humidifier.h"
 
-Humidifier::Humidifier(u8 pin, u8 statePin, String metricPrefix) {
+Humidifier::Humidifier(u8 pin, u8 statePin) {
   this->pin = pin;
   this->statePin = statePin;
-  this->metricPrefix = metricPrefix;
   pinMode(pin, OUTPUT_OPEN_DRAIN);
   pinMode(statePin, INPUT);
 }
@@ -18,7 +17,7 @@ void Humidifier::setup(const u8 level) {
 }
 
 String Humidifier::metrics() {
-  return String(metricPrefix) + "humidifier_level " + getLevel() + "\n";
+  return String("actuators/humidifier level=") + getLevel();
 }
 
 // PRIVATE

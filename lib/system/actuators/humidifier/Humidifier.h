@@ -5,7 +5,7 @@
 
 class Humidifier {
 public:
-  Humidifier(u8 pin, u8 statePin, String metricPrefix);
+  Humidifier(u8 pin, u8 statePin);
 
   void setup(u8 level);
 
@@ -16,7 +16,6 @@ public:
 private:
   u8 pin;
   u8 statePin;
-  String metricPrefix;
 
   void click();
 };

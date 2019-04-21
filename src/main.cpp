@@ -1,9 +1,9 @@
 #include "../lib/system/System.h"
 
 System sys({
-                      "greenhouse", "mgs", "hotbed-test",
-                      "INSIDIUS 2.4GHz", "scalable"
-                  });
+               "greenhouse", "mgs", "hotbed-test",
+               "INSIDIUS 2.4GHz", "scalable"
+           });
 
 const u8 DHT_SENSOR_PIN = D1;
 const u8 HUMIDIFIER_PIN = D4;
@@ -16,7 +16,6 @@ void setup(void) {
   sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
   sys.setupVentilation(VENTILATION_PIN);
   sys.setupGigrostat(96, 99);
-
 }
 
 void loop(void) {

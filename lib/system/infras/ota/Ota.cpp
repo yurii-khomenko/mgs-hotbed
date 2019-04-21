@@ -1,9 +1,9 @@
 #include "Ota.h"
 #include <ArduinoOTA.h>
 
-Ota::Ota(String systemName, String serviceName) {
+Ota::Ota(String system, String service) {
 
-  const String hostname = systemName + "-" + serviceName;
+  const String hostname = system + "-" + service;
 
   Serial.print("[OTA] Start server ... ");
   ArduinoOTA.setHostname(const_cast<char *> (hostname.c_str()));

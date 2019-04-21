@@ -5,7 +5,7 @@
 
 System::System(const Conf &conf) {
   this->conf = conf;
-  metricPrefix = conf.groupName + "/" + conf.systemName + "/" + conf.serviceName;
+  metricPrefix = conf.group + "/" + conf.system + "/" + conf.service;
 }
 
 void System::setup() {
@@ -21,7 +21,7 @@ void System::setup() {
     else offLed();
   });
 
-  ota = new Ota(conf.systemName, conf.serviceName);
+  ota = new Ota(conf.system, conf.service);
 
 //  delay(200);
 //  client.publish("greenhouse/mgs/hotbed-test/metrics",
@@ -42,10 +42,14 @@ void System::setup() {
     const String message = String((char*) payload);
     Serial.println(", message:" + message);
 
-//    Serial.println(String(metricPrefix) + " " + dhtSensor->metrics());
-    Serial.println(message.toInt());
+    //TODO right handle if metrics are empty
 
+    Serial.println(String(metricPrefix)  + " " + dhtSensor->metrics());
+//    mqttClient->publish(String(metricPrefix) + "/metrics", String(metricPrefix)  + " " + dhtSensor->metrics());
+    mqttClient->publish(String(metricPrefix) + "/metrics", dhtSensor->metrics());
 
+//    Serial.println(message.toInt());
+//    mqttClient.
   });
 }
 
@@ -73,15 +77,15 @@ void System::setupPin(const u8 pin, const u8 mode) {
 }
 
 void System::setupDHT(const u8 pin, const u8 type) {
-  dhtSensor = new DhtSensor(pin, type, metricPrefix);
+  dhtSensor = new DhtSensor(pin, type);
 }
 
 void System::setupHumidifier(const u8 pin, const u8 statePin) {
-  humidifier = new Humidifier(pin, statePin, metricPrefix);
+  humidifier = new Humidifier(pin, statePin);
 }
 
 void System::setupVentilation(const u8 pin) {
-  ventilation = new Ventilation(pin, metricPrefix);
+  ventilation = new Ventilation(pin);
 }
 
 void System::setupGigrostat(const real32 min, const real32 max) {

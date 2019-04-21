@@ -33,6 +33,10 @@ MqttClient::MqttClient(
   client.subscribe("greenhouse/mgs/hotbed-test/commands");
 }
 
+void MqttClient::publish(String topic, String message) {
+  client.publish(topic.c_str(), message.c_str());
+}
+
 void MqttClient::loop() {
 
   if (!client.connected()) {

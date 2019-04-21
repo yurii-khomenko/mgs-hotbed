@@ -1,10 +1,9 @@
 #include "DhtSensor.h"
 #include "DHT.h"
 
-DhtSensor::DhtSensor(u8 pin, u8 type, String metricPrefix) {
+DhtSensor::DhtSensor(u8 pin, u8 type) {
   this->pin = pin;
   this->type = type;
-  this->metricPrefix = metricPrefix;
   dht = new DHT(pin, type);
   dht->begin();
 }
@@ -26,11 +25,7 @@ String DhtSensor::metrics() {
   const real32 t = temperature();
   const real32 h = humidity();
 
-  return String("") +
-         (!isnan(t) ? (String("dhtSensor/temperature=") + t + ",") : "") +
-         (!isnan(h) ? (String("dhtSensor/humidity=")    + h + ",") : "");
-
-//  return String("") + //TODO group/system/service/object/field
-//         (!isnan(t) ? (metricPrefix + "temperature_level " + t + "\n") : "") +
-//         (!isnan(h) ? (metricPrefix + "humidity_level " + h + "\n") : "");
+  return String("sensors/dht ") +
+         (!isnan(t) ? (String("temperature=") + t + ",") : "") +
+         (!isnan(h) ? (String("humidity=")    + h      ) : "");
 }
