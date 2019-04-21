@@ -1,6 +1,6 @@
-#include <Esp8266System.h>
+#include "../lib/system/System.h"
 
-Esp8266System sys({
+System sys({
                       "greenhouse", "mgs", "hotbed-test",
                       "INSIDIUS 2.4GHz", "scalable"
                   });
@@ -13,9 +13,9 @@ const u8 VENTILATION_PIN = D6;
 void setup(void) {
   sys.setup();
   sys.setupDHT(DHT_SENSOR_PIN, DHT22);
-//  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
-//  sys.setupVentilation(VENTILATION_PIN);
-//  sys.setupGigrostat(96, 99);
+  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
+  sys.setupVentilation(VENTILATION_PIN);
+  sys.setupGigrostat(96, 99);
 
 }
 

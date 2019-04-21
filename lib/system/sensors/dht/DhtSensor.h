@@ -1,7 +1,7 @@
 #ifndef DhtSensor_h
 #define DhtSensor_h
 
-#include <DHT.h>
+#include "DHT.h"
 
 class DhtSensor {
 public:

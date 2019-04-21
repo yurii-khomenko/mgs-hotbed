@@ -1,9 +1,9 @@
 #ifndef Gigrostat_h
 #define Gigrostat_h
 
-#include "../sensors/DhtSensor.h"
-#include "../actuators/Humidifier.h"
-#include "../actuators/Ventilation.h"
+#include "../../sensors/dht/DhtSensor.h"
+#include "../../actuators/humidifier/Humidifier.h"
+#include "../../actuators/ventilation/Ventilation.h"
 
 class Gigrostat {
 public:

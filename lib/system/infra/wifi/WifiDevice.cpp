@@ -1,7 +1,7 @@
-#include <WifiDevice.h>
+#include "WifiDevice.h"
 #include <ESP8266WiFi.h>
 
-WifiDevice::WifiDevice(const String &ssid, String password, std::function<void(bool)> onProgress) {
+WifiDevice::WifiDevice(String ssid, String password, std::function<void(bool)> onProgress) {
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);

@@ -1,5 +1,5 @@
-#include <Gigrostat.h>
-#include <Fsm.h>
+#include "Gigrostat.h"
+#include "../../control/fsm/Fsm.h"
 
 #define IDLE        0
 #define INCREASE    1

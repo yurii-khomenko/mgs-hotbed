@@ -1,5 +1,5 @@
 #include "DhtSensor.h"
-#include <DHT.h>
+#include "DHT.h"
 
 DhtSensor::DhtSensor(u8 pin, u8 type, String metricPrefix) {
   this->pin = pin;

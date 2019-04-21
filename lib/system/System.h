@@ -1,16 +1,15 @@
-#ifndef ESP8266System_h
-#define ESP8266System_h
+#ifndef System_h
+#define System_h
 
 #include <Arduino.h>
 
-#include <WifiDevice.h>
-#include <Ota.h>
-#include <MqttClient.h>
+#include "infra/wifi/WifiDevice.h"
+#include "infra/ota/Ota.h"
+#include "infra/mqtt/MqttClient.h"
 
-#include <ESP8266WebServer.h>
-#include <DhtSensor.h>
-#include <Humidifier.h>
-#include <Gigrostat.h>
+#include "sensors/dht/DhtSensor.h"
+#include "actuators/humidifier/Humidifier.h"
+#include "control/gigrostat/Gigrostat.h"
 
 struct Conf {
 
@@ -22,14 +21,13 @@ struct Conf {
   String password;
 };
 
-class Esp8266System {
+class System {
 public:
-  Esp8266System(const Conf &conf);
+  System(const Conf &conf);
 
   WifiDevice *wifi;
   Ota *ota;
   MqttClient *mqttClient;
-  ESP8266WebServer *server;
 
   DhtSensor *dhtSensor;
   Humidifier *humidifier;
