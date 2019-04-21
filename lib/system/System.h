@@ -2,6 +2,7 @@
 #define System_h
 
 #include <Arduino.h>
+#include "controls/metricSender/MetricSender.h"
 
 #include "infras/wifi/WifiDevice.h"
 #include "infras/ota/Ota.h"
@@ -28,6 +29,7 @@ public:
   WifiDevice *wifi;
   Ota *ota;
   MqttClient *mqttClient;
+  MetricSender *metricSender;
 
   DhtSensor *dhtSensor;
   Humidifier *humidifier;

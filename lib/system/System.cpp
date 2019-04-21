@@ -1,5 +1,6 @@
 #include "System.h"
 
+#include "controls/metricSender/MetricSender.h"
 #include "actuators/humidifier/Humidifier.h"
 #include "controls/gigrostat/Gigrostat.h"
 
@@ -50,6 +51,10 @@ void System::setup() {
 
 //    Serial.println(message.toInt());
 //    mqttClient.
+  });
+
+  metricSender = new MetricSender(mqttClient, 2000, [] {
+
   });
 }
 

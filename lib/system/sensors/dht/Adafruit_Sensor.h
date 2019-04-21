@@ -23,7 +23,7 @@
 #ifndef ARDUINO
  #include <stdint.h>
 #elif ARDUINO >= 100
- #include "Arduino.h"
+ #include <Arduino.h>
  #include "Print.h"
 #else
  #include "WProgram.h"
