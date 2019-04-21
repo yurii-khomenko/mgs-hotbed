@@ -29,26 +29,23 @@ void System::setup() {
 //
 //  delay(200);
 
+//TODO NTP Server
 //TODO Realise metrics
   mqttClient = new MqttClient(
       "m24.cloudmqtt.com", 14338,
       "clctfcra", "4zqsFa4wUppB",
       [this] (char* topic, u8* payload, u32 length) {
 
-    Serial.print("[MqttClient] Message arrived in topic: ");
-    Serial.print(topic);
+    Serial.print("[MqttClient] Message arrived in topic: "); Serial.print(topic);
 
-    Serial.print(", message:");
-    for (u32 i = 0; i < length; i++)
-      Serial.print((char)payload[i]);
+    payload[length] = 0;
+    const String message = String(((char*) payload)).);
+    Serial.println(", message:" + message);
 
-    Serial.println();
+//    Serial.println(String(metricPrefix) + " " + dhtSensor->metrics());
+    Serial.println(message.toInt());
 
-    const u16 command = (payload[0] - 48) * 100;
 
-    Serial.println(String(metricPrefix) + " " + dhtSensor->metrics());
-
-    //TODO NTP Server
   });
 }
 
