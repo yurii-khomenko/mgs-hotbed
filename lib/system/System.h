@@ -2,7 +2,8 @@
 #define System_h
 
 #include <Arduino.h>
-#include "controls/metricSender/MetricSender.h"
+
+//#include <infras/ntp/NtpClient.h>
 
 #include "infras/wifi/WifiDevice.h"
 #include "infras/ota/Ota.h"
@@ -10,7 +11,9 @@
 
 #include "sensors/dht/DhtSensor.h"
 #include "actuators/humidifier/Humidifier.h"
+
 #include "controls/gigrostat/Gigrostat.h"
+#include "controls/metricSender/MetricSender.h"
 
 struct Conf {
 
@@ -27,6 +30,7 @@ public:
   System(const Conf &conf);
 
   WifiDevice *wifi;
+//  NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
   MetricSender *metricSender;

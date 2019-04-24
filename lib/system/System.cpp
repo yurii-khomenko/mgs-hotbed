@@ -1,8 +1,16 @@
 #include "System.h"
 
+#include <WiFiUdp.h>
+#include <NTPClient.h>
+
 #include "controls/metricSender/MetricSender.h"
 #include "actuators/humidifier/Humidifier.h"
 #include "controls/gigrostat/Gigrostat.h"
+
+
+const long utcOffsetInSeconds = 3600;
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 
 System::System(const Conf &conf) {
   this->conf = conf;
@@ -20,6 +28,12 @@ void System::setup() {
     if (in) onLed();
     else offLed();
   });
+
+  timeClient.begin();
+
+//  WiFiUDP udp;
+//  ntpClient = new NtpClient(udp);
+//  ntpClient->begin();
 
   ota = new Ota(conf.system, conf.service);
 
@@ -51,10 +65,15 @@ void System::setup() {
 
 void System::loop() {
 
+//  if (ntpClient)    ntpClient->update();
   if (ota)          ota->loop();
   if (mqttClient)   mqttClient->loop();
   if (metricSender) metricSender->loop();
   if (gigrostat)    gigrostat->loop();
+
+
+  timeClient.update();
+  Serial.println(timeClient.getFormattedTime());
 
   delay(100);
 }
