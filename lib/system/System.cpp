@@ -7,8 +7,8 @@
 #include "actuators/humidifier/Humidifier.h"
 #include "controls/gigrostat/Gigrostat.h"
 
-WiFiUDP ntpUDP;
-NtpClient timeClient(ntpUDP);
+WiFiUDP udp;
+NtpClient ntpClient(udp);
 
 System::System(const Conf &conf) {
   this->conf = conf;
@@ -27,7 +27,7 @@ void System::setup() {
     else offLed();
   });
 
-  timeClient.begin();
+  ntpClient.begin();
 
 //  WiFiUDP udp;
 //  ntpClient = new NtpClient(udp);
@@ -70,8 +70,8 @@ void System::loop() {
   if (gigrostat)    gigrostat->loop();
 
 
-  timeClient.update();
-  Serial.println(timeClient.getFormattedTime());
+  ntpClient.update();
+  Serial.println(ntpClient.getFormattedTime());
 
   delay(100);
 }
