@@ -70,8 +70,6 @@ void System::loop() {
   if (metricSender) metricSender->loop();
   if (gigrostat)    gigrostat->loop();
 
-  Serial.println(ntpClient.getFormattedTime());
-
   delay(100);
 }
 
