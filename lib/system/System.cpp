@@ -63,14 +63,13 @@ void System::setup() {
 
 void System::loop() {
 
-//  if (ntpClient)    ntpClient->update();
+  ntpClient.update();
+
   if (ota)          ota->loop();
   if (mqttClient)   mqttClient->loop();
   if (metricSender) metricSender->loop();
   if (gigrostat)    gigrostat->loop();
 
-
-  ntpClient.update();
   Serial.println(ntpClient.getFormattedTime());
 
   delay(100);
