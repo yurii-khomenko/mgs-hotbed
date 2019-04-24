@@ -1,16 +1,14 @@
 #include "System.h"
 
 #include <WiFiUdp.h>
-#include <NTPClient.h>
+#include <infras/ntp/NtpClient.h>
 
 #include "controls/metricSender/MetricSender.h"
 #include "actuators/humidifier/Humidifier.h"
 #include "controls/gigrostat/Gigrostat.h"
 
-
-const long utcOffsetInSeconds = 3600;
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
+NtpClient timeClient(ntpUDP);
 
 System::System(const Conf &conf) {
   this->conf = conf;
