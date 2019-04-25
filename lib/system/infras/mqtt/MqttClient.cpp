@@ -10,6 +10,8 @@ MqttClient::MqttClient(
     const String& queuePrefix,
     std::function<void(char*, u8*, u32)> onMessage) {
 
+  this->host = host;
+  this->port = port;
   this->user = user;
   this->password = password;
   this->queuePrefix = queuePrefix;
@@ -19,9 +21,9 @@ MqttClient::MqttClient(
 
   while (!client.connected()) {
 
-    Serial.println("[MqttClient] Connecting to MQTT...");
+//    Serial.println("[MqttClient] Connecting to MQTT...");
 
-    if (reconnect())
+    if (connect())
       Serial.println("[MqttClient] Connected");
     else {
       Serial.print("[MqttClient] failed with state ");
@@ -37,11 +39,19 @@ void MqttClient::publish(const String& topic, const String& message) {
 
 void MqttClient::loop() {
 
+
+
+
+
+
+  !client.connected() ? connect() : client.loop();
+
+
   if (!client.connected()) {
     const long now = millis();
     if (now - lastReconnectAttempt > 2000) {
       lastReconnectAttempt = now;
-      if (reconnect())
+      if (connect())
         lastReconnectAttempt = 0;
     }
   } else
@@ -51,9 +61,13 @@ void MqttClient::loop() {
 // PRIVATE
 //============================================================================>
 
-bool MqttClient::reconnect() {
+bool MqttClient::connect() {
 
-  if (!client.connected() && client.connect("ESP8266Client", user.c_str(), password.c_str()))
+  Serial.print("[MqttClient] Connecting to MQTT(" + host + ":" + port + ")...");
+
+  if (client.connect("ESP8266Client", user.c_str(), password.c_str())) {
+    Serial.println("done");
+  }
     client.subscribe((String(queuePrefix) + "/commands").c_str());
 
   return client.connected();

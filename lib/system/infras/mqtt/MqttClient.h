@@ -16,11 +16,13 @@ public:
   void loop();
 
 private:
+  String host;
+  u16 port;
   String user;
   String password;
   String queuePrefix;
   u64 lastReconnectAttempt = 0;
-  bool reconnect();
+  bool connect();
 };
 
 #endif
