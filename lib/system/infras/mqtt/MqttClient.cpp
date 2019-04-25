@@ -63,12 +63,17 @@ void MqttClient::loop() {
 
 bool MqttClient::connect() {
 
-  Serial.print("[MqttClient] Connecting to MQTT(" + host + ":" + port + ")...");
+  Serial.print("[MqttClient] Connecting to MQTT(" + host + ":" + port + ")\t... ");
 
   if (client.connect("ESP8266Client", user.c_str(), password.c_str())) {
+
     Serial.println("done");
-  }
-    client.subscribe((String(queuePrefix) + "/commands").c_str());
+
+  } else
+    Serial.println("fail");
+
+
+  client.subscribe((String(queuePrefix) + "/commands").c_str());
 
   return client.connected();
 }
