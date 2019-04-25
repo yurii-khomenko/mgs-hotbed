@@ -17,9 +17,17 @@ void MetricSender::loop() {
 
   if(now - lastSentTime >= period) {
 
+    Serial.println("[MetricSender] Loop");
+
     lastSentTime = now;
 
-    for (auto &m : metrics())
+    for (auto &m : metrics()) {
+
+      Serial.print("[MetricSender] Send metric to mqtt: ");
+      Serial.println(m);
+
       client->publish(queuePrefix + "/metrics", m);
+
+    }
   }
 }

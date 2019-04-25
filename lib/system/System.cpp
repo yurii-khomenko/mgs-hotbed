@@ -47,11 +47,15 @@ void System::setup() {
 
   metricSender = new MetricSender(mqttClient, 2000, queuePrefix, [this] {
 
+    onLed();
+
     std::vector<String> metrics;
 
     if (dhtSensor) metrics.push_back(dhtSensor->metrics());
     if (humidifier) metrics.push_back(humidifier->metrics());
     if (ventilation) metrics.push_back(ventilation->metrics());
+
+    offLed();
 
     return metrics;
   });
