@@ -29,10 +29,6 @@ void System::setup() {
 
   ntpClient.begin();
 
-//  WiFiUDP udp;
-//  ntpClient = new NtpClient(udp);
-//  ntpClient->begin();
-
   ota = new Ota(conf.system, conf.service);
 
   const String queuePrefix = conf.group + "/" + conf.system + "/" + conf.service;
