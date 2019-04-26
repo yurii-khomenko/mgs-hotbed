@@ -20,8 +20,16 @@ MqttClient::MqttClient(
   client.setCallback(std::move(onMessage));
 
   while (!client.connected()) {
-    connect();
-    delay(250);
+
+//    Serial.println("[MqttClient] Connecting to MQTT...");
+
+    if (connect())
+      Serial.println("[MqttClient] Connected");
+    else {
+      Serial.print("[MqttClient] failed with state ");
+      Serial.print(client.state());
+      delay(500);
+    }
   }
 }
 
@@ -30,7 +38,19 @@ void MqttClient::publish(const String &topic, const String &message) {
 }
 
 void MqttClient::loop() {
+
+
   !client.connected() ? connect() : client.loop();
+
+  if (!client.connected()) {
+    const long now = millis();
+    if (now - lastReconnectAttempt > 2000) {
+      lastReconnectAttempt = now;
+      if (connect())
+        lastReconnectAttempt = 0;
+    }
+  } else
+    client.loop();
 }
 
 // PRIVATE
@@ -38,23 +58,17 @@ void MqttClient::loop() {
 
 bool MqttClient::connect() {
 
-  const long now = millis();
-  if (now - lastReconnectAttempt < 2000) return false;
+  Serial.print("[MqttClient] Connecting to MQTT(" + host + ":" + port + ")\t... ");
 
-  lastReconnectAttempt = now;
+  if (client.connect("ESP8266Client", user.c_str(), password.c_str())) {
 
-  Serial.print("[MqttClient] Connecting to MQTT(" + host + ":" + port + ") ... ");
+    Serial.println("done");
 
-  if (!client.connect("ESP8266Client", user.c_str(), password.c_str())) {
-    Serial.println(String("fail(") + client.state() + ")");
-    return false;
-  }
+  } else
+    Serial.println("fail");
 
-  Serial.println("done");
 
-  const String topic = String(queuePrefix) + "/commands";
-  Serial.print("[MqttClient] Try to subscribe to topic " + topic + " ... ");
-  Serial.println(client.subscribe(topic.c_str()) ? "done" : "fail");
+  client.subscribe((String(queuePrefix) + "/commands").c_str());
 
   return client.connected();
 }
