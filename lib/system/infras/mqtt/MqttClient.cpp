@@ -16,21 +16,10 @@ MqttClient::MqttClient(
   this->password = password;
   this->queuePrefix = queuePrefix;
 
-  client.setServer(host.c_str(), port);
+  randomSeed(micros());
+
+  client.setServer(this->host.c_str(), port);
   client.setCallback(std::move(onMessage));
-
-  while (!client.connected()) {
-
-//    Serial.println("[MqttClient] Connecting to MQTT...");
-
-    if (connect())
-      Serial.println("[MqttClient] Connected");
-    else {
-      Serial.print("[MqttClient] failed with state ");
-      Serial.print(client.state());
-      delay(500);
-    }
-  }
 }
 
 void MqttClient::publish(const String &topic, const String &message) {
@@ -38,19 +27,7 @@ void MqttClient::publish(const String &topic, const String &message) {
 }
 
 void MqttClient::loop() {
-
-
   !client.connected() ? connect() : client.loop();
-
-  if (!client.connected()) {
-    const long now = millis();
-    if (now - lastReconnectAttempt > 2000) {
-      lastReconnectAttempt = now;
-      if (connect())
-        lastReconnectAttempt = 0;
-    }
-  } else
-    client.loop();
 }
 
 // PRIVATE
@@ -58,17 +35,26 @@ void MqttClient::loop() {
 
 bool MqttClient::connect() {
 
-  Serial.print("[MqttClient] Connecting to MQTT(" + host + ":" + port + ")\t... ");
+  const long now = millis();
+  if (now - lastReconnectAttempt < 2000) return false;
 
-  if (client.connect("ESP8266Client", user.c_str(), password.c_str())) {
+  lastReconnectAttempt = now;
 
-    Serial.println("done");
+  Serial.print(String("[MqttClient] Connecting to MQTT(") + host + ":" + port + ") ... ");
 
-  } else
-    Serial.println("fail");
+  const String clientId = String("ESP8266Client-") + String(random(0xffff), HEX);
 
+  if (!client.connect(clientId.c_str(), user.c_str(), password.c_str())) {
+    Serial.println(String("fail(") + client.state() + ")");
+    return false;
+  }
 
-  client.subscribe((String(queuePrefix) + "/commands").c_str());
+  Serial.println("done");
+  client.publish("outTopic", "hello world");
+
+  const String topic = String(queuePrefix) + "/commands";
+  Serial.print("[MqttClient] Try to subscribe to topic " + topic + "...");
+  Serial.println(client.subscribe(topic.c_str()) ? "done" : "fail");
 
   return client.connected();
 }
