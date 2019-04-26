@@ -34,7 +34,8 @@ void System::setup() {
   const String queuePrefix = conf.group + "/" + conf.system + "/" + conf.service;
 
   mqttClient = new MqttClient(
-      "m24.cloudmqtt.com", 14338, "clctfcra", "4zqsFa4wUppB",
+//      "m24.cloudmqtt.com", 14338, "clctfcra", "4zqsFa4wUppB",
+      "35.241.228.120", 1883, "", "",
       queuePrefix,
       [&] (char* topic, u8* payload, u32 length) {
 
@@ -69,8 +70,6 @@ void System::loop() {
   if (mqttClient)   mqttClient->loop();
   if (metricSender) metricSender->loop();
   if (gigrostat)    gigrostat->loop();
-
-  delay(100);
 }
 
 void System::setupPin(const u8 pin, const u8 mode) {
