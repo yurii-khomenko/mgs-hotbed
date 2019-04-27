@@ -1,7 +1,7 @@
 #include "../lib/system/System.h"
 
 System sys({
-               "greenhouse", "mgs", "hotbed-test",
+               "greenhouse", "mgs", "hotbed",
                "INSIDIUS 2.4GHz", "scalable"
            });
 
