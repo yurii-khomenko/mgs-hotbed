@@ -1,5 +1,5 @@
-#ifndef Ventilation_h
-#define Ventilation_h
+#ifndef Lighting_h
+#define Lighting_h
 
 #include <Arduino.h>
 

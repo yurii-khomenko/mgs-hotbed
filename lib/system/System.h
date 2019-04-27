@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 
-//#include <infras/ntp/NtpClient.h>
-
 #include "infras/wifi/WifiDevice.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
@@ -37,7 +35,7 @@ public:
 
   DhtSensor *dhtSensor;
   Humidifier *humidifier;
-  Ventilation *ventilation;
+  Lighting *ventilation;
 
   Gigrostat *gigrostat;
 

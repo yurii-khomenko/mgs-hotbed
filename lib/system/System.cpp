@@ -85,7 +85,7 @@ void System::setupHumidifier(const u8 pin, const u8 statePin) {
 }
 
 void System::setupVentilation(const u8 pin) {
-  ventilation = new Ventilation(pin);
+  ventilation = new Lighting(pin);
 }
 
 void System::setupGigrostat(const real32 min, const real32 max) {
