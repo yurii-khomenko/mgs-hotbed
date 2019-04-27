@@ -5,13 +5,11 @@
 
 class Lighting {
 public:
-  Lighting(u8 pin);
+  Lighting(u8 pin, u8 ledNum);
 
-  u8 level = 0;
+  void setup();
 
-  void setup(u8 level);
-
-  String metrics();
+//  String metrics();
 
 private:
   u8 pin;

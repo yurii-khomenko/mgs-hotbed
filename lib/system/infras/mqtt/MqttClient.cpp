@@ -22,6 +22,10 @@ MqttClient::MqttClient(
   client.setCallback(std::move(onMessage));
 }
 
+bool MqttClient::enabled() {
+  return client.connected();
+}
+
 void MqttClient::publish(const String &topic, const String &message) {
   client.publish(topic.c_str(), message.c_str());
 }

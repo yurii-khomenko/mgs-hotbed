@@ -12,6 +12,7 @@ public:
       const String &queuePrefix,
       std::function<void(char *, u8 *, u32)> onMessage);
 
+  bool enabled();
   void publish(const String &topic, const String &message);
 
   void loop();

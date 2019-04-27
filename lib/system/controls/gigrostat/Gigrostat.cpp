@@ -34,7 +34,7 @@ State decrease(
 
 Fsm fsm(&idle);
 
-Gigrostat::Gigrostat(DhtSensor *dhtSensor, Humidifier *humidifier, Lighting *ventilation) {
+Gigrostat::Gigrostat(DhtSensor *dhtSensor, Humidifier *humidifier, Ventilation *ventilation) {
   this->dhtSensor = dhtSensor;
   this->humidifier = humidifier;
   this->ventilation = ventilation;

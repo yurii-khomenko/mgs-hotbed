@@ -1,11 +1,11 @@
 #include "Ventilation.h"
 
-Lighting::Lighting(u8 pin) {
+Ventilation::Ventilation(u8 pin) {
   this->pin = pin;
   pinMode(pin, OUTPUT);
 }
 
-void Lighting::setup(u8 level) {
+void Ventilation::setup(u8 level) {
 
   this->level = level;
 
@@ -15,6 +15,6 @@ void Lighting::setup(u8 level) {
     digitalWrite(pin, HIGH);
 }
 
-String Lighting::metrics() {
+String Ventilation::metrics() {
   return String("actuators/ventilation level=") + level;
 }

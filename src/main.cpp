@@ -13,7 +13,7 @@ const u8 LIGHT_PIN = D7;
 
 void setup(void) {
   sys.setup();
-  sys.setupDHT(DHT_SENSOR_PIN, DHT22);
+  sys.setupDht(DHT_SENSOR_PIN, DHT22);
 //  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
 //  sys.setupVentilation(VENTILATION_PIN);
 //  sys.setupGigrostat(96, 99);

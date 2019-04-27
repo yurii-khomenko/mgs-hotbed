@@ -72,32 +72,36 @@ void System::loop() {
   if (gigrostat)    gigrostat->loop();
 }
 
-void System::setupPin(const u8 pin, const u8 mode) {
+void System::setupPin(u8 pin, u8 mode) {
   pinMode(pin, mode);
 }
 
-void System::setupDHT(const u8 pin, const u8 type) {
+void System::setupDht(u8 pin, u8 type) {
   dhtSensor = new DhtSensor(pin, type);
 }
 
-void System::setupHumidifier(const u8 pin, const u8 statePin) {
+void System::setupHumidifier(u8 pin, u8 statePin) {
   humidifier = new Humidifier(pin, statePin);
 }
 
-void System::setupVentilation(const u8 pin) {
-  ventilation = new Lighting(pin);
+void System::setupLighting(u8 pin) {
+
 }
 
-void System::setupGigrostat(const real32 min, const real32 max) {
+void System::setupVentilation(u8 pin) {
+  ventilation = new Ventilation(pin);
+}
+
+void System::setupGigrostat(real32 min, real32 max) {
   gigrostat = new Gigrostat(dhtSensor, humidifier, ventilation);
   gigrostat->setup(min, max);
 }
 
-void System::onPin(const u8 pin) {
+void System::onPin(u8 pin) {
   digitalWrite(pin, HIGH);
 }
 
-void System::offPin(const u8 pin) {
+void System::offPin(u8 pin) {
   digitalWrite(pin, LOW);
 }
 

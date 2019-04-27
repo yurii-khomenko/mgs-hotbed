@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-class Lighting {
+class Ventilation {
 public:
-  Lighting(u8 pin);
+  Ventilation(u8 pin);
 
   u8 level = 0;
 

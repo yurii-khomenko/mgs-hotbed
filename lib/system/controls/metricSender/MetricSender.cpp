@@ -2,7 +2,7 @@
 
 MetricSender::MetricSender(
     MqttClient *client, u16 period,
-    const String& queuePrefix,
+    const String &queuePrefix,
     const std::function<std::vector<String>(void)> &metrics) {
 
   this->client = client;
@@ -15,11 +15,12 @@ void MetricSender::loop() {
 
   const long now = millis();
 
-  if(now - lastSentTime >= period) {
+  if (now - lastSentTime >= period) {
 
     lastSentTime = now;
 
-    for (auto &m : metrics())
-      client->publish(queuePrefix + "/metrics", m);
+    if (client->enabled())
+      for (auto &m : metrics())
+        client->publish(queuePrefix + "/metrics", m);
   }
 }

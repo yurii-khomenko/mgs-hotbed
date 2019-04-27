@@ -9,6 +9,7 @@
 
 #include "sensors/dht/DhtSensor.h"
 #include "actuators/humidifier/Humidifier.h"
+#include "actuators/ventilation/Ventilation.h"
 
 #include "controls/gigrostat/Gigrostat.h"
 #include "controls/metricSender/MetricSender.h"
@@ -34,8 +35,9 @@ public:
   MetricSender *metricSender;
 
   DhtSensor *dhtSensor;
+
   Humidifier *humidifier;
-  Lighting *ventilation;
+  Ventilation *ventilation;
 
   Gigrostat *gigrostat;
 
@@ -45,9 +47,11 @@ public:
 
   void setupPin(u8 pin, u8 mode);
 
-  void setupDHT(u8 pin, u8 type);
+  void setupDht(u8 pin, u8 type);
 
   void setupHumidifier(u8 pin, u8 pinStatus);
+
+  void setupLighting(u8 pin);
 
   void setupVentilation(u8 pin);
 
@@ -62,8 +66,6 @@ public:
   void offLed();
 
   void withBlink(const std::function<void(void)> &body);
-
-  String metrics();
 
 private:
   Conf conf;
