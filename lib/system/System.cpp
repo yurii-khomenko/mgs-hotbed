@@ -84,8 +84,8 @@ void System::setupHumidifier(u8 pin, u8 statePin) {
   humidifier = new Humidifier(pin, statePin);
 }
 
-void System::setupLighting(u8 pin) {
-
+void System::setupLighting(u8 pin, u16 ledNum) {
+  lighting = new Lighting(pin, ledNum);
 }
 
 void System::setupVentilation(u8 pin) {

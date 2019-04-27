@@ -5,9 +5,9 @@
 
 class Lighting {
 public:
-  Lighting(u8 pin, u8 ledNum);
+  Lighting(u8 pin, u16 ledNum);
 
-  void setup();
+//  void setup();
 
 //  String metrics();
 

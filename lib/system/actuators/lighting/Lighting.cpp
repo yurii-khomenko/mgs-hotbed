@@ -1,28 +1,18 @@
 #include "Lighting.h"
 #include <FastLED.h>
 
-Lighting::Lighting(u8 pin, u8 ledNum) {
+Lighting::Lighting(u8 pin, u16 ledNum) {
 
   this->pin = pin;
   pinMode(pin, OUTPUT);
 
-  CRGB leds[ledNum];
+  CRGB leds[32];
 
-  FastLED.addLeds<WS2812, D7, RGB>(leds, ledNum);
+  FastLED.addLeds<WS2812, D7, GRB>(leds, ledNum);
+  FastLED.setBrightness(1);
+//  FastLED.setTemperature(Tungsten100W);
 
-  leds[0] = CRGB::Red;
-  leds[1] = CRGB::Green;
-  leds[2] = CRGB::Blue;
+  fill_solid(leds, 32, CRGB::White);
 
   FastLED.show();
 }
-
-void Lighting::setup() {
-
-
-
-}
-
-//String Lighting::metrics() {
-//  return String("actuators/lighting level=") + level;
-//}
