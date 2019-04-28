@@ -9,6 +9,7 @@ public:
   ~Lighting();
 
   void setup(const struct CRGB &color, u16 temperature, u8 brightness);
+  void setBrightness(u8 level);
 
   String metrics();
 
