@@ -10,6 +10,8 @@ public:
 
   void setup(const struct CRGB &color, u16 temp, u8 brightness);
 
+  String metrics();
+
 private:
   u8 pin;
   u16 ledNum;
