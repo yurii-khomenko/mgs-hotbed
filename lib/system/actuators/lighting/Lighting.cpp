@@ -1,13 +1,13 @@
 #include "Lighting.h"
 #include <FastLED.h>
 
-Lighting::Lighting(u8 pin, u16 ledNum) {
+Lighting::Lighting(u8 pin, u16 ledsNumber) {
 
   this->pin = pin;
-  this->ledNum = ledNum;
-  this->leds = new CRGB[ledNum];
+  this->ledsNumber = ledsNumber;
+  this->leds = new CRGB[ledsNumber];
 
-  FastLED.addLeds<WS2812, D7, GRB>(leds, ledNum);
+  FastLED.addLeds<WS2812, D7, GRB>(leds, ledsNumber);
 }
 
 Lighting::~Lighting() {
@@ -16,9 +16,24 @@ Lighting::~Lighting() {
   delete leds;
 }
 
-void Lighting::setup(const struct CRGB &color, u16 temp, u8 brightness) {
+// TODO: Set frequency or wave length of light per LED
+// TODO: Set temperature in kelvins //http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
+void Lighting::setup(const struct CRGB &color, u16 temperature, u8 brightness) {
+
+  this->temperature = temperature;
+  this->brightness = brightness;
+
   FastLED.setBrightness(brightness);
-  FastLED.setTemperature(OvercastSky); //http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
-  fill_solid(leds, ledNum, CRGB::White);
+  FastLED.setTemperature(OvercastSky);
+  fill_solid(leds, ledsNumber, CRGB::White);
   FastLED.show();
+}
+
+String Lighting::metrics() {
+  return String("actuators/lighting ") +
+    "r="           + leds[0].r   + "," +
+    "g="           + leds[0].g   + "," +
+    "b="           + leds[0].b   + "," +
+    "temperature=" + temperature + "," +
+    "brightness="  + brightness;
 }
