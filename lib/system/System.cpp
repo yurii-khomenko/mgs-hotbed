@@ -9,7 +9,6 @@
 #include "controls/gigrostat/Gigrostat.h"
 
 WiFiUDP udp;
-NtpClient ntpClient(udp);
 
 System::System(const Conf &conf) {
   this->conf = conf;
@@ -28,7 +27,11 @@ void System::setup() {
     else offLed();
   });
 
-  ntpClient.begin();
+  ntpClient = new NtpClient(udp);
+  ntpClient->begin();
+  ntpClient->update();
+
+  Serial.println(String("[System] current UTC: ") + ntpClient->getFormattedTime());
 
   ota = new Ota(conf.system, conf.service);
 
@@ -67,7 +70,7 @@ void System::setup() {
 
 void System::loop() {
 
-  ntpClient.update();
+  ntpClient->update();
 
   if (ota)          ota->loop();
   if (mqttClient)   mqttClient->loop();
