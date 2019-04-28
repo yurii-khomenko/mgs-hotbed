@@ -4,10 +4,10 @@
 #include <Arduino.h>
 
 #include "infras/wifi/WifiDevice.h"
+#include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
-#include "infras/ntp/NtpClient.h"
-#include "infras/sender/metricSender/MetricSender.h"
+#include "infras/senders/metric/MetricSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
