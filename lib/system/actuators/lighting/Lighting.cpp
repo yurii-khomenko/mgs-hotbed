@@ -7,7 +7,9 @@ Lighting::Lighting(u8 pin, u16 ledsNumber) {
   this->ledsNumber = ledsNumber;
   this->leds = new CRGB[ledsNumber];
 
-  FastLED.addLeds<WS2812, D7, GRB>(leds, ledsNumber);
+  const u8 p = D7;
+
+  FastLED.addLeds<WS2812, p, GRB>(leds, ledsNumber);
 }
 
 Lighting::~Lighting() {
@@ -31,6 +33,7 @@ void Lighting::setup(const struct CRGB &color, u16 temperature, u8 brightness) {
 
 void Lighting::setBrightness(u8 level) { //TODO: move level from 0..255 to 0..100.00% (real32)
   FastLED.setBrightness(level);
+  FastLED.show();
 }
 
 String Lighting::metrics() {

@@ -32,21 +32,22 @@ void System::setup() {
 
   ota = new Ota(conf.system, conf.service);
 
-  const String queuePrefix = conf.group + "/" + conf.system + "/" + conf.service;
+  const String id = conf.group + "/" + conf.system + "/" + conf.service; // TODO create conf end log layer
 
-  mqttClient = new MqttClient(
-      "35.241.228.120", 1883, "", "",
-      queuePrefix,
-      [&] (char* topic, u8* payload, u32 length) {
+  mqttClient = new MqttClient("35.205.137.155", 1883, "", "", id);
 
-    Serial.print("[MqttClient] Message arrived in topic: "); Serial.print(topic);
+  mqttClient->subscribe("commands", [&] (char* topic, u8* payload, u32 length) {
 
     payload[length] = 0;
     const String message = String((char*) payload);
-    Serial.println(", message:" + message);
+
+    Serial.print("[MqttClient] topic: "); Serial.print(topic); Serial.println(", message:" + message);
+
+    lighting->setBrightness(message.toInt());
+
   });
 
-  metricSender = new MetricSender(mqttClient, 2000, queuePrefix, [this] {
+  metricSender = new MetricSender(mqttClient, 2000, [this] {
 
     onLed();
 
