@@ -4,15 +4,21 @@
 Lighting::Lighting(u8 pin, u16 ledNum) {
 
   this->pin = pin;
-  pinMode(pin, OUTPUT);
-
-  CRGB leds[32];
+  this->ledNum = ledNum;
+  this->leds = new CRGB[ledNum];
 
   FastLED.addLeds<WS2812, D7, GRB>(leds, ledNum);
-  FastLED.setBrightness(1);
-//  FastLED.setTemperature(Tungsten100W);
+}
 
-  fill_solid(leds, 32, CRGB::White);
+Lighting::~Lighting() {
+  setup(CRGB::Black, 0, 0);
+  FastLED.show();
+  delete leds;
+}
 
+void Lighting::setup(const struct CRGB &color, u16 temp, u8 brightness) {
+  FastLED.setBrightness(brightness);
+  FastLED.setTemperature(OvercastSky); //http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
+  fill_solid(leds, ledNum, CRGB::White);
   FastLED.show();
 }

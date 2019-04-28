@@ -2,6 +2,7 @@
 
 #include <WiFiUdp.h>
 #include <infras/ntp/NtpClient.h>
+#include <pixeltypes.h>
 
 #include "controls/metricSender/MetricSender.h"
 #include "actuators/humidifier/Humidifier.h"
@@ -86,6 +87,7 @@ void System::setupHumidifier(u8 pin, u8 statePin) {
 
 void System::setupLighting(u8 pin, u16 ledNum) {
   lighting = new Lighting(pin, ledNum);
+  lighting->setup(CRGB::White, 7000, 5);
 }
 
 void System::setupVentilation(u8 pin) {
