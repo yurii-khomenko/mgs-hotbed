@@ -2,11 +2,10 @@
 
 #include <WiFiUdp.h>
 #include <infras/ntp/NtpClient.h>
-#include <pixeltypes.h>
 
-#include "controls/metricSender/MetricSender.h"
-#include "actuators/humidifier/Humidifier.h"
-#include "controls/gigrostat/Gigrostat.h"
+#include <controls/metricSender/MetricSender.h>
+#include <actuators/humidifier/Humidifier.h>
+#include <controls/gigrostat/Gigrostat.h>
 
 WiFiUDP udp;
 
@@ -23,8 +22,7 @@ void System::setup() {
 
   wifi = new WifiDevice(conf.ssid, conf.password, [this](bool in) {
     Serial.print(".");
-    if (in) onLed();
-    else offLed();
+    in ? onLed() : offLed();
   });
 
   ntpClient = new NtpClient(udp);

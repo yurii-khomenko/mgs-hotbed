@@ -14,8 +14,8 @@ Lighting::Lighting(
   const u8 p = D7;
 
   FastLED.addLeds<WS2812, p, GRB>(leds, ledsNumber);
-  setColor(color);
-  setTemperature(temperature);
+  setColor(color, false);
+  setTemperature(temperature, false);
   setBrightness(brightness);
 }
 
