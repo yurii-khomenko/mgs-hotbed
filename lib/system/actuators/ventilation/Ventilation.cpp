@@ -5,7 +5,7 @@ Ventilation::Ventilation(u8 pin) {
   pinMode(pin, OUTPUT);
 }
 
-void Ventilation::setup(u8 level) {
+void Ventilation::setup(u8 level) { // TODO: move to real32
 
   this->level = level;
 

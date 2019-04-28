@@ -2,6 +2,7 @@
 
 #include <WiFiUdp.h>
 #include <infras/ntp/NtpClient.h>
+#include <pixeltypes.h>
 
 #include "controls/metricSender/MetricSender.h"
 #include "actuators/humidifier/Humidifier.h"
@@ -31,29 +32,31 @@ void System::setup() {
 
   ota = new Ota(conf.system, conf.service);
 
-  const String queuePrefix = conf.group + "/" + conf.system + "/" + conf.service;
+  const String id = conf.group + "/" + conf.system + "/" + conf.service; // TODO create conf end log layer
 
-  mqttClient = new MqttClient(
-//      "m24.cloudmqtt.com", 14338, "clctfcra", "4zqsFa4wUppB",
-      "35.241.228.120", 1883, "", "",
-      queuePrefix,
-      [&] (char* topic, u8* payload, u32 length) {
+  mqttClient = new MqttClient("35.205.137.155", 1883, "", "", id);
 
-    Serial.print("[MqttClient] Message arrived in topic: "); Serial.print(topic);
+  mqttClient->subscribe("commands", [&] (char* topic, u8* payload, u32 length) {
 
     payload[length] = 0;
     const String message = String((char*) payload);
-    Serial.println(", message:" + message);
+
+    Serial.print("[MqttClient] topic: "); Serial.print(topic); Serial.println(", message:" + message);
+
+    lighting->setBrightness(message.toFloat());
+
   });
 
-  metricSender = new MetricSender(mqttClient, 2000, queuePrefix, [this] {
+  metricSender = new MetricSender(mqttClient, 2000, [this] {
 
     onLed();
 
     std::vector<String> metrics;
 
     if (dhtSensor) metrics.push_back(dhtSensor->metrics());
+
     if (humidifier) metrics.push_back(humidifier->metrics());
+    if (lighting) metrics.push_back(lighting->metrics());
     if (ventilation) metrics.push_back(ventilation->metrics());
 
     offLed();
@@ -72,32 +75,36 @@ void System::loop() {
   if (gigrostat)    gigrostat->loop();
 }
 
-void System::setupPin(const u8 pin, const u8 mode) {
+void System::setupPin(u8 pin, u8 mode) {
   pinMode(pin, mode);
 }
 
-void System::setupDHT(const u8 pin, const u8 type) {
+void System::setupDht(u8 pin, u8 type) {
   dhtSensor = new DhtSensor(pin, type);
 }
 
-void System::setupHumidifier(const u8 pin, const u8 statePin) {
+void System::setupHumidifier(u8 pin, u8 statePin) {
   humidifier = new Humidifier(pin, statePin);
 }
 
-void System::setupVentilation(const u8 pin) {
+void System::setupLighting(u8 pin, u16 ledNum) {
+  lighting = new Lighting(pin, ledNum);
+}
+
+void System::setupVentilation(u8 pin) {
   ventilation = new Ventilation(pin);
 }
 
-void System::setupGigrostat(const real32 min, const real32 max) {
+void System::setupGigrostat(real32 min, real32 max) {
   gigrostat = new Gigrostat(dhtSensor, humidifier, ventilation);
   gigrostat->setup(min, max);
 }
 
-void System::onPin(const u8 pin) {
+void System::onPin(u8 pin) {
   digitalWrite(pin, HIGH);
 }
 
-void System::offPin(const u8 pin) {
+void System::offPin(u8 pin) {
   digitalWrite(pin, LOW);
 }
 
