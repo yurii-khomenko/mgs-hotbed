@@ -54,7 +54,9 @@ void System::setup() {
     std::vector<String> metrics;
 
     if (dhtSensor) metrics.push_back(dhtSensor->metrics());
+
     if (humidifier) metrics.push_back(humidifier->metrics());
+    if (lighting) metrics.push_back(lighting->metrics());
     if (ventilation) metrics.push_back(ventilation->metrics());
 
     offLed();

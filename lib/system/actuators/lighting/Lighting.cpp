@@ -31,8 +31,9 @@ void Lighting::setup(const struct CRGB &color, u16 temperature, u8 brightness) {
   FastLED.show();
 }
 
-void Lighting::setBrightness(u8 level) { //TODO: move level from 0..255 to 0..100.00% (real32)
-  FastLED.setBrightness(level);
+void Lighting::setBrightness(u8 brightness) { //TODO: move level from 0..255 to 0..100.00% (real32)
+  this->brightness = brightness;
+  FastLED.setBrightness(brightness);
   FastLED.show();
 }
 
