@@ -16,7 +16,7 @@ void setup(void) {
 
   sys.setupDht(DHT_SENSOR_PIN, DHT22);
 
-  sys.setupLighting(LIGHTING_PIN, 32);
+  sys.setupLighting(LIGHTING_PIN, 48);
 
 //  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
 //  sys.setupVentilation(VENTILATION_PIN);

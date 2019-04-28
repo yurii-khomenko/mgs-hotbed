@@ -43,7 +43,7 @@ void System::setup() {
 
     Serial.print("[MqttClient] topic: "); Serial.print(topic); Serial.println(", message:" + message);
 
-    lighting->setBrightness(message.toInt());
+    lighting->setBrightness(message.toFloat());
 
   });
 
@@ -89,7 +89,6 @@ void System::setupHumidifier(u8 pin, u8 statePin) {
 
 void System::setupLighting(u8 pin, u16 ledNum) {
   lighting = new Lighting(pin, ledNum);
-  lighting->setup(CRGB::White, 7000, 4);
 }
 
 void System::setupVentilation(u8 pin) {

@@ -65,7 +65,7 @@ bool MqttClient::connect(String topic) {
 
   Serial.println("done");
 
-  Serial.print("[MqttClient] Try to subscribe to topic " + topic + "...");
+  Serial.print("[MqttClient] Try to subscribe to topic '" + topic + "'...");
   Serial.println(client.subscribe((topicGroup + topic).c_str()) ? "done" : "fail");
 
   return client.connected();
