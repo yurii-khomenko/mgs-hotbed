@@ -7,7 +7,7 @@
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
 #include "infras/ntp/NtpClient.h"
-#include "infras/metricSender/MetricSender.h"
+#include "infras/sender/metricSender/MetricSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
