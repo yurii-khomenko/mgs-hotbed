@@ -3,19 +3,21 @@
 
 Lighting::Lighting(
     u8 pin, u16 ledsNumber,
-    const struct CRGB &color,
+    const CRGB& color,
     u16 temperature,
     real32 brightness) {
 
   this->pin = pin;
   this->ledsNumber = ledsNumber;
+  this->color = color;
+
   this->leds = new CRGB[ledsNumber];
 
   const u8 p = D7;
 
   FastLED.addLeds<WS2812, p, GRB>(leds, ledsNumber);
-  setColor(color, false);
-  setTemperature(temperature, false);
+  setColor(color);
+  setTemperature(temperature);
   setBrightness(brightness);
 }
 
@@ -25,23 +27,33 @@ Lighting::~Lighting() {
   delete leds;
 }
 
+String Lighting::metrics() {
+  return String("actuators/lighting ") +
+         "r="           + leds[0].r   + "," +
+         "g="           + leds[0].g   + "," +
+         "b="           + leds[0].b   + "," +
+         "temperature=" + temperature + "," +
+         "brightness="  + brightness;
+}
+
 // TODO: Set frequency or wave length of light per LED
 // TODO: Set temperature in kelvins //http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
 
-void Lighting::setColor(u16 index, const struct CRGB &color, bool force) {
+void Lighting::setColor(u16 index, const struct CRGB &color) {
 
   if (index <= 0 || index >= ledsNumber) return;
 
   leds[index] = color;
-  if (force) FastLED.show();
+  FastLED.show();
 }
 
-void Lighting::setColor(const struct CRGB &color, bool force) {
+void Lighting::setColor(const CRGB &color) {
+  this->color = color;
   fill_solid(leds, ledsNumber, color);
-  if (force) FastLED.show();
+  FastLED.show();
 }
 
-void Lighting::setTemperature(u16 levelKelvin, bool force) { //TODO TOP1 create function to convert Kelvin to RGB
+void Lighting::setTemperature(u16 levelKelvin) { //TODO TOP1 create function to convert Kelvin to RGB
 
   temperature = levelKelvin;
 
@@ -55,10 +67,10 @@ void Lighting::setTemperature(u16 levelKelvin, bool force) { //TODO TOP1 create 
   else if (levelKelvin <= 7000)   FastLED.setTemperature(OvercastSky);
   else                            FastLED.setTemperature(ClearBlueSky);
 
-  if (force) FastLED.show();
+  FastLED.show();
 }
 
-void Lighting::setBrightness(real32 levelPercent, bool force) {
+void Lighting::setBrightness(real32 levelPercent) {
 
   if      (levelPercent == brightness) return;
   else if (levelPercent <= 0)          brightness = 0;
@@ -66,14 +78,17 @@ void Lighting::setBrightness(real32 levelPercent, bool force) {
   else                                 brightness = levelPercent;
 
   FastLED.setBrightness((u8) (brightness * 2.55));
-  if (force) FastLED.show();
+  FastLED.show();
 }
 
-String Lighting::metrics() {
-  return String("actuators/lighting ") +
-    "r="           + leds[0].r   + "," +
-    "g="           + leds[0].g   + "," +
-    "b="           + leds[0].b   + "," +
-    "temperature=" + temperature + "," +
-    "brightness="  + brightness;
+void Lighting::setState(const DynamicJsonDocument &state) {
+
+  setColor({
+               state["actuators"]["lighting"]["color"]["r"] | color.r,
+               state["actuators"]["lighting"]["color"]["g"] | color.g,
+               state["actuators"]["lighting"]["color"]["b"] | color.b
+           });
+
+  setTemperature(state["actuators"]["lighting"]["temperature"] | temperature);
+  setBrightness (state["actuators"]["lighting"]["brightness"]  | brightness);
 }
