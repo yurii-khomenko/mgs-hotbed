@@ -7,17 +7,21 @@ Humidifier::Humidifier(u8 pin, u8 statePin) {
   pinMode(statePin, INPUT);
 }
 
-u8 Humidifier::getLevel() {
+String Humidifier::metrics() {
+  return String("actuators/humidifier flow=") + getFlow();
+}
+
+void Humidifier::setState(const DynamicJsonDocument &state) {
+  setFlow(state["actuators"]["humidifier"]["flow"] | getFlow());
+}
+
+u8 Humidifier::getFlow() {
   return (u8) digitalRead(statePin) ? 100 : 0;
 }
 
-void Humidifier::setup(const u8 level) {
-  if (level <= 0 && getLevel() >= 100) click();
-  else if (level > 0 && getLevel() <= 0) click();
-}
-
-String Humidifier::metrics() {
-  return String("actuators/humidifier level=") + getLevel();
+void Humidifier::setFlow(u8 level) {
+  if (level <= 0 && getFlow() >= 100) click();
+  else if (level > 0 && getFlow() <= 0) click();
 }
 
 // PRIVATE

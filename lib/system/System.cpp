@@ -47,9 +47,9 @@ void System::setup() {
     DynamicJsonDocument state(1024);
     deserializeJson(state, message);
 
-    lighting->setState(state);
-
-
+    if (humidifier)  humidifier->setState(state);
+    if (lighting)    lighting->setState(state);
+    if (ventilation) ventilation->setState(state);
   });
 
   metricSender = new MetricSender(mqttClient, 2000, [this] {

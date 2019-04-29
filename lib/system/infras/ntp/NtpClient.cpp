@@ -74,7 +74,7 @@ bool NtpClient::forceUpdate() {
 bool NtpClient::update() {
   if ((millis() - this->_lastUpdate >= this->_updateInterval)     // Update after _updateInterval
       || this->_lastUpdate == 0) {                                // Update if there was no update yet.
-    if (!this->_udpSetup) this->begin();                         // setup the UDP client if needed
+    if (!this->_udpSetup) this->begin();                         // setLevel the UDP client if needed
     return this->forceUpdate();
   }
   return true;
