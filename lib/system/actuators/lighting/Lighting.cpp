@@ -36,8 +36,17 @@ String Lighting::metrics() {
          "brightness="  + brightness;
 }
 
-// TODO: Set frequency or wave length of light per LED
-// TODO: Set temperature in kelvins //http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
+void Lighting::setState(const DynamicJsonDocument &state) {
+
+  setColor({
+               state["actuators"]["lighting"]["color"]["r"] | color.r,
+               state["actuators"]["lighting"]["color"]["g"] | color.g,
+               state["actuators"]["lighting"]["color"]["b"] | color.b
+           });
+
+  setTemperature(state["actuators"]["lighting"]["temperature"] | temperature);
+  setBrightness (state["actuators"]["lighting"]["brightness"]  | brightness);
+}
 
 void Lighting::setColor(u16 index, const struct CRGB &color) {
 
@@ -53,7 +62,10 @@ void Lighting::setColor(const CRGB &color) {
   FastLED.show();
 }
 
-void Lighting::setTemperature(u16 levelKelvin) { //TODO TOP1 create function to convert Kelvin to RGB
+
+void Lighting::setTemperature(u16 levelKelvin) {
+
+  //TODO TOP1 create function to convert Kelvin to RGB http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
 
   temperature = levelKelvin;
 
@@ -79,16 +91,4 @@ void Lighting::setBrightness(real32 levelPercent) {
 
   FastLED.setBrightness((u8) (brightness * 2.55));
   FastLED.show();
-}
-
-void Lighting::setState(const DynamicJsonDocument &state) {
-
-  setColor({
-               state["actuators"]["lighting"]["color"]["r"] | color.r,
-               state["actuators"]["lighting"]["color"]["g"] | color.g,
-               state["actuators"]["lighting"]["color"]["b"] | color.b
-           });
-
-  setTemperature(state["actuators"]["lighting"]["temperature"] | temperature);
-  setBrightness (state["actuators"]["lighting"]["brightness"]  | brightness);
 }
