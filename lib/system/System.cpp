@@ -1,5 +1,6 @@
 #include "System.h"
 
+#include <ArduinoJson.h>
 #include <WiFiUdp.h>
 #include "infras/ntp/NtpClient.h"
 
@@ -36,15 +37,29 @@ void System::setup() {
 
   mqttClient = new MqttClient("su69.org", 1883, "", "", id);
 
-  mqttClient->subscribe("commands", [&] (char* topic, u8* payload, u32 length) {
+  mqttClient->subscribe("commands", [&] (char* topic, u8* message, u32 length) {
 
-    payload[length] = 0;
-    const String message = String((char*) payload);
+    message[length] = 0;
 
-    Serial.print("[MqttClient] topic: "); Serial.print(topic); Serial.println(", message:" + message);
+    Serial.print("[MqttClient] topic: ");Serial.print(topic);
+    Serial.print(", message:");Serial.println((char *) message);
 
-    lighting->setBrightness(message.toFloat());
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, message);
 
+    const u8 r = doc["actuators"]["lighting"]["color"]["r"];
+    const u8 g = doc["actuators"]["lighting"]["color"]["g"];
+    const u8 b = doc["actuators"]["lighting"]["color"]["b"];
+
+    const real32 temperature  = doc["actuators"]["lighting"]["temperature"];
+    const real32 brightness   = doc["actuators"]["lighting"]["brightness"];
+
+    Serial.println(r);
+    Serial.println(g);
+    Serial.println(b);
+
+    Serial.println(temperature);
+    Serial.println(brightness);
   });
 
   metricSender = new MetricSender(mqttClient, 2000, [this] {

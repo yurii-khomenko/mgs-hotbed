@@ -52,13 +52,11 @@ void t1Callback() {
 void t2Callback() {
   Serial.print("t2: ");
   Serial.println(millis());
-
 }
 
 void t3Callback() {
   Serial.print("t3: ");
   Serial.println(millis());
-
 }
 
 
@@ -76,26 +74,25 @@ void setup(void) {
 //  sys.setupVentilation(VENTILATION_PIN);
 //  sys.setupGigrostat(96, 99);
 
-
-
-  Serial.println("Scheduler TEST");
-
-  runner.init();
-  Serial.println("Initialized scheduler");
-
-  runner.addTask(t1);
-  Serial.println("added t1");
-
-  runner.addTask(t2);
-  Serial.println("added t2");
-
-  delay(5000);
-
-  t1.enable();
-  Serial.println("Enabled t1");
-
-  t2.enable();
-  Serial.println("Enabled t2");
+//
+//  Serial.println("Scheduler TEST");
+//
+//  runner.init();
+//  Serial.println("Initialized scheduler");
+//
+//  runner.addTask(t1);
+//  Serial.println("added t1");
+//
+//  runner.addTask(t2);
+//  Serial.println("added t2");
+//
+//  delay(5000);
+//
+//  t1.enable();
+//  Serial.println("Enabled t1");
+//
+//  t2.enable();
+//  Serial.println("Enabled t2");
 }
 
 void loop(void) {

@@ -2,6 +2,7 @@
 #define Lighting_h
 
 #include <FastLED.h>
+#include <ArduinoJson.h>
 
 class Lighting {
 public:
@@ -16,6 +17,7 @@ public:
   void setColor(const struct CRGB &color, bool force = true);
   void setTemperature(u16 levelKelvin, bool force = true);
   void setBrightness(real32 levelPercent, bool force = true);
+//  void setState()
 
   String metrics();
 
