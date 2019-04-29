@@ -14,13 +14,12 @@ public:
   ~Lighting();
 
   String metrics();
+  void setState(const DynamicJsonDocument &state);
 
   void setColor(u16 index, const struct CRGB &color);
   void setColor(const CRGB &color);
   void setTemperature(u16 levelKelvin);
   void setBrightness(real32 levelPercent);
-
-  void setState(const DynamicJsonDocument &state);
 
 private:
   u8 pin;
