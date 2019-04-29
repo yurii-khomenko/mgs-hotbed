@@ -4,17 +4,18 @@
 #include <Arduino.h>
 
 #include "infras/wifi/WifiDevice.h"
+#include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
+#include "infras/senders/metric/MetricSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
 #include "actuators/humidifier/Humidifier.h"
 #include "actuators/ventilation/Ventilation.h"
-#include <actuators/lighting/Lighting.h>
+#include "actuators/lighting/Lighting.h"
 
 #include "controls/gigrostat/Gigrostat.h"
-#include "controls/metricSender/MetricSender.h"
 
 struct Conf {
 
@@ -31,7 +32,7 @@ public:
   System(const Conf &conf);
 
   WifiDevice *wifi;
-//  NtpClient *ntpClient;
+  NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
   MetricSender *metricSender;

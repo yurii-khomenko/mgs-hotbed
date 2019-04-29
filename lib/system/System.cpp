@@ -1,15 +1,12 @@
 #include "System.h"
 
 #include <WiFiUdp.h>
-#include <infras/ntp/NtpClient.h>
-#include <pixeltypes.h>
+#include "infras/ntp/NtpClient.h"
 
-#include "controls/metricSender/MetricSender.h"
 #include "actuators/humidifier/Humidifier.h"
 #include "controls/gigrostat/Gigrostat.h"
 
 WiFiUDP udp;
-NtpClient ntpClient(udp);
 
 System::System(const Conf &conf) {
   this->conf = conf;
@@ -24,11 +21,14 @@ void System::setup() {
 
   wifi = new WifiDevice(conf.ssid, conf.password, [this](bool in) {
     Serial.print(".");
-    if (in) onLed();
-    else offLed();
+    in ? onLed() : offLed();
   });
 
-  ntpClient.begin();
+  ntpClient = new NtpClient(udp);
+  ntpClient->begin();
+  ntpClient->update();
+
+  Serial.println(String("[System] current UTC: ") + ntpClient->getFormattedTime());
 
   ota = new Ota(conf.system, conf.service);
 
@@ -53,11 +53,11 @@ void System::setup() {
 
     std::vector<String> metrics;
 
-    if (dhtSensor) metrics.push_back(dhtSensor->metrics());
+    if (dhtSensor)      metrics.push_back(dhtSensor->metrics());
 
-    if (humidifier) metrics.push_back(humidifier->metrics());
-    if (lighting) metrics.push_back(lighting->metrics());
-    if (ventilation) metrics.push_back(ventilation->metrics());
+    if (humidifier)     metrics.push_back(humidifier->metrics());
+    if (lighting)       metrics.push_back(lighting->metrics());
+    if (ventilation)    metrics.push_back(ventilation->metrics());
 
     offLed();
 
@@ -67,7 +67,7 @@ void System::setup() {
 
 void System::loop() {
 
-  ntpClient.update();
+  ntpClient->update();
 
   if (ota)          ota->loop();
   if (mqttClient)   mqttClient->loop();

@@ -1,7 +1,7 @@
 #ifndef MetricSender_h
 #define MetricSender_h
 
-#include "../../infras/mqtt/MqttClient.h"
+#include "infras/mqtt/MqttClient.h"
 
 class MetricSender {
 public:

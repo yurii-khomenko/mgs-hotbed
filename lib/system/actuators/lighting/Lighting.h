@@ -8,8 +8,8 @@ public:
   Lighting(
       u8 pin, u16 ledsNumber,
       const struct CRGB &color = CRGB::White,
-      u16 temperature = 6600,
-      real32 brightness = 30);
+      u16 temperature = 20000,
+      real32 brightness = 5);
   ~Lighting();
 
   void setColor(u16 index, const struct CRGB &color, bool force = true);
