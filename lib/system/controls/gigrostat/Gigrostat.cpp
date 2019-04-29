@@ -49,35 +49,35 @@ void Gigrostat::setup(const real32 min, const real32 max) {
 
   fsm.addTransition(&idle, &increase, INCREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from idle to increase");
-    ventilation->setup(0);
-    humidifier->setup(100);
+    ventilation->setFlow(0);
+    humidifier->setFlow(100);
   });
   fsm.addTransition(&increase, &idle, IDLE, [this] {
     Serial.println("[Gigrostat] Transitioning from increase to idle");
-    ventilation->setup(0);
-    humidifier->setup(0);
+    ventilation->setFlow(0);
+    humidifier->setFlow(0);
   });
 
   fsm.addTransition(&increase, &decrease, DECREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from increase to decrease");
-    ventilation->setup(100);
-    humidifier->setup(0);
+    ventilation->setFlow(100);
+    humidifier->setFlow(0);
   });
   fsm.addTransition(&decrease, &increase, INCREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from decrease to increase");
-    ventilation->setup(0);
-    humidifier->setup(100);
+    ventilation->setFlow(0);
+    humidifier->setFlow(100);
   });
 
   fsm.addTransition(&decrease, &idle, IDLE, [this] {
     Serial.println("[Gigrostat] Transitioning from decrease to idle");
-    ventilation->setup(0);
-    humidifier->setup(0);
+    ventilation->setFlow(0);
+    humidifier->setFlow(0);
   });
   fsm.addTransition(&idle, &decrease, DECREASE, [this] {
     Serial.println("[Gigrostat] Transitioning from idle to decrease");
-    ventilation->setup(100);
-    humidifier->setup(0);
+    ventilation->setFlow(100);
+    humidifier->setFlow(0);
   });
 }
 

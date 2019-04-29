@@ -71,7 +71,7 @@ void setup(void) {
   sys.setupLighting(LIGHTING_PIN, 48);
 
 //  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
-//  sys.setupVentilation(VENTILATION_PIN);
+  sys.setupVentilation(VENTILATION_PIN);
 //  sys.setupGigrostat(96, 99);
 
 //

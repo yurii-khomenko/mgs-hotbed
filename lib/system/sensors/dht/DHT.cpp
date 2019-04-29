@@ -162,7 +162,7 @@ bool DHT::read(bool force) {
   // Send start signal.  See DHT datasheet for full signal diagram:
   //   http://www.adafruit.com/datasheets/Digital%20humidity%20and%20temperature%20sensor%20AM2302.pdf
 
-  // Go into high impedence state to let pull-up raise data line level and
+  // Go into high impedence state to let pull-up raise data line getLevel and
   // start the reading process.
   pinMode(_pin, INPUT_PULLUP);
   delay(1);
@@ -263,10 +263,10 @@ bool DHT::read(bool force) {
   }
 }
 
-// Expect the signal line to be at the specified level for a period of time and
-// return a count of loop cycles spent at that level (this cycle count can be
+// Expect the signal line to be at the specified getLevel for a period of time and
+// return a count of loop cycles spent at that getLevel (this cycle count can be
 // used to compare the relative time of two pulses).  If more than a millisecond
-// ellapses without the level changing then the call fails with a 0 response.
+// ellapses without the getLevel changing then the call fails with a 0 response.
 // This is adapted from Arduino's pulseInLong function (which is only available
 // in the very latest IDE versions):
 //   https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/wiring_pulse.c
@@ -279,7 +279,7 @@ uint32_t DHT::expectPulse(bool level) {
   // On AVR platforms use direct GPIO port access as it's much faster and better
   // for catching pulses that are 10's of microseconds in length:
   #ifdef __AVR
-    uint8_t portState = level ? _bit : 0;
+    uint8_t portState = getLevel ? _bit : 0;
     while ((*portInputRegister(_port) & _bit) == portState) {
       if (count++ >= _maxcycles) {
         return TIMEOUT; // Exceeded timeout, fail.
