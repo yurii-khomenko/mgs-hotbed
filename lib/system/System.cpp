@@ -34,7 +34,7 @@ void System::setup() {
 
   const String id = conf.group + "/" + conf.system + "/" + conf.service; // TODO create conf end log layer
 
-  mqttClient = new MqttClient("35.205.137.155", 1883, "", "", id);
+  mqttClient = new MqttClient("su69.org", 1883, "", "", id);
 
   mqttClient->subscribe("commands", [&] (char* topic, u8* payload, u32 length) {
 
