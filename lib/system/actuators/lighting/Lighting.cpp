@@ -53,7 +53,7 @@ void Lighting::setTemperature(u16 levelKelvin, bool force) { //TODO TOP1 create 
   else if (levelKelvin <= 5400)   FastLED.setTemperature(HighNoonSun);
   else if (levelKelvin <= 6000)   FastLED.setTemperature(DirectSunlight);
   else if (levelKelvin <= 7000)   FastLED.setTemperature(OvercastSky);
-  else if (levelKelvin <= 20000)  FastLED.setTemperature(ClearBlueSky);
+  else                            FastLED.setTemperature(ClearBlueSky);
 
   if (force) FastLED.show();
 }
