@@ -13,9 +13,7 @@ Lighting::Lighting(
 
   this->leds = new CRGB[ledsNumber];
 
-  const u8 p = D7;
-
-  FastLED.addLeds<WS2812, p, GRB>(leds, ledsNumber);
+  FastLED.addLeds<WS2812, D7, GRB>(leds, ledsNumber);
   setColor(color);
   setTemperature(temperature);
   setBrightness(brightness);
