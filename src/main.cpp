@@ -45,7 +45,7 @@ Task blink(100, TASK_FOREVER, [] {
 
 
 void setup(void) {
-  sys.setup();
+  sys.enableSystem();
 
 //  sys.setupDht(DHT_SENSOR_PIN, DHT22);
 

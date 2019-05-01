@@ -5,9 +5,7 @@
 #include <ArduinoOTA.h>
 
 class Ota {
-
 public:
-
   Ota(const String &systemName, const String &serviceName) {
 
     const String hostname = systemName + "-" + serviceName;

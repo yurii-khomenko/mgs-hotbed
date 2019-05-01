@@ -8,7 +8,7 @@ class MetricSender {
 private:
   MqttClient *client;
   u16 period;
-  std::function<std::vector<String>(void)> metrics;
+  std::function<std::vector<String>(void)> states;
   u64 lastSentTime = 0;
 
 public:
@@ -16,7 +16,7 @@ public:
       const std::function<std::vector<String>(void)> &metrics) {
     this->client = client;
     this->period = period;
-    this->metrics = metrics;
+    this->states = metrics;
   }
 
   void loop() {
@@ -27,8 +27,8 @@ public:
       lastSentTime = now;
 
       if (client->enabled())
-        for (auto &m : metrics())
-          client->publish("getState", m);
+        for (auto &s : states())
+          client->publish("states", s);
     }
   }
 };

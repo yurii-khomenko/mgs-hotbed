@@ -9,7 +9,6 @@
 #define NTP_DEFAULT_LOCAL_PORT 1337
 
 class NtpClient {
-
 public:
   NtpClient(UDP &udp) {
     this->_udp = &udp;

@@ -30,15 +30,13 @@ struct Conf {
 };
 
 class System {
-
-private:
-  Conf conf;
-  WiFiUDP udp;
-
 public:
   System(const Conf &conf) {
     this->conf = conf;
   }
+
+  Conf conf;
+  WiFiUDP udp;
 
   WifiDevice *wifi;
   NtpClient *ntpClient;
@@ -54,7 +52,7 @@ public:
 
   Gigrostat *gigrostat;
 
-  void setup() {
+  void enableSystem() {
 
     Serial.begin(115200);
     pinMode(LED_BUILTIN, OUTPUT);
@@ -111,15 +109,6 @@ public:
     });
   }
 
-  void loop() {
-
-    ntpClient->update();
-
-    if (ota)          ota->loop();
-    if (mqttClient)   mqttClient->loop();
-    if (metricSender) metricSender->loop();
-    if (gigrostat)    gigrostat->loop();}
-
   void enableDht(u8 pin, u8 type) {
     dhtSensor = new DhtSensor(pin, type);
   }
@@ -161,6 +150,16 @@ public:
     digitalWrite(LED_BUILTIN, HIGH);
     body();
     digitalWrite(LED_BUILTIN, LOW);
+  }
+
+  void loop() {
+
+    ntpClient->update();
+
+    if (ota)          ota->loop();
+    if (mqttClient)   mqttClient->loop();
+    if (metricSender) metricSender->loop();
+    if (gigrostat)    gigrostat->loop();
   }
 };
 
