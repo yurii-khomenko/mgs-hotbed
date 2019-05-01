@@ -102,7 +102,7 @@ public:
       if (dhtSensor)      metrics.push_back(dhtSensor->getState());
 
       if (humidifier)     metrics.push_back(humidifier->getState());
-      if (lighting)       metrics.push_back(lighting->metrics());
+      if (lighting)       metrics.push_back(lighting->getState());
       if (ventilation)    metrics.push_back(ventilation->getState());
 
       digitalWrite(LED_BUILTIN, LOW);
@@ -151,7 +151,7 @@ public:
 
   void enableGigrostat(real32 min, real32 max) {
     gigrostat = new Gigrostat(dhtSensor, humidifier, ventilation);
-    gigrostat->setup(min, max);
+    gigrostat->setHumidity(min, max);
   }
   void disableGigrostat() {
     delete gigrostat;

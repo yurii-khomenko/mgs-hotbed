@@ -47,7 +47,7 @@ public:
     this->ventilation = ventilation;
   }
 
-  void setup(real32 min, real32 max){
+  void setHumidity(real32 min, real32 max){
 
     this->min = min;
     this->max = max;
@@ -92,14 +92,11 @@ public:
 
     const float current = dhtSensor->humidity();
 
-    if (isnan(current)) return;
+    if (isnan(current))     return;
 
-    if (current < min)
-      fsm.trigger(INCREASE);
-    else if (current > max)
-      fsm.trigger(DECREASE);
-    else
-      fsm.trigger(IDLE);
+    if      (current < min) fsm.trigger(INCREASE);
+    else if (current > max) fsm.trigger(DECREASE);
+    else                    fsm.trigger(IDLE);
 
     fsm.loop();
   }

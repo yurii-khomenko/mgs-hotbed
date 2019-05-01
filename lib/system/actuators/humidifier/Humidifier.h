@@ -26,7 +26,7 @@ public:
   }
 
   void setFlow(u8 level) {
-    if (level <= 0 && getFlow() >= 100) click();
+    if (level <= 0 && getFlow() >= 100)   click();
     else if (level > 0 && getFlow() <= 0) click();
   }
 
