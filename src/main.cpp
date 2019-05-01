@@ -29,19 +29,8 @@ Task blink(100, TASK_FOREVER, [] {
   sys.lighting->setBrightness(sys.lighting->getBrightness() + step);
 });
 
-//, &scheduler, true, [] {
-//  pinMode(LED_BUILTIN, OUTPUT);
-//  return true;
-//});
-
-//Task taskLedOff(500, TASK_FOREVER, [] {
-////  sys.lighting->setBrightness(0);
-//  digitalWrite(LED_BUILTIN, LOW);
-//});
-
-
-
 void setup(void) {
+
   sys.enableSystem();
 
   sys.enableDht(DHT_SENSOR_PIN, DHT22);
@@ -55,29 +44,9 @@ void setup(void) {
   blink.enable();
 
 
-//  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
-//  sys.setupVentilation(VENTILATION_PIN);
-//  sys.setupGigrostat(96, 99);
-
-//
-//  Serial.println("Scheduler TEST");
-//
-//  runner.init();
-//  Serial.println("Initialized scheduler");
-//
-//  runner.addTask(t1);
-//  Serial.println("added t1");
-//
-//  runner.addTask(t2);
-//  Serial.println("added t2");
-//
-//  delay(5000);
-//
-//  t1.enable();
-//  Serial.println("Enabled t1");
-//
-//  t2.enable();
-//  Serial.println("Enabled t2");
+//  sys.enableHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
+//  sys.enableVentilation(VENTILATION_PIN);
+//  sys.enableGigrostat(96, 99);
 }
 
 void loop(void) {
