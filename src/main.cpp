@@ -29,6 +29,10 @@ Task blink(100, TASK_FOREVER, [] {
   sys.lighting->setBrightness(sys.lighting->getBrightness() + step);
 });
 
+Task taskLighting(1000, TASK_FOREVER, [] {
+  
+});
+
 void setup(void) {
 
   sys.enableSystem();
@@ -42,6 +46,9 @@ void setup(void) {
 
   sys.scheduler.addTask(blink);
   blink.enable();
+
+  sys.scheduler.addTask(taskLighting);
+  taskLighting.enable();
 
 
 //  sys.enableHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
