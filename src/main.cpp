@@ -1,5 +1,4 @@
 #include "../lib/system/System.h"
-#include <TaskScheduler.h>
 
 System sys({
                "greenhouse", "mgs", "hotbed-test",
@@ -17,8 +16,6 @@ const u8 LIGHTING_PIN = D7;
 // setHumidity(hum, gigro);
 // all setter setHumidi
 // and set all as mqtt packet. we have json config in a packet.
-
-Scheduler scheduler;
 
 real32 step = 1;
 
@@ -47,16 +44,14 @@ Task blink(100, TASK_FOREVER, [] {
 void setup(void) {
   sys.enableSystem();
 
-//  sys.setupDht(DHT_SENSOR_PIN, DHT22);
+  sys.enableDht(DHT_SENSOR_PIN, DHT22);
 
   sys.enableLighting(LIGHTING_PIN, 32);
   sys.lighting->setColor({255,90,0});
   sys.lighting->setTemperature(1000);
   sys.lighting->setBrightness(10);
 
-  scheduler.init();
-  scheduler.addTask(blink);
-  scheduler.startNow();
+  sys.scheduler.addTask(blink);
   blink.enable();
 
 
@@ -87,5 +82,4 @@ void setup(void) {
 
 void loop(void) {
   sys.loop();
-  scheduler.execute();
 }

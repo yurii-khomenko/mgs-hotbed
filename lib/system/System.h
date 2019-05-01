@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <WiFiUdp.h>
 #include <ArduinoJson.h>
+#include <TaskScheduler.h>
 
 #include "infras/wifi/WifiDevice.h"
 #include "infras/ntp/NtpClient.h"
@@ -52,6 +53,8 @@ public:
 
   Gigrostat *gigrostat;
 
+  Scheduler scheduler;
+
   void enableSystem() {
 
     Serial.begin(115200);
@@ -59,7 +62,7 @@ public:
 
     wifi = new WifiDevice(conf.ssid, conf.password, [this](bool in) {
       Serial.print(".");
-      digitalWrite(LED_BUILTIN, in);
+      digitalWrite(LED_BUILTIN, !in);
     });
 
     ntpClient = new NtpClient(udp);
@@ -93,7 +96,7 @@ public:
 
     metricSender = new MetricSender(mqttClient, 2000, [this] {
 
-      digitalWrite(LED_BUILTIN, HIGH);
+      digitalWrite(LED_BUILTIN, LOW);
 
       std::vector<String> metrics;
 
@@ -103,10 +106,13 @@ public:
       if (lighting)       metrics.push_back(lighting->getState());
       if (ventilation)    metrics.push_back(ventilation->getState());
 
-      digitalWrite(LED_BUILTIN, LOW);
+      digitalWrite(LED_BUILTIN, HIGH);
 
       return metrics;
     });
+
+    scheduler.init();
+    scheduler.startNow();
   }
 
   void enableDht(u8 pin, u8 type) {
@@ -154,12 +160,14 @@ public:
 
   void loop() {
 
-    ntpClient->update();
+    if (ntpClient)    ntpClient->update();
 
     if (ota)          ota->loop();
     if (mqttClient)   mqttClient->loop();
     if (metricSender) metricSender->loop();
     if (gigrostat)    gigrostat->loop();
+
+    scheduler.execute();
   }
 };
 
