@@ -22,13 +22,13 @@ public:
   real32 getFlow() { return flow; }
   void setFlow(real32 levelPercent) {
 
-    if      (levelPercent == flow)       return;
-    else if (levelPercent <= 0)          flow = 0;
-    else if (levelPercent >= 100)        flow = 100;
-    else                                 flow = levelPercent;
+    if      (levelPercent == flow)  return;
+    else if (levelPercent <= 0)     flow = 0;
+    else if (levelPercent >= 100)   flow = 100;
+    else                            flow = levelPercent;
 
-    if (flow <= 0)                       digitalWrite(pin, LOW);
-    else                                 digitalWrite(pin, HIGH);
+    if (flow <= 0)                  digitalWrite(pin, LOW);
+    else                            digitalWrite(pin, HIGH);
   }
 
 private:
