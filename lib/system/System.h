@@ -153,9 +153,9 @@ public:
   }
 
   void withBlink(const std::function<void(void)> &body) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    body();
     digitalWrite(LED_BUILTIN, LOW);
+    body();
+    digitalWrite(LED_BUILTIN, HIGH);
   }
 
   void loop() {
