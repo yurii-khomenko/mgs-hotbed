@@ -10,7 +10,7 @@
 #include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
-#include "infras/senders/metric/MetricSender.h"
+#include "infras/senders/metric/StateSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
@@ -43,7 +43,7 @@ public:
   NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
-  MetricSender *metricSender;
+  StateSender *stateSender;
 
   DhtSensor *dhtSensor;
 
@@ -94,21 +94,21 @@ public:
       if (ventilation) ventilation->setState(state);
     });
 
-    metricSender = new MetricSender(mqttClient, 2000, [this] {
+    stateSender = new StateSender(mqttClient, 2000, [this] {
 
       digitalWrite(LED_BUILTIN, LOW);
 
-      std::vector<String> metrics;
+      std::vector<String> states;
 
-      if (dhtSensor)      metrics.push_back(dhtSensor->getState());
+      if (dhtSensor)      states.push_back(dhtSensor->getState());
 
-      if (humidifier)     metrics.push_back(humidifier->getState());
-      if (lighting)       metrics.push_back(lighting->getState());
-      if (ventilation)    metrics.push_back(ventilation->getState());
+      if (humidifier)     states.push_back(humidifier->getState());
+      if (lighting)       states.push_back(lighting->getState());
+      if (ventilation)    states.push_back(ventilation->getState());
 
       digitalWrite(LED_BUILTIN, HIGH);
 
-      return metrics;
+      return states;
     });
 
     scheduler.init();
@@ -160,12 +160,13 @@ public:
 
   void loop() {
 
-    if (ntpClient)    ntpClient->update();
+    ntpClient->update();
 
     if (ota)          ota->loop();
     if (mqttClient)   mqttClient->loop();
-    if (metricSender) metricSender->loop();
     if (gigrostat)    gigrostat->loop();
+
+    if (stateSender)  stateSender->loop();
 
     scheduler.execute();
   }

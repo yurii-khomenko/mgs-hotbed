@@ -1,9 +1,9 @@
-#ifndef MetricSender_h
-#define MetricSender_h
+#ifndef StateSender_h
+#define StateSender_h
 
 #include "infras/mqtt/MqttClient.h"
 
-class MetricSender {
+class StateSender {
 
 private:
   MqttClient *client;
@@ -12,11 +12,11 @@ private:
   u64 lastSentTime = 0;
 
 public:
-  MetricSender(MqttClient *client, u16 period,
-      const std::function<std::vector<String>(void)> &metrics) {
+  StateSender(MqttClient *client, u16 period,
+      const std::function<std::vector<String>(void)> &states) {
     this->client = client;
     this->period = period;
-    this->states = metrics;
+    this->states = states;
   }
 
   void loop() {
@@ -27,8 +27,8 @@ public:
       lastSentTime = now;
 
       if (client->enabled())
-        for (auto &s : states())
-          client->publish("states", s);
+        for (auto &state : states())
+          client->publish("states", state);
     }
   }
 };
