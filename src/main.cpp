@@ -20,17 +20,17 @@ const u8 LIGHTING_PIN = D7;
 
 Scheduler scheduler;
 
-//bool on = false;
-//
-//Task blink(500, TASK_FOREVER, [] {
-//
-//  Serial.println("hit");
-//  Serial.println(digitalRead(LED_BUILTIN));
-//
-//  sys.lighting->getBrightness() == 0.0 ?
-//  sys.lighting->setBrightness(0) :
-//  sys.lighting->setBrightness(0);
-//});
+real32 step = 1;
+
+Task blink(100, TASK_FOREVER, [] {
+
+  if (sys.lighting->getBrightness() < 10)
+    step = -step;
+  else if (sys.lighting->getBrightness() > 50)
+    step = -step;
+
+  sys.lighting->setBrightness(sys.lighting->getBrightness() + step);
+});
 
 //, &scheduler, true, [] {
 //  pinMode(LED_BUILTIN, OUTPUT);
@@ -44,64 +44,20 @@ Scheduler scheduler;
 
 
 
-//// Callback methods prototypes
-//void t1Callback();
-//void t2Callback();
-//void t3Callback();
-
-//Tasks
-//Task t4();
-//Task t1(2000, 10, &t1Callback);
-//Task t2(3000, TASK_FOREVER, &t2Callback);
-//Task t3(5000, TASK_FOREVER, &t3Callback);
-//
-//Scheduler runner;
-
-//
-//void t1Callback() {
-//  Serial.print("t1: ");
-//  Serial.println(millis());
-//
-//  if (t1.isFirstIteration()) {
-//    runner.addTask(t3);
-//    t3.enable();
-//    Serial.println("t1: enabled t3 and added to the chain");
-//  }
-//
-//  if (t1.isLastIteration()) {
-//    t3.disable();
-//    runner.deleteTask(t3);
-//    t2.setInterval(500);
-//    Serial.println("t1: disable t3 and delete it from the chain. t2 interval set to 500");
-//  }
-//}
-//
-//void t2Callback() {
-//  Serial.print("t2: ");
-//  Serial.println(millis());
-//}
-//
-//void t3Callback() {
-//  Serial.print("t3: ");
-//  Serial.println(millis());
-//}
-
-
-
-
-
 void setup(void) {
   sys.setup();
 
 //  sys.setupDht(DHT_SENSOR_PIN, DHT22);
 
-  sys.setupLighting(LIGHTING_PIN, 48);
-  sys.lighting->setColor(CRGB::White);
-//  sys.lighting->setBrightness(10);
+  sys.enableLighting(LIGHTING_PIN, 32);
+  sys.lighting->setColor({255,90,0});
+  sys.lighting->setTemperature(1000);
+  sys.lighting->setBrightness(10);
 
-//  scheduler.init();
-//  scheduler.addTask(blink);
-//  scheduler.startNow();
+  scheduler.init();
+  scheduler.addTask(blink);
+  scheduler.startNow();
+  blink.enable();
 
 
 //  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);

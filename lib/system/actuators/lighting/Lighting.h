@@ -10,7 +10,7 @@ public:
       u8 pin, u16 ledsNumber,
       const CRGB& color = CRGB::White,
       u16 temperature = 20000,
-      real32 brightness = 10);
+      real32 brightness = 20);
   ~Lighting();
 
   String metrics();
