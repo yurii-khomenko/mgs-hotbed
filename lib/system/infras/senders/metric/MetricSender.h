@@ -28,7 +28,7 @@ public:
 
       if (client->enabled())
         for (auto &m : metrics())
-          client->publish("metrics", m);
+          client->publish("getState", m);
     }
   }
 };

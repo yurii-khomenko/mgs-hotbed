@@ -103,7 +103,7 @@ public:
 
       if (humidifier)     metrics.push_back(humidifier->metrics());
       if (lighting)       metrics.push_back(lighting->metrics());
-      if (ventilation)    metrics.push_back(ventilation->metrics());
+      if (ventilation)    metrics.push_back(ventilation->getState());
 
       digitalWrite(LED_BUILTIN, LOW);
 
