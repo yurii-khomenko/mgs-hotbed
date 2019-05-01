@@ -12,7 +12,11 @@ const u8 VENTILATION_PIN = D6;
 const u8 LIGHTING_PIN = D7;
 
 
-
+// move to lib System and config
+// constructor to define
+// setup(hum, gigro);
+// all setter setHumidi
+// and set all as mqtt packet. we have json config in a packet.
 
 
 //#include <TaskScheduler.h>

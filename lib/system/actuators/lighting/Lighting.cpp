@@ -60,7 +60,6 @@ void Lighting::setColor(const CRGB &color) {
   FastLED.show();
 }
 
-
 void Lighting::setTemperature(u16 levelKelvin) {
 
   //TODO TOP1 create function to convert Kelvin to RGB http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
