@@ -13,7 +13,7 @@ public:
     pinMode(statePin, INPUT);
   }
 
-  String metrics() {
+  String getState() {
     return String("actuators/humidifier flow=") + getFlow();
   }
 
