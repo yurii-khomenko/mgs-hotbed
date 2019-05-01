@@ -93,6 +93,7 @@ void System::setupHumidifier(u8 pin, u8 statePin) {
 }
 
 void System::setupLighting(u8 pin, u16 ledNum) {
+  delete lighting;
   lighting = new Lighting(pin, ledNum);
 }
 

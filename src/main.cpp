@@ -1,4 +1,5 @@
 #include "../lib/system/System.h"
+#include <TaskScheduler.h>
 
 System sys({
                "greenhouse", "mgs", "hotbed-test",
@@ -11,15 +12,37 @@ const u8 HUMIDIFIER_STATE_PIN = D5;
 const u8 VENTILATION_PIN = D6;
 const u8 LIGHTING_PIN = D7;
 
-
 // move to lib System and config
 // constructor to define
 // setup(hum, gigro);
 // all setter setHumidi
 // and set all as mqtt packet. we have json config in a packet.
 
+Scheduler scheduler;
 
-//#include <TaskScheduler.h>
+//bool on = false;
+//
+//Task blink(500, TASK_FOREVER, [] {
+//
+//  Serial.println("hit");
+//  Serial.println(digitalRead(LED_BUILTIN));
+//
+//  sys.lighting->getBrightness() == 0.0 ?
+//  sys.lighting->setBrightness(0) :
+//  sys.lighting->setBrightness(0);
+//});
+
+//, &scheduler, true, [] {
+//  pinMode(LED_BUILTIN, OUTPUT);
+//  return true;
+//});
+
+//Task taskLedOff(500, TASK_FOREVER, [] {
+////  sys.lighting->setBrightness(0);
+//  digitalWrite(LED_BUILTIN, LOW);
+//});
+
+
 
 //// Callback methods prototypes
 //void t1Callback();
@@ -70,12 +93,19 @@ const u8 LIGHTING_PIN = D7;
 void setup(void) {
   sys.setup();
 
-  sys.setupDht(DHT_SENSOR_PIN, DHT22);
+//  sys.setupDht(DHT_SENSOR_PIN, DHT22);
 
   sys.setupLighting(LIGHTING_PIN, 48);
+  sys.lighting->setColor(CRGB::White);
+//  sys.lighting->setBrightness(10);
+
+//  scheduler.init();
+//  scheduler.addTask(blink);
+//  scheduler.startNow();
+
 
 //  sys.setupHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
-  sys.setupVentilation(VENTILATION_PIN);
+//  sys.setupVentilation(VENTILATION_PIN);
 //  sys.setupGigrostat(96, 99);
 
 //
@@ -101,5 +131,5 @@ void setup(void) {
 
 void loop(void) {
   sys.loop();
-//  runner.execute();
+  scheduler.execute();
 }

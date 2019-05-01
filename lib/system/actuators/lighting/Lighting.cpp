@@ -13,15 +13,16 @@ Lighting::Lighting(
 
   this->leds = new CRGB[ledsNumber];
 
+  setColor(color, false);
+  setBrightness(brightness, false);
+  setTemperature(temperature, false);
+
   FastLED.addLeds<WS2812, D7, GRB>(leds, ledsNumber);
-  setColor(color);
-  setTemperature(temperature);
-  setBrightness(brightness);
+  FastLED.show();
 }
 
 Lighting::~Lighting() {
   setBrightness(0);
-  FastLED.show();
   delete leds;
 }
 
@@ -54,13 +55,13 @@ void Lighting::setColor(u16 index, const struct CRGB &color) {
   FastLED.show();
 }
 
-void Lighting::setColor(const CRGB &color) {
+void Lighting::setColor(const CRGB &color, bool force) {
   this->color = color;
   fill_solid(leds, ledsNumber, color);
-  FastLED.show();
+  if (force) FastLED.show();
 }
 
-void Lighting::setTemperature(u16 levelKelvin) {
+void Lighting::setTemperature(u16 levelKelvin, bool force) {
 
   //TODO TOP1 create function to convert Kelvin to RGB http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
 
@@ -76,10 +77,10 @@ void Lighting::setTemperature(u16 levelKelvin) {
   else if (levelKelvin <= 7000)   FastLED.setTemperature(OvercastSky);
   else                            FastLED.setTemperature(ClearBlueSky);
 
-  FastLED.show();
+  if (force) FastLED.show();
 }
 
-void Lighting::setBrightness(real32 levelPercent) {
+void Lighting::setBrightness(real32 levelPercent, bool force) {
 
   if      (levelPercent == brightness) return;
   else if (levelPercent <= 0)          brightness = 0;
@@ -87,5 +88,5 @@ void Lighting::setBrightness(real32 levelPercent) {
   else                                 brightness = levelPercent;
 
   FastLED.setBrightness((u8) (brightness * 2.55));
-  FastLED.show();
+  if (force) FastLED.show();
 }
