@@ -8,15 +8,15 @@ class StatusSender {
 private:
   MqttClient *client;
   u16 period;
-  std::function<std::vector<String>(void)> statuses;
+  std::function<std::vector<String>(void)> telemetries;
   u64 lastSentTime = 0;
 
 public:
   StatusSender(MqttClient *client, u16 period,
-      const std::function<std::vector<String>(void)> &statuses) {
+      const std::function<std::vector<String>(void)> &telemetries) {
     this->client = client;
     this->period = period;
-    this->statuses = statuses;
+    this->telemetries = telemetries;
   }
 
   void loop() {
@@ -28,8 +28,8 @@ public:
       lastSentTime = now;
 
       if (client->enabled())
-        for (auto &status : statuses())
-          client->publish("statuses", status);
+        for (auto &telemetry : telemetries())
+          client->publish("telemetries", telemetry);
     }
   }
 };
