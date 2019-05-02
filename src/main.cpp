@@ -19,13 +19,13 @@ const u8 LIGHTING_PIN = D7;
 
 Task taskLighting(1000, TASK_FOREVER, [] {
 
-  const u8 startLightHours = 17;
+  const u8 startLightHours = 13;
   const u8 startLightMinutes = 00;
   const u8 startLightSeconds = 00;
 
-  const u8 endLightHours = 05;
-  const u8 endLightMinutes = 00;
-  const u8 endLightSeconds = 00;
+  const u8 endLightHours = 04;
+  const u8 endLightMinutes = 59;
+  const u8 endLightSeconds = 59;
 
   const u8 hh = sys.ntpClient->getHours();
   const u8 mm = sys.ntpClient->getMinutes();
@@ -39,10 +39,13 @@ Task taskLighting(1000, TASK_FOREVER, [] {
       startLightMinutes <= mm && mm <= endLightMinutes &&
       startLightSeconds <= ss && ss <= endLightSeconds) {
 
+    Serial.println("hit");
+
     sys.lighting->setTemperature(20000);
     sys.lighting->setColor(CRGB::White);
     sys.lighting->setBrightness(10);
   } else {
+    Serial.println("no hit");
     sys.lighting->setBrightness(0);
   }
 });
@@ -58,8 +61,8 @@ void setup(void) {
 //  sys.lighting->setTemperature(1000);
 //  sys.lighting->setBrightness(10);
 
-  sys.scheduler.addTask(taskLighting);
-  taskLighting.enable();
+//  sys.scheduler.addTask(taskLighting);
+//  taskLighting.enable();
 
 //  sys.enableHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
 //  sys.enableVentilation(VENTILATION_PIN);
