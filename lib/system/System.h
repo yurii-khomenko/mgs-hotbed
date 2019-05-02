@@ -10,7 +10,7 @@
 #include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
-#include "infras/senders/status/StatusSender.h"
+#include "infras/senders/state/StateSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
@@ -43,7 +43,7 @@ public:
   NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
-  StatusSender *statusSender;
+  StateSender *stateSender;
 
   DhtSensor *dhtSensor;
 
@@ -94,7 +94,7 @@ public:
       if (ventilation) ventilation->setState(spec);
     });
 
-    statusSender = new StatusSender(mqttClient, 2000, [this] {
+    stateSender = new StateSender(mqttClient, 2000, [this] {
 
       digitalWrite(LED_BUILTIN, LOW);
 
@@ -123,9 +123,9 @@ public:
     delete dhtSensor;
   }
 
-  void enableHumidifier(u8 pin, u8 pinStatus) {
+  void enableHumidifier(u8 pin, u8 pinState) {
     delete humidifier;
-    humidifier = new Humidifier(pin, pinStatus);
+    humidifier = new Humidifier(pin, pinState);
   }
   void disableHumidifier() {
     delete humidifier;
@@ -170,7 +170,7 @@ public:
     if (mqttClient)   mqttClient->loop();
     if (gigrostat)    gigrostat->loop();
 
-    if (statusSender)  statusSender->loop();
+    if (stateSender)  stateSender->loop();
 
     scheduler.execute();
   }
