@@ -79,7 +79,7 @@ public:
     if (force) FastLED.show();
   }
 
-  void setConfig(const DynamicJsonDocument &config) {
+  void setConfig(const JsonDocument &config) {
 
     setColor({
                  config["actuators"]["lighting"]["color"]["r"] | color.r,

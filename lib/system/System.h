@@ -86,7 +86,7 @@ public:
       Serial.print(", message:");
       Serial.println((char *) message);
 
-      DynamicJsonDocument config(1024); //TODO: use length field
+      DynamicJsonDocument config(length);
       deserializeJson(config, message);
 
       if (humidifier)   humidifier->setConfig(config);

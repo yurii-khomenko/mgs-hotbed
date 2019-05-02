@@ -24,7 +24,7 @@ public:
     else                            digitalWrite(pin, HIGH);
   }
 
-  void setConfig(const DynamicJsonDocument &config) {
+  void setConfig(const JsonDocument &config) {
     setFlow(config["actuators"]["ventilation"]["flow"] | flow);
   }
 

@@ -22,7 +22,7 @@ public:
     else if (level > 0 && getFlow() <= 0) click();
   }
 
-  void setConfig(const DynamicJsonDocument &config) {
+  void setConfig(const JsonDocument &config) {
     setFlow(config["actuators"]["humidifier"]["flow"] | getFlow());
   }
 
