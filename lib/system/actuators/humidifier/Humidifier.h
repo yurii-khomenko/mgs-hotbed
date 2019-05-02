@@ -13,14 +13,6 @@ public:
     pinMode(statePin, INPUT);
   }
 
-  void setSpec(const DynamicJsonDocument &state) {
-    setFlow(state["actuators"]["humidifier"]["flow"] | getFlow());
-  }
-
-  String getStatus() {
-    return String("actuators/humidifier flow=") + getFlow();
-  }
-
   u8 getFlow() {
     return (u8) digitalRead(statePin) ? 100 : 0;
   }
@@ -28,6 +20,14 @@ public:
   void setFlow(u8 level) {
     if (level <= 0 && getFlow() >= 100)   click();
     else if (level > 0 && getFlow() <= 0) click();
+  }
+
+  void setSpec(const DynamicJsonDocument &spec) {
+    setFlow(spec["actuators"]["humidifier"]["flow"] | getFlow());
+  }
+
+  String getStatus() {
+    return String("actuators/humidifier flow=") + getFlow();
   }
 
 private:

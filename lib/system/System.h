@@ -99,17 +99,17 @@ public:
 
       digitalWrite(LED_BUILTIN, LOW);
 
-      std::vector<String> states;
+      std::vector<String> statuses;
 
-      if (dhtSensor)      states.push_back(dhtSensor->getStatus());
+      if (dhtSensor)      statuses.push_back(dhtSensor->getStatus());
 
-      if (humidifier)     states.push_back(humidifier->getStatus());
-      if (lighting)       states.push_back(lighting->getStatus());
-      if (ventilation)    states.push_back(ventilation->getStatus());
+      if (humidifier)     statuses.push_back(humidifier->getStatus());
+      if (lighting)       statuses.push_back(lighting->getStatus());
+      if (ventilation)    statuses.push_back(ventilation->getStatus());
 
       digitalWrite(LED_BUILTIN, HIGH);
 
-      return states;
+      return statuses;
     });
 
     scheduler.init();
