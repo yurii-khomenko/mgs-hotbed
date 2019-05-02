@@ -52,7 +52,7 @@ public:
     setBrightness(state["actuators"]["lighting"]["brightness"] | brightness);
   }
 
-  void setColor(u16 index, const CRGB &color = CRGB::White) {
+  void setColor(u16 index, const CRGB &color) {
 
     if (index <= 0 || index >= ledsNumber) return;
 

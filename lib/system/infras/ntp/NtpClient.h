@@ -111,19 +111,19 @@ public:
     return true;
   }
 
-  int getDay() {
+  u8 getDay() {
     return (((this->getEpochTime() / 86400L) + 4) % 7); //0 is Sunday
   }
 
-  int getHours() {
+  u8 getHours() {
     return ((this->getEpochTime() % 86400L) / 3600);
   }
 
-  int getMinutes() {
+  u8 getMinutes() {
     return ((this->getEpochTime() % 3600) / 60);
   }
 
-  int getSeconds() {
+  u8 getSeconds() {
     return (this->getEpochTime() % 60);
   }
 

@@ -17,20 +17,37 @@ const u8 LIGHTING_PIN = D7;
 // all setter setHumidi
 // and set all as mqtt packet. we have json config in a packet.
 
-real32 step = 1;
-
-Task blink(100, TASK_FOREVER, [] {
-
-  if (sys.lighting->getBrightness() < 10)
-    step = -step;
-  else if (sys.lighting->getBrightness() > 50)
-    step = -step;
-
-  sys.lighting->setBrightness(sys.lighting->getBrightness() + step);
-});
-
 Task taskLighting(1000, TASK_FOREVER, [] {
-  
+
+  const u8 startLightHours = 0;
+  const u8 startLightMinutes = 28;
+  const u8 startLightSeconds = 0;
+
+  const u8 endLightHours = 0;
+  const u8 endLightMinutes = 29;
+  const u8 endLightSeconds = 59;
+
+  const u8 hh = sys.ntpClient->getHours();
+  const u8 mm = sys.ntpClient->getMinutes();
+  const u8 ss = sys.ntpClient->getSeconds();
+
+  Serial.println(hh);
+  Serial.println(mm);
+  Serial.println(ss);
+
+  if (startLightHours   <= hh && hh <= endLightHours &&
+      startLightMinutes <= mm && mm <= endLightMinutes &&
+      startLightSeconds <= ss && ss <= endLightSeconds) {
+
+    Serial.println("hit");
+
+    sys.lighting->setTemperature(20000);
+    sys.lighting->setColor(CRGB::White);
+    sys.lighting->setBrightness(10);
+  } else {
+    Serial.println("no hit");
+    sys.lighting->setBrightness(0);
+  }
 });
 
 void setup(void) {
@@ -40,16 +57,12 @@ void setup(void) {
   sys.enableDht(DHT_SENSOR_PIN, DHT22);
 
   sys.enableLighting(LIGHTING_PIN, 32);
-  sys.lighting->setColor({255,90,0});
-  sys.lighting->setTemperature(1000);
-  sys.lighting->setBrightness(10);
-
-  sys.scheduler.addTask(blink);
-  blink.enable();
+//  sys.lighting->setColor({255,90,0});
+//  sys.lighting->setTemperature(1000);
+//  sys.lighting->setBrightness(10);
 
   sys.scheduler.addTask(taskLighting);
   taskLighting.enable();
-
 
 //  sys.enableHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
 //  sys.enableVentilation(VENTILATION_PIN);
