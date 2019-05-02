@@ -19,12 +19,12 @@ const u8 LIGHTING_PIN = D7;
 
 Task taskLighting(1000, TASK_FOREVER, [] {
 
-  const u8 startLightHours = 0;
-  const u8 startLightMinutes = 28;
-  const u8 startLightSeconds = 0;
+  const u8 startLightHours = 00;
+  const u8 startLightMinutes = 17;
+  const u8 startLightSeconds = 00;
 
-  const u8 endLightHours = 0;
-  const u8 endLightMinutes = 29;
+  const u8 endLightHours = 00;
+  const u8 endLightMinutes = 05;
   const u8 endLightSeconds = 59;
 
   const u8 hh = sys.ntpClient->getHours();

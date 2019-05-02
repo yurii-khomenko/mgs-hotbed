@@ -9,8 +9,8 @@ public:
   Lighting(
       u8 pin, u16 ledsNumber,
       const CRGB &color = CRGB::White,
-      u16 temperature = 20000,
-      real32 brightness = 20) {
+      u16 temperature = 1000,
+      real32 brightness = 0) {
 
     this->pin = pin;
     this->ledsNumber = ledsNumber;
