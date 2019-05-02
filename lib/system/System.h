@@ -5,12 +5,13 @@
 #include <WiFiUdp.h>
 #include <ArduinoJson.h>
 #include <TaskScheduler.h>
+#include <infras/senders/status/StatusSender.h>
 
 #include "infras/wifi/WifiDevice.h"
 #include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
-#include "infras/senders/state/StateSender.h"
+#include "infras/senders/status/StatusSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
@@ -43,7 +44,7 @@ public:
   NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
-  StateSender *stateSender;
+  StatusSender *statusSender;
 
   DhtSensor *dhtSensor;
 
@@ -89,22 +90,22 @@ public:
       DynamicJsonDocument spec(1024); //TODO: use length field
       deserializeJson(spec, message);
 
-      if (humidifier) humidifier->setState(spec);
-      if (lighting) lighting->setState(spec);
-      if (ventilation) ventilation->setState(spec);
+      if (humidifier) humidifier->setSpec(spec);
+      if (lighting) lighting->setSpec(spec);
+      if (ventilation) ventilation->setSpec(spec);
     });
 
-    stateSender = new StateSender(mqttClient, 2000, [this] {
+    statusSender = new StatusSender(mqttClient, 2000, [this] {
 
       digitalWrite(LED_BUILTIN, LOW);
 
       std::vector<String> states;
 
-      if (dhtSensor)      states.push_back(dhtSensor->getState());
+      if (dhtSensor)      states.push_back(dhtSensor->getStatus());
 
-      if (humidifier)     states.push_back(humidifier->getState());
-      if (lighting)       states.push_back(lighting->getState());
-      if (ventilation)    states.push_back(ventilation->getState());
+      if (humidifier)     states.push_back(humidifier->getStatus());
+      if (lighting)       states.push_back(lighting->getStatus());
+      if (ventilation)    states.push_back(ventilation->getStatus());
 
       digitalWrite(LED_BUILTIN, HIGH);
 
@@ -170,7 +171,7 @@ public:
     if (mqttClient)   mqttClient->loop();
     if (gigrostat)    gigrostat->loop();
 
-    if (stateSender)  stateSender->loop();
+    if (statusSender)  statusSender->loop();
 
     scheduler.execute();
   }

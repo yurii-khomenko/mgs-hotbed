@@ -11,15 +11,16 @@ public:
     pinMode(pin, OUTPUT);
   }
 
-  String getState() {
+  void setSpec(const DynamicJsonDocument &spec) {
+    setFlow(spec["actuators"]["ventilation"]["flow"] | flow);
+  }
+
+  String getStatus() {
     return String("actuators/ventilation flow=") + flow;
   }
 
-  void setState(const DynamicJsonDocument &state) {
-    setFlow(state["actuators"]["ventilation"]["flow"] | flow);
-  }
-
   real32 getFlow() { return flow; }
+
   void setFlow(real32 levelPercent) {
 
     if      (levelPercent == flow)  return;

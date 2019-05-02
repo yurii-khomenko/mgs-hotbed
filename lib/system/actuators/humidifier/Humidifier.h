@@ -13,12 +13,12 @@ public:
     pinMode(statePin, INPUT);
   }
 
-  String getState() {
-    return String("actuators/humidifier flow=") + getFlow();
+  void setSpec(const DynamicJsonDocument &state) {
+    setFlow(state["actuators"]["humidifier"]["flow"] | getFlow());
   }
 
-  void setState(const DynamicJsonDocument &state) {
-    setFlow(state["actuators"]["humidifier"]["flow"] | getFlow());
+  String getStatus() {
+    return String("actuators/humidifier flow=") + getFlow();
   }
 
   u8 getFlow() {

@@ -12,7 +12,7 @@ public:
     dht->begin();
   }
 
-  String getState() {
+  String getStatus() {
 
     const real32 t = temperature();
     const real32 h = humidity();

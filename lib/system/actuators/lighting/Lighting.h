@@ -31,7 +31,7 @@ public:
     delete leds;
   }
 
-  String getState() {
+  String getStatus() {
     return String("actuators/lighting ") +
            "r=" + leds[0].r + "," +
            "g=" + leds[0].g + "," +
@@ -40,16 +40,16 @@ public:
            "brightness=" + brightness;
   }
 
-  void setState(const DynamicJsonDocument &state) {
+  void setSpec(const DynamicJsonDocument &spec) {
 
     setColor({
-                 state["actuators"]["lighting"]["color"]["r"] | color.r,
-                 state["actuators"]["lighting"]["color"]["g"] | color.g,
-                 state["actuators"]["lighting"]["color"]["b"] | color.b
+                 spec["actuators"]["lighting"]["color"]["r"] | color.r,
+                 spec["actuators"]["lighting"]["color"]["g"] | color.g,
+                 spec["actuators"]["lighting"]["color"]["b"] | color.b
              });
 
-    setTemperature(state["actuators"]["lighting"]["temperature"] | temperature);
-    setBrightness(state["actuators"]["lighting"]["brightness"] | brightness);
+    setTemperature(spec["actuators"]["lighting"]["temperature"] | temperature);
+    setBrightness(spec["actuators"]["lighting"]["brightness"] | brightness);
   }
 
   void setColor(u16 index, const CRGB &color, bool force = true) {
