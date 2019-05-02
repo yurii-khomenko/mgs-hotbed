@@ -131,21 +131,24 @@ public:
     if (!config["actuators"]["humidifier"].isNull()) {
       enableHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
       humidifier->setConfig(config);
-    } else delete humidifier;
+    } else
+      delete humidifier;
   }
 
   void configLighting(const DynamicJsonDocument &config) {
     if (!config["actuators"]["lighting"].isNull()) {
       enableLighting(LIGHTING_PIN, 150);
       lighting->setConfig(config);
-    } else delete lighting;
+    } else
+      delete lighting;
   }
 
   void configVentilation(const DynamicJsonDocument &config) {
-    if (config["actuators"]["ventilation"].isNull())
-         enableVentilation(VENTILATION_PIN);
-    else delete ventilation;
-    if (ventilation) ventilation->setConfig(config);
+    if (!config["actuators"]["ventilation"].isNull()) {
+      enableVentilation(VENTILATION_PIN);
+      ventilation->setConfig(config);
+    } else
+      delete ventilation;
   }
 
   void enableDht(u8 pin, u8 type) {
