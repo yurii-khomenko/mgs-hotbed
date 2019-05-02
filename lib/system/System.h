@@ -55,6 +55,17 @@ public:
 
   Scheduler scheduler;
 
+  void setup() {
+    const u8 DHT_SENSOR_PIN = D1;
+    const u8 HUMIDIFIER_PIN = D4;
+    const u8 HUMIDIFIER_STATE_PIN = D5;
+    const u8 VENTILATION_PIN = D6;
+    const u8 LIGHTING_PIN = D7;
+    sys.enableSystem();
+    sys.enableDht(DHT_SENSOR_PIN, DHT22);
+    sys.enableLighting(LIGHTING_PIN, 150);
+  }
+
   void enableSystem() {
 
     Serial.begin(115200);
