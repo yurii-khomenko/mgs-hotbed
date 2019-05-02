@@ -14,7 +14,7 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _type = type;
   #ifdef __AVR
     _bit = digitalPinToBitMask(pin);
-    _port = digitalPinToPort(pin);
+    port = digitalPinToPort(pin);
   #endif
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
                                                  // reading pulses from DHT sensor.
@@ -162,7 +162,7 @@ bool DHT::read(bool force) {
   // Send start signal.  See DHT datasheet for full signal diagram:
   //   http://www.adafruit.com/datasheets/Digital%20humidity%20and%20temperature%20sensor%20AM2302.pdf
 
-  // Go into high impedence state to let pull-up raise data line getLevel and
+  // Go into high impedence telemetrySender to let pull-up raise data line getLevel and
   // start the reading process.
   pinMode(_pin, INPUT_PULLUP);
   delay(1);
@@ -213,8 +213,8 @@ bool DHT::read(bool force) {
     // high pulse is ~28 microseconds then it's a 0 and if it's ~70 microseconds
     // then it's a 1.  We measure the cycle count of the initial 50us low pulse
     // and use that to compare to the cycle count of the high pulse to determine
-    // if the bit is a 0 (high state cycle count < low state cycle count), or a
-    // 1 (high state cycle count > low state cycle count). Note that for speed all
+    // if the bit is a 0 (high telemetrySender cycle count < low telemetrySender cycle count), or a
+    // 1 (high telemetrySender cycle count > low telemetrySender cycle count). Note that for speed all
     // the pulses are read into a array and then examined in a later step.
     for (int i=0; i<80; i+=2) {
       cycles[i]   = expectPulse(LOW);
@@ -222,8 +222,8 @@ bool DHT::read(bool force) {
     }
   } // Timing critical code is now complete.
 
-  // Inspect pulses and determine which ones are 0 (high state cycle count < low
-  // state cycle count), or 1 (high state cycle count > low state cycle count).
+  // Inspect pulses and determine which ones are 0 (high telemetrySender cycle count < low
+  // telemetrySender cycle count), or 1 (high telemetrySender cycle count > low telemetrySender cycle count).
   for (int i=0; i<40; ++i) {
     uint32_t lowCycles  = cycles[2*i];
     uint32_t highCycles = cycles[2*i+1];
@@ -280,7 +280,7 @@ uint32_t DHT::expectPulse(bool level) {
   // for catching pulses that are 10's of microseconds in length:
   #ifdef __AVR
     uint8_t portState = getLevel ? _bit : 0;
-    while ((*portInputRegister(_port) & _bit) == portState) {
+    while ((*portInputRegister(port) & _bit) == portState) {
       if (count++ >= _maxcycles) {
         return TIMEOUT; // Exceeded timeout, fail.
       }

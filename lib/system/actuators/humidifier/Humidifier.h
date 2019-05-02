@@ -6,19 +6,39 @@
 
 class Humidifier {
 public:
-  Humidifier(u8 pin, u8 statePin);
+  Humidifier(u8 pin, u8 statePin) {
+    this->pin = pin;
+    this->statePin = statePin;
+    pinMode(pin, OUTPUT_OPEN_DRAIN);
+    pinMode(statePin, INPUT);
+  }
 
-  String metrics();
-  void setState(const DynamicJsonDocument &state);
+  u8 getFlow() {
+    return (u8) digitalRead(statePin) ? 100 : 0;
+  }
 
-  u8 getFlow();
-  void setFlow(u8 level);
+  void setFlow(u8 level) {
+    if (level <= 0 && getFlow() >= 100)   click();
+    else if (level > 0 && getFlow() <= 0) click();
+  }
+
+  void setConfig(const JsonDocument &config) {
+    setFlow(config["actuators"]["humidifier"]["flow"] | getFlow());
+  }
+
+  String getTelemetry() {
+    return String("actuators/humidifier flow=") + getFlow();
+  }
 
 private:
   u8 pin;
   u8 statePin;
 
-  void click();
+  void click() {
+    digitalWrite(pin, LOW);
+    delay(200);
+    digitalWrite(pin, HIGH);
+  }
 };
 
 #endif

@@ -6,13 +6,31 @@
 
 class Ventilation {
 public:
-  Ventilation(u8 pin);
-
-  String metrics();
-  void setState(const DynamicJsonDocument &state);
+  Ventilation(u8 pin) {
+    this->pin = pin;
+    pinMode(pin, OUTPUT);
+  }
 
   real32 getFlow() { return flow; }
-  void setFlow(real32 levelPercent);
+
+  void setFlow(real32 levelPercent) {
+
+    if      (levelPercent == flow)  return;
+    else if (levelPercent <= 0)     flow = 0;
+    else if (levelPercent >= 100)   flow = 100;
+    else                            flow = levelPercent;
+
+    if (flow <= 0)                  digitalWrite(pin, LOW);
+    else                            digitalWrite(pin, HIGH);
+  }
+
+  void setConfig(const JsonDocument &config) {
+    setFlow(config["actuators"]["ventilation"]["flow"] | flow);
+  }
+
+  String getTelemetry() {
+    return String("actuators/ventilation flow=") + flow;
+  }
 
 private:
   u8 pin;
