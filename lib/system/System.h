@@ -90,9 +90,9 @@ public:
       DynamicJsonDocument spec(1024); //TODO: use length field
       deserializeJson(spec, message);
 
-      if (humidifier) humidifier->setSpec(spec);
-      if (lighting) lighting->setSpec(spec);
-      if (ventilation) ventilation->setSpec(spec);
+      if (humidifier)   humidifier->setSpec(spec);
+      if (lighting)     lighting->setSpec(spec);
+      if (ventilation)  ventilation->setSpec(spec);
     });
 
     statusSender = new StatusSender(mqttClient, 2000, [this] {
