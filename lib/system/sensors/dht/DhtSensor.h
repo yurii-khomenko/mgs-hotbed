@@ -24,7 +24,7 @@ public:
     return h;
   }
 
-  String getTelemetry() {
+  String getState() {
 
     const real32 t = temperature();
     const real32 h = humidity();

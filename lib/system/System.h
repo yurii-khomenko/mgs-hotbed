@@ -10,7 +10,7 @@
 #include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
-#include "infras/senders/telemetry/TelemetrySender.h"
+#include "infras/senders/state/StateSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
@@ -43,7 +43,7 @@ public:
   NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
-  TelemetrySender *telemetrySender; //TODO: move to Task
+  StateSender *stateSender; //TODO: move to Task
 
   DhtSensor *dhtSensor;
 
@@ -86,7 +86,7 @@ public:
       Serial.print(", message:");
       Serial.println((char *) message);
 
-      DynamicJsonDocument config(length);
+      DynamicJsonDocument config(length * 2);
       deserializeJson(config, message);
 
       if (humidifier)   humidifier->setConfig(config);
@@ -94,17 +94,17 @@ public:
       if (ventilation)  ventilation->setConfig(config);
     });
 
-    telemetrySender = new TelemetrySender(mqttClient, 2000, [this] {
+    stateSender = new StateSender(mqttClient, 2000, [this] {
 
       digitalWrite(LED_BUILTIN, LOW);
 
       std::vector<String> telemetries;
 
-      if (dhtSensor)      telemetries.push_back(dhtSensor->getTelemetry());
+      if (dhtSensor)      telemetries.push_back(dhtSensor->getState());
 
-      if (humidifier)     telemetries.push_back(humidifier->getTelemetry());
-      if (lighting)       telemetries.push_back(lighting->getTelemetry());
-      if (ventilation)    telemetries.push_back(ventilation->getTelemetry());
+      if (humidifier)     telemetries.push_back(humidifier->getState());
+      if (lighting)       telemetries.push_back(lighting->getState());
+      if (ventilation)    telemetries.push_back(ventilation->getState());
 
       digitalWrite(LED_BUILTIN, HIGH);
 
@@ -170,7 +170,7 @@ public:
     if (mqttClient)   mqttClient->loop();
     if (gigrostat)    gigrostat->loop();
 
-    if (telemetrySender) telemetrySender->loop();
+    if (stateSender)  stateSender->loop();
 
     scheduler.execute();
   }

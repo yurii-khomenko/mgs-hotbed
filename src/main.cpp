@@ -56,7 +56,7 @@ void setup(void) {
 
   sys.enableDht(DHT_SENSOR_PIN, DHT22);
 
-  sys.enableLighting(LIGHTING_PIN, 32);
+  sys.enableLighting(LIGHTING_PIN, 150);
 //  sys.lighting->setColor({255,90,0});
 //  sys.lighting->setTemperature(1000);
 //  sys.lighting->setBrightness(10);
