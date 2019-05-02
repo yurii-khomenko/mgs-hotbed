@@ -98,17 +98,17 @@ public:
 
       digitalWrite(LED_BUILTIN, LOW);
 
-      std::vector<String> telemetries;
+      std::vector<String> states;
 
-      if (dhtSensor)      telemetries.push_back(dhtSensor->getState());
+      if (dhtSensor)      states.push_back(dhtSensor->getState());
 
-      if (humidifier)     telemetries.push_back(humidifier->getState());
-      if (lighting)       telemetries.push_back(lighting->getState());
-      if (ventilation)    telemetries.push_back(ventilation->getState());
+      if (humidifier)     states.push_back(humidifier->getState());
+      if (lighting)       states.push_back(lighting->getState());
+      if (ventilation)    states.push_back(ventilation->getState());
 
       digitalWrite(LED_BUILTIN, HIGH);
 
-      return telemetries;
+      return states;
     });
 
     scheduler.init();
