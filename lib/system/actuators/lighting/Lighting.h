@@ -8,8 +8,8 @@ class Lighting {
 public:
   Lighting(
       u8 pin, u16 ledsNumber,
-      const CRGB &color = {255, 90, 0},
-      u16 temperature = 1000,
+      const CRGB &color = CRGB::White,
+      u16 temperature = 6600,
       real32 brightness = 0) {
 
     this->pin = pin;
