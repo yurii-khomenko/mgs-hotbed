@@ -56,17 +56,14 @@ public:
   Scheduler scheduler;
 
   void setup() {
-
-    const u8 DHT_SENSOR_PIN = D1;
-    const u8 HUMIDIFIER_PIN = D4;
-    const u8 HUMIDIFIER_STATE_PIN = D5;
-    const u8 VENTILATION_PIN = D6;
-    const u8 LIGHTING_PIN = D7;
-
     enableSystem();
-    enableDht(DHT_SENSOR_PIN, DHT22);
-    enableLighting(LIGHTING_PIN, 150);
   }
+
+  const u8 DHT_SENSOR_PIN = D1;
+  const u8 HUMIDIFIER_PIN = D4;
+  const u8 HUMIDIFIER_STATE_PIN = D5;
+  const u8 VENTILATION_PIN = D6;
+  const u8 LIGHTING_PIN = D7;
 
   void enableSystem() {
 
@@ -96,15 +93,17 @@ public:
 
       Serial.print("[MqttClient] topic: ");
       Serial.print(topic);
-      Serial.print(", message:");
+      Serial.println((String) ", length: " + length + ", message:");
       Serial.println((char *) message);
 
       DynamicJsonDocument config(length * 2);
       deserializeJson(config, message);
 
-      if (humidifier)   humidifier->setConfig(config);
-      if (lighting)     lighting->setConfig(config);
-      if (ventilation)  ventilation->setConfig(config);
+      if (!config["actuators"]["lighting"].isNull())  configLighting(config);
+
+      configHumidifier(config);
+      configLighting(config);
+      configVentilation(config);
     });
 
     stateSender = new StateSender(mqttClient, 2000, [this] {
@@ -128,8 +127,29 @@ public:
     scheduler.startNow();
   }
 
+  void configHumidifier(const DynamicJsonDocument &config) {
+    if (!config["actuators"]["humidifier"].isNull()) {
+      enableHumidifier(HUMIDIFIER_PIN, HUMIDIFIER_STATE_PIN);
+      humidifier->setConfig(config);
+    } else delete humidifier;
+  }
+
+  void configLighting(const DynamicJsonDocument &config) {
+    if (!config["actuators"]["lighting"].isNull()) {
+      enableLighting(LIGHTING_PIN, 150);
+      lighting->setConfig(config);
+    } else delete lighting;
+  }
+
+  void configVentilation(const DynamicJsonDocument &config) {
+    if (config["actuators"]["ventilation"].isNull())
+         enableVentilation(VENTILATION_PIN);
+    else delete ventilation;
+    if (ventilation) ventilation->setConfig(config);
+  }
+
   void enableDht(u8 pin, u8 type) {
-    delete dhtSensor;
+    disableDht();
     dhtSensor = new DhtSensor(pin, type);
   }
   void disableDht() {
@@ -137,7 +157,7 @@ public:
   }
 
   void enableHumidifier(u8 pin, u8 pinState) {
-    delete humidifier;
+    disableHumidifier();
     humidifier = new Humidifier(pin, pinState);
   }
   void disableHumidifier() {
@@ -148,16 +168,10 @@ public:
     delete lighting;
     lighting = new Lighting(pin, ledNum);
   }
-  void disableLighting() {
-    delete lighting;
-  }
 
   void enableVentilation(u8 pin) {
     delete ventilation;
     ventilation = new Ventilation(pin);
-  }
-  void disableVentilation() {
-    delete ventilation;
   }
 
   void enableGigrostat(real32 min, real32 max) {

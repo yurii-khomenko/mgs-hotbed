@@ -6,28 +6,18 @@
 
 class Lighting {
 public:
-  Lighting(
-      u8 pin, u16 ledsNumber,
-      const CRGB &color = CRGB::White,
-      u16 temperature = 6600,
-      real32 brightness = 0) {
+  Lighting(u8 pin, u16 ledsNumber) {
 
     this->pin = pin;
     this->ledsNumber = ledsNumber;
-    this->color = color;
 
     this->leds = new CRGB[ledsNumber];
 
-    setColor(color, false);
-    setBrightness(brightness, false);
-    setTemperature(temperature, false);
-
     FastLED.addLeds<WS2812, D7, GRB>(leds, ledsNumber);
-    FastLED.show();
   }
 
   ~Lighting() {
-    setBrightness(0);
+    FastLED.clearData();
     delete leds;
   }
 
@@ -85,9 +75,10 @@ public:
                  config["actuators"]["lighting"]["color"]["r"] | color.r,
                  config["actuators"]["lighting"]["color"]["g"] | color.g,
                  config["actuators"]["lighting"]["color"]["b"] | color.b
-             });
+             },
+                 false);
 
-    setTemperature(config["actuators"]["lighting"]["temperature"] | temperature);
+    setTemperature(config["actuators"]["lighting"]["temperature"] | temperature, false);
     setBrightness( config["actuators"]["lighting"]["brightness"]  | brightness);
   }
 

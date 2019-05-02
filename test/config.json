@@ -1,8 +1,0 @@
-{
-  "enabled": true,
-  "actuators": {
-    "lighting": {
-      "enabled": true
-    }
-  }
-}

@@ -1,0 +1,13 @@
+{
+  "actuators": {
+    "lighting": {
+      "color": {
+        "r": 255,
+        "g": 40,
+        "b": 0
+      },
+      "temperature": 6600,
+      "brightness": 10
+    }
+  }
+}
