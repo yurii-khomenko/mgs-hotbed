@@ -11,39 +11,34 @@
 class NtpClient {
 public:
   NtpClient(UDP &udp) {
-    this->_udp = &udp;
+    this->udpClient = &udp;
   }
 
   NtpClient(UDP &udp, long timeOffset) {
-    this->_udp = &udp;
-    this->_timeOffset = timeOffset;
+    this->udpClient = &udp;
+    this->timeOffset = timeOffset;
   }
 
   NtpClient(UDP &udp, const char *poolServerName) {
-    this->_udp = &udp;
-    this->_poolServerName = poolServerName;
+    this->udpClient = &udp;
+    this->host = poolServerName;
   }
 
   NtpClient(UDP &udp, const char *poolServerName, long timeOffset) {
-    this->_udp = &udp;
-    this->_timeOffset = timeOffset;
-    this->_poolServerName = poolServerName;
+    this->udpClient = &udp;
+    this->timeOffset = timeOffset;
+    this->host = poolServerName;
   }
 
   NtpClient(UDP &udp, const char *poolServerName, long timeOffset, unsigned long updateInterval) {
-    this->_udp = &udp;
-    this->_timeOffset = timeOffset;
-    this->_poolServerName = poolServerName;
-    this->_updateInterval = updateInterval;
+    this->udpClient = &udp;
+    this->timeOffset = timeOffset;
+    this->host = poolServerName;
+    this->updateInterval = updateInterval;
   }
 
-  /**
-   * Set time server name
-   *
-   * @param poolServerName
-   */
-  void setPoolServerName(const char *poolServerName) {
-    this->_poolServerName = poolServerName;
+  void setHost(const char *host) {
+    this->host = host;
   }
 
   /**
@@ -57,9 +52,9 @@ public:
    * Starts the underlying UDP client with the specified local port
    */
   void begin(int port) {
-    this->_port = port;
-    this->_udp->begin(this->_port);
-    this->_udpSetup = true;
+    this->port = port;
+    this->udpClient->begin(this->port);
+    this->udpClientInit = true;
   }
 
   /**
@@ -69,9 +64,9 @@ public:
    * @return true on success, false on failure
    */
   bool update() {
-    if ((millis() - this->_lastUpdate >= this->_updateInterval)     // Update after _updateInterval
-        || this->_lastUpdate == 0) {                                // Update if there was no update yet.
-      if (!this->_udpSetup) this->begin();                         // setLevel the UDP client if needed
+    if ((millis() - this->lastUpdate >= this->updateInterval)     // Update after updateInterval
+        || this->lastUpdate == 0) {                                // Update if there was no update yet.
+      if (!this->udpClientInit) this->begin();                         // setLevel the UDP client if needed
       return this->forceUpdate();
     }
     return true;
@@ -91,22 +86,22 @@ public:
     int cb = 0;
     do {
       delay(10);
-      cb = this->_udp->parsePacket();
+      cb = this->udpClient->parsePacket();
       if (timeout > 100) return false; // timeout after 1000 ms
       timeout++;
     } while (cb == 0);
 
-    this->_lastUpdate = millis() - (10 * (timeout + 1)); // Account for delay in reading the time
+    this->lastUpdate = millis() - (10 * (timeout + 1)); // Account for delay in reading the time
 
-    this->_udp->read(this->_packetBuffer, NTP_PACKET_SIZE);
+    this->udpClient->read(this->packetBuffer, NTP_PACKET_SIZE);
 
-    unsigned long highWord = word(this->_packetBuffer[40], this->_packetBuffer[41]);
-    unsigned long lowWord = word(this->_packetBuffer[42], this->_packetBuffer[43]);
+    u64 highWord = word(this->packetBuffer[40], this->packetBuffer[41]);
+    u64 lowWord = word(this->packetBuffer[42], this->packetBuffer[43]);
     // combine the four bytes (two words) into a long integer
     // this is NTP time (seconds since Jan 1 1900):
     unsigned long secsSince1900 = highWord << 16 | lowWord;
 
-    this->_currentEpoc = secsSince1900 - SEVENZYYEARS;
+    this->currentEpoc = secsSince1900 - SEVENZYYEARS;
 
     return true;
   }
@@ -131,7 +126,7 @@ public:
    * Changes the time offset. Useful for changing timezones dynamically
    */
   void setTimeOffset(int timeOffset) {
-    this->_timeOffset = timeOffset;
+    this->timeOffset = timeOffset;
   }
 
   /**
@@ -139,7 +134,7 @@ public:
    * timeOffset should not be set in the constructor
    */
   void setUpdateInterval(unsigned long updateInterval) {
-    this->_updateInterval = updateInterval;
+    this->updateInterval = updateInterval;
   }
 
   /**
@@ -162,57 +157,57 @@ public:
   /**
    * @return time in seconds since Jan. 1, 1970
    */
-  unsigned long getEpochTime() const {
-    return this->_timeOffset + // User offset
-           this->_currentEpoc + // Epoc returned by the NTP server
-           ((millis() - this->_lastUpdate) / 1000); // Time since last update
+  u64 getEpochTime() const {
+    return this->timeOffset + // User offset
+           this->currentEpoc + // Epoc returned by the NTP server
+           ((millis() - this->lastUpdate) / 1000); // Time since last update
   }
 
   /**
    * Stops the underlying UDP client
    */
   void end() {
-    this->_udp->stop();
-    this->_udpSetup = false;
+    this->udpClient->stop();
+    this->udpClientInit = false;
   }
 
 private:
-  UDP *_udp;
-  bool _udpSetup = false;
+  UDP *udpClient;
+  bool udpClientInit = false;
 
-  const char *_poolServerName = "pool.ntp.org"; // Default time server
-  int _port = NTP_DEFAULT_LOCAL_PORT;
-  long _timeOffset = 0;
+  const char *host = "pool.ntp.org";
+  int port = NTP_DEFAULT_LOCAL_PORT;
 
-  unsigned long _updateInterval = 60000;  // In ms
+  u64 updateInterval = 60000;  // In ms
 
-  unsigned long _currentEpoc = 0;      // In s
-  unsigned long _lastUpdate = 0;      // In ms
+  s32 timeOffset = 0;
 
-  byte _packetBuffer[NTP_PACKET_SIZE];
+  u64 currentEpoc = 0;      // In s
+  u64 lastUpdate = 0;      // In ms
+
+  byte packetBuffer[NTP_PACKET_SIZE];
 
   void sendNTPPacket() {
     // set all bytes in the buffer to 0
-    memset(this->_packetBuffer, 0, NTP_PACKET_SIZE);
+    memset(this->packetBuffer, 0, NTP_PACKET_SIZE);
     // Initialize values needed to form NTP request
     // (see URL above for details on the packets)
-    this->_packetBuffer[0] = 0b11100011;   // LI, Version, Mode
-    this->_packetBuffer[1] = 0;     // Stratum, or type of clock
-    this->_packetBuffer[2] = 6;     // Polling Interval
-    this->_packetBuffer[3] = 0xEC;  // Peer Clock Precision
+    this->packetBuffer[0] = 0b11100011;   // LI, Version, Mode
+    this->packetBuffer[1] = 0;     // Stratum, or type of clock
+    this->packetBuffer[2] = 6;     // Polling Interval
+    this->packetBuffer[3] = 0xEC;  // Peer Clock Precision
     // 8 bytes of zero for Root Delay & Root Dispersion
-    this->_packetBuffer[12] = 49;
-    this->_packetBuffer[13] = 0x4E;
-    this->_packetBuffer[14] = 49;
-    this->_packetBuffer[15] = 52;
+    this->packetBuffer[12] = 49;
+    this->packetBuffer[13] = 0x4E;
+    this->packetBuffer[14] = 49;
+    this->packetBuffer[15] = 52;
 
     // all NTP fields have been given values, now
     // you can send a packet requesting a timestamp:
-    this->_udp->beginPacket(this->_poolServerName, 123); //NTP requests are to port 123
-    this->_udp->write(this->_packetBuffer, NTP_PACKET_SIZE);
-    this->_udp->endPacket();
+    this->udpClient->beginPacket(this->host, 123); //NTP requests are to port 123
+    this->udpClient->write(this->packetBuffer, NTP_PACKET_SIZE);
+    this->udpClient->endPacket();
   }
 };
-
 
 #endif

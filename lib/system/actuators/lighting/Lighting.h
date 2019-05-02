@@ -8,7 +8,7 @@ class Lighting {
 public:
   Lighting(
       u8 pin, u16 ledsNumber,
-      const CRGB &color = CRGB::White,
+      const CRGB &color = {255, 90, 0},
       u16 temperature = 1000,
       real32 brightness = 0) {
 
@@ -52,12 +52,12 @@ public:
     setBrightness(state["actuators"]["lighting"]["brightness"] | brightness);
   }
 
-  void setColor(u16 index, const CRGB &color) {
+  void setColor(u16 index, const CRGB &color, bool force = true) {
 
     if (index <= 0 || index >= ledsNumber) return;
 
     leds[index] = color;
-    FastLED.show();
+    if (force) FastLED.show();
   }
 
   void setColor(const CRGB &color, bool force = true) {

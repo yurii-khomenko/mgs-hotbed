@@ -116,6 +116,7 @@ public:
   }
 
   void enableDht(u8 pin, u8 type) {
+    delete dhtSensor;
     dhtSensor = new DhtSensor(pin, type);
   }
   void disableDht() {
@@ -123,6 +124,7 @@ public:
   }
 
   void enableHumidifier(u8 pin, u8 pinStatus) {
+    delete humidifier;
     humidifier = new Humidifier(pin, pinStatus);
   }
   void disableHumidifier() {
@@ -138,6 +140,7 @@ public:
   }
 
   void enableVentilation(u8 pin) {
+    delete ventilation;
     ventilation = new Ventilation(pin);
   }
   void disableVentilation() {
@@ -145,6 +148,7 @@ public:
   }
 
   void enableGigrostat(real32 min, real32 max) {
+    delete gigrostat;
     gigrostat = new Gigrostat(dhtSensor, humidifier, ventilation);
     gigrostat->setHumidity(min, max);
   }
