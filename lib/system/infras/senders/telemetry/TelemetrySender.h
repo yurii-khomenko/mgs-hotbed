@@ -3,7 +3,7 @@
 
 #include "../../mqtt/MqttClient.h"
 
-class StatusSender {
+class TelemetrySender {
 
 private:
   MqttClient *client;
@@ -12,7 +12,7 @@ private:
   u64 lastSentTime = 0;
 
 public:
-  StatusSender(MqttClient *client, u16 period,
+  TelemetrySender(MqttClient *client, u16 period,
       const std::function<std::vector<String>(void)> &telemetries) {
     this->client = client;
     this->period = period;

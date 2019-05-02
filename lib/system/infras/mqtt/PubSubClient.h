@@ -35,7 +35,7 @@
 //  pass the entire MQTT packet in each write call.
 //#define MQTT_MAX_TRANSFER_SIZE 80
 
-// Possible values for client.telemetry()
+// Possible values for client.telemetrySender()
 #define MQTT_CONNECTION_TIMEOUT     -4
 #define MQTT_CONNECTION_LOST        -3
 #define MQTT_CONNECT_FAILED         -2

@@ -162,7 +162,7 @@ bool DHT::read(bool force) {
   // Send start signal.  See DHT datasheet for full signal diagram:
   //   http://www.adafruit.com/datasheets/Digital%20humidity%20and%20temperature%20sensor%20AM2302.pdf
 
-  // Go into high impedence telemetry to let pull-up raise data line getLevel and
+  // Go into high impedence telemetrySender to let pull-up raise data line getLevel and
   // start the reading process.
   pinMode(_pin, INPUT_PULLUP);
   delay(1);
@@ -213,8 +213,8 @@ bool DHT::read(bool force) {
     // high pulse is ~28 microseconds then it's a 0 and if it's ~70 microseconds
     // then it's a 1.  We measure the cycle count of the initial 50us low pulse
     // and use that to compare to the cycle count of the high pulse to determine
-    // if the bit is a 0 (high telemetry cycle count < low telemetry cycle count), or a
-    // 1 (high telemetry cycle count > low telemetry cycle count). Note that for speed all
+    // if the bit is a 0 (high telemetrySender cycle count < low telemetrySender cycle count), or a
+    // 1 (high telemetrySender cycle count > low telemetrySender cycle count). Note that for speed all
     // the pulses are read into a array and then examined in a later step.
     for (int i=0; i<80; i+=2) {
       cycles[i]   = expectPulse(LOW);
@@ -222,8 +222,8 @@ bool DHT::read(bool force) {
     }
   } // Timing critical code is now complete.
 
-  // Inspect pulses and determine which ones are 0 (high telemetry cycle count < low
-  // telemetry cycle count), or 1 (high telemetry cycle count > low telemetry cycle count).
+  // Inspect pulses and determine which ones are 0 (high telemetrySender cycle count < low
+  // telemetrySender cycle count), or 1 (high telemetrySender cycle count > low telemetrySender cycle count).
   for (int i=0; i<40; ++i) {
     uint32_t lowCycles  = cycles[2*i];
     uint32_t highCycles = cycles[2*i+1];

@@ -5,13 +5,12 @@
 #include <WiFiUdp.h>
 #include <ArduinoJson.h>
 #include <TaskScheduler.h>
-#include <infras/senders/status/StatusSender.h>
 
 #include "infras/wifi/WifiDevice.h"
 #include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
-#include "infras/senders/status/StatusSender.h"
+#include "infras/senders/telemetry/TelemetrySender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
@@ -44,7 +43,7 @@ public:
   NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
-  StatusSender *statusSender;
+  TelemetrySender *telemetrySender; //TODO: move to Task
 
   DhtSensor *dhtSensor;
 
@@ -78,7 +77,7 @@ public:
 
     mqttClient = new MqttClient("su69.org", 1883, "", "", id);
 
-    mqttClient->subscribe("specs", [&](char *topic, u8 *message, u32 length) {
+    mqttClient->subscribe("configs", [&](char *topic, u8 *message, u32 length) {
 
       message[length] = 0;
 
@@ -87,29 +86,29 @@ public:
       Serial.print(", message:");
       Serial.println((char *) message);
 
-      DynamicJsonDocument spec(1024); //TODO: use length field
-      deserializeJson(spec, message);
+      DynamicJsonDocument config(1024); //TODO: use length field
+      deserializeJson(config, message);
 
-      if (humidifier) humidifier->setConfig(spec);
-      if (lighting) lighting->setConfig(spec);
-      if (ventilation) ventilation->setConfig(spec);
+      if (humidifier)   humidifier->setConfig(config);
+      if (lighting)     lighting->setConfig(config);
+      if (ventilation)  ventilation->setConfig(config);
     });
 
-    statusSender = new StatusSender(mqttClient, 2000, [this] {
+    telemetrySender = new TelemetrySender(mqttClient, 2000, [this] {
 
       digitalWrite(LED_BUILTIN, LOW);
 
-      std::vector<String> statuses;
+      std::vector<String> telemetries;
 
-      if (dhtSensor)      statuses.push_back(dhtSensor->getStatus());
+      if (dhtSensor)      telemetries.push_back(dhtSensor->getTelemetry());
 
-      if (humidifier)     statuses.push_back(humidifier->getTelemetry());
-      if (lighting)       statuses.push_back(lighting->getStatus());
-      if (ventilation)    statuses.push_back(ventilation->getStatus());
+      if (humidifier)     telemetries.push_back(humidifier->getTelemetry());
+      if (lighting)       telemetries.push_back(lighting->getTelemetry());
+      if (ventilation)    telemetries.push_back(ventilation->getTelemetry());
 
       digitalWrite(LED_BUILTIN, HIGH);
 
-      return statuses;
+      return telemetries;
     });
 
     scheduler.init();
@@ -171,7 +170,7 @@ public:
     if (mqttClient)   mqttClient->loop();
     if (gigrostat)    gigrostat->loop();
 
-    if (statusSender)  statusSender->loop();
+    if (telemetrySender) telemetrySender->loop();
 
     scheduler.execute();
   }

@@ -28,7 +28,7 @@ public:
     setFlow(config["actuators"]["ventilation"]["flow"] | flow);
   }
 
-  String getStatus() {
+  String getTelemetry() {
     return String("actuators/ventilation flow=") + flow;
   }
 

@@ -8,7 +8,7 @@
 #define NTP_PACKET_SIZE 48
 #define NTP_DEFAULT_LOCAL_PORT 1337
 
-class NtpClient { //TODO Set as object with telemetry time
+class NtpClient { //TODO Set as object with telemetrySender time
 public:
   NtpClient(UDP &udp) {
     this->udpClient = &udp;
