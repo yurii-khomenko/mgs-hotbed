@@ -10,7 +10,7 @@
 #include "infras/ntp/NtpClient.h"
 #include "infras/ota/Ota.h"
 #include "infras/mqtt/MqttClient.h"
-#include "infras/senders/metric/StateSender.h"
+#include "infras/senders/status/StatusSender.h"
 
 #include "sensors/dht/DhtSensor.h"
 
@@ -43,7 +43,7 @@ public:
   NtpClient *ntpClient;
   Ota *ota;
   MqttClient *mqttClient;
-  StateSender *stateSender;
+  StatusSender *statusSender;
 
   DhtSensor *dhtSensor;
 
@@ -77,7 +77,7 @@ public:
 
     mqttClient = new MqttClient("su69.org", 1883, "", "", id);
 
-    mqttClient->subscribe("commands", [&](char *topic, u8 *message, u32 length) {
+    mqttClient->subscribe("specs", [&](char *topic, u8 *message, u32 length) {
 
       message[length] = 0;
 
@@ -86,15 +86,15 @@ public:
       Serial.print(", message:");
       Serial.println((char *) message);
 
-      DynamicJsonDocument state(1024);
-      deserializeJson(state, message);
+      DynamicJsonDocument spec(1024); //TODO: use length field
+      deserializeJson(spec, message);
 
-      if (humidifier) humidifier->setState(state);
-      if (lighting) lighting->setState(state);
-      if (ventilation) ventilation->setState(state);
+      if (humidifier) humidifier->setState(spec);
+      if (lighting) lighting->setState(spec);
+      if (ventilation) ventilation->setState(spec);
     });
 
-    stateSender = new StateSender(mqttClient, 2000, [this] {
+    statusSender = new StatusSender(mqttClient, 2000, [this] {
 
       digitalWrite(LED_BUILTIN, LOW);
 
@@ -170,7 +170,7 @@ public:
     if (mqttClient)   mqttClient->loop();
     if (gigrostat)    gigrostat->loop();
 
-    if (stateSender)  stateSender->loop();
+    if (statusSender)  statusSender->loop();
 
     scheduler.execute();
   }

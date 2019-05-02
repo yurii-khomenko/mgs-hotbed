@@ -1,25 +1,26 @@
 #ifndef StateSender_h
 #define StateSender_h
 
-#include "infras/mqtt/MqttClient.h"
+#include "../../mqtt/MqttClient.h"
 
 class StateSender {
 
 private:
   MqttClient *client;
   u16 period;
-  std::function<std::vector<String>(void)> states;
+  std::function<std::vector<String>(void)> statuses;
   u64 lastSentTime = 0;
 
 public:
   StateSender(MqttClient *client, u16 period,
-      const std::function<std::vector<String>(void)> &states) {
+      const std::function<std::vector<String>(void)> &statuses) {
     this->client = client;
     this->period = period;
-    this->states = states;
+    this->statuses = statuses;
   }
 
   void loop() {
+
     const long now = millis();
 
     if (now - lastSentTime >= period) {
@@ -27,8 +28,8 @@ public:
       lastSentTime = now;
 
       if (client->enabled())
-        for (auto &state : states())
-          client->publish("states", state);
+        for (auto &state : statuses())
+          client->publish("statuses", state);
     }
   }
 };
