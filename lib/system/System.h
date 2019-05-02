@@ -92,7 +92,7 @@ public:
 
       if (humidifier) humidifier->setConfig(spec);
       if (lighting) lighting->setConfig(spec);
-      if (ventilation)  ventilation->setSpec(spec);
+      if (ventilation) ventilation->setConfig(spec);
     });
 
     statusSender = new StatusSender(mqttClient, 2000, [this] {

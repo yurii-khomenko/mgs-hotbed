@@ -102,8 +102,8 @@ public:
   }
 
 private:
-  DhtSensor *dhtSensor;
-  Humidifier *humidifier;
+  DhtSensor   *dhtSensor;
+  Humidifier  *humidifier;
   Ventilation *ventilation;
 
   real32 min;

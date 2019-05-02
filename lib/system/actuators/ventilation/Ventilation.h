@@ -11,14 +11,6 @@ public:
     pinMode(pin, OUTPUT);
   }
 
-  void setSpec(const DynamicJsonDocument &spec) {
-    setFlow(spec["actuators"]["ventilation"]["flow"] | flow);
-  }
-
-  String getStatus() {
-    return String("actuators/ventilation flow=") + flow;
-  }
-
   real32 getFlow() { return flow; }
 
   void setFlow(real32 levelPercent) {
@@ -30,6 +22,14 @@ public:
 
     if (flow <= 0)                  digitalWrite(pin, LOW);
     else                            digitalWrite(pin, HIGH);
+  }
+
+  void setConfig(const DynamicJsonDocument &config) {
+    setFlow(config["actuators"]["ventilation"]["flow"] | flow);
+  }
+
+  String getStatus() {
+    return String("actuators/ventilation flow=") + flow;
   }
 
 private:
