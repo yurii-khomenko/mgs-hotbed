@@ -91,7 +91,7 @@ public:
     setBrightness( config["actuators"]["lighting"]["brightness"]  | brightness);
   }
 
-  String getTelemetry() {
+  String getState() {
     return String("actuators/lighting ") +
            "r="           + leds[0].r    + "," +
            "g="           + leds[0].g    + "," +

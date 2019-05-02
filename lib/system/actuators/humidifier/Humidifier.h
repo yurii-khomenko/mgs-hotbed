@@ -26,7 +26,7 @@ public:
     setFlow(config["actuators"]["humidifier"]["flow"] | getFlow());
   }
 
-  String getTelemetry() {
+  String getState() {
     return String("actuators/humidifier flow=") + getFlow();
   }
 
