@@ -90,8 +90,8 @@ public:
       DynamicJsonDocument spec(1024); //TODO: use length field
       deserializeJson(spec, message);
 
-      if (humidifier)   humidifier->setSpec(spec);
-      if (lighting)     lighting->setSpec(spec);
+      if (humidifier) humidifier->setConfig(spec);
+      if (lighting) lighting->setConfig(spec);
       if (ventilation)  ventilation->setSpec(spec);
     });
 
@@ -103,7 +103,7 @@ public:
 
       if (dhtSensor)      statuses.push_back(dhtSensor->getStatus());
 
-      if (humidifier)     statuses.push_back(humidifier->getStatus());
+      if (humidifier)     statuses.push_back(humidifier->getTelemetry());
       if (lighting)       statuses.push_back(lighting->getStatus());
       if (ventilation)    statuses.push_back(ventilation->getStatus());
 

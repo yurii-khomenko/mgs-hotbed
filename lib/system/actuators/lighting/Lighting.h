@@ -31,27 +31,6 @@ public:
     delete leds;
   }
 
-  String getStatus() {
-    return String("actuators/lighting ") +
-           "r=" + leds[0].r + "," +
-           "g=" + leds[0].g + "," +
-           "b=" + leds[0].b + "," +
-           "temperature=" + temperature + "," +
-           "brightness=" + brightness;
-  }
-
-  void setSpec(const DynamicJsonDocument &spec) {
-
-    setColor({
-                 spec["actuators"]["lighting"]["color"]["r"] | color.r,
-                 spec["actuators"]["lighting"]["color"]["g"] | color.g,
-                 spec["actuators"]["lighting"]["color"]["b"] | color.b
-             });
-
-    setTemperature(spec["actuators"]["lighting"]["temperature"] | temperature);
-    setBrightness(spec["actuators"]["lighting"]["brightness"] | brightness);
-  }
-
   void setColor(u16 index, const CRGB &color, bool force = true) {
 
     if (index <= 0 || index >= ledsNumber) return;
@@ -98,6 +77,27 @@ public:
 
     FastLED.setBrightness((u8) (brightness * 2.55));
     if (force) FastLED.show();
+  }
+
+  void setConfig(const DynamicJsonDocument &config) {
+
+    setColor({
+                 config["actuators"]["lighting"]["color"]["r"] | color.r,
+                 config["actuators"]["lighting"]["color"]["g"] | color.g,
+                 config["actuators"]["lighting"]["color"]["b"] | color.b
+             });
+
+    setTemperature(config["actuators"]["lighting"]["temperature"] | temperature);
+    setBrightness( config["actuators"]["lighting"]["brightness"]  | brightness);
+  }
+
+  String getStatus() {
+    return String("actuators/lighting ") +
+           "r="           + leds[0].r    + "," +
+           "g="           + leds[0].g    + "," +
+           "b="           + leds[0].b    + "," +
+           "temperature=" + temperature  + "," +
+           "brightness="  + brightness;
   }
 
 private:

@@ -22,11 +22,11 @@ public:
     else if (level > 0 && getFlow() <= 0) click();
   }
 
-  void setSpec(const DynamicJsonDocument &spec) {
-    setFlow(spec["actuators"]["humidifier"]["flow"] | getFlow());
+  void setConfig(const DynamicJsonDocument &config) {
+    setFlow(config["actuators"]["humidifier"]["flow"] | getFlow());
   }
 
-  String getStatus() {
+  String getTelemetry() {
     return String("actuators/humidifier flow=") + getFlow();
   }
 
