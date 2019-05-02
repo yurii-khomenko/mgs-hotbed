@@ -39,13 +39,10 @@ Task taskLighting(1000, TASK_FOREVER, [] {
       startLightMinutes <= mm && mm <= endLightMinutes &&
       startLightSeconds <= ss && ss <= endLightSeconds) {
 
-    Serial.println("hit");
-
     sys.lighting->setTemperature(20000);
     sys.lighting->setColor(CRGB::White);
     sys.lighting->setBrightness(10);
   } else {
-    Serial.println("no hit");
     sys.lighting->setBrightness(0);
   }
 });
