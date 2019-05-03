@@ -88,22 +88,21 @@ public:
     mqttClient = new MqttClient("su69.org", 1883, "", "", id);
 
     mqttClient->subscribe("configs", [&](char *topic, u8 *message, u32 length) {
+      withBlink ([&] {
+        message[length] = 0;
 
-      message[length] = 0;
+        Serial.print("[MqttClient] topic: ");
+        Serial.print(topic);
+        Serial.println((String) ", length: " + length + ", message:");
+        Serial.println((char *) message);
 
-      Serial.print("[MqttClient] topic: ");
-      Serial.print(topic);
-      Serial.println((String) ", length: " + length + ", message:");
-      Serial.println((char *) message);
+        DynamicJsonDocument config(length * 2);
+        deserializeJson(config, message);
 
-      DynamicJsonDocument config(length * 2);
-      deserializeJson(config, message);
-
-      if (!config["actuators"]["lighting"].isNull())  configLighting(config);
-
-      configHumidifier(config);
-      configLighting(config);
-      configVentilation(config);
+        configHumidifier(config); //TODO: BUG: if double disable - device reset
+        configLighting(config);
+        configVentilation(config);
+      });
     });
 
     stateSender = new StateSender(mqttClient, 2000, [this] {

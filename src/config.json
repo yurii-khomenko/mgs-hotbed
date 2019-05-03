@@ -1,5 +1,8 @@
 {
   "actuators": {
+    "humidifier": {
+      "flow": 0
+    },
     "lighting": {
       "color": {
         "r": 255,
@@ -7,7 +10,10 @@
         "b": 0
       },
       "temperature": 6600,
-      "brightness": 10
+      "brightness": 5
+    },
+    "ventilation": {
+      "flow": 0
     }
   }
 }

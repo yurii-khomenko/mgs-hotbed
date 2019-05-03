@@ -14,11 +14,14 @@ public:
     this->leds = new CRGB[ledsNumber];
 
     FastLED.addLeds<WS2812, D7, GRB>(leds, ledsNumber);
+
+    Serial.println("[Lighting] enable");
   }
 
   ~Lighting() {
     FastLED.clearData();
     delete leds;
+    Serial.println("[Lighting] disable");
   }
 
   void setColor(u16 index, const CRGB &color, bool force = true) {

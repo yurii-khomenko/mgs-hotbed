@@ -11,6 +11,11 @@ public:
     this->statePin = statePin;
     pinMode(pin, OUTPUT_OPEN_DRAIN);
     pinMode(statePin, INPUT);
+    Serial.println("[Humidifier] enable");
+  }
+
+  ~Humidifier() {
+    Serial.println("[Humidifier] disable");
   }
 
   u8 getFlow() {

@@ -9,6 +9,11 @@ public:
   Ventilation(u8 pin) {
     this->pin = pin;
     pinMode(pin, OUTPUT);
+    Serial.println("[Ventilation] enable");
+  }
+
+  ~Ventilation() {
+    Serial.println("[Ventilation] disable");
   }
 
   real32 getFlow() { return flow; }
