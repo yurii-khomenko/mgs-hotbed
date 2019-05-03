@@ -9,7 +9,7 @@ public:
   Ventilation(u8 pin) {
     this->pin = pin;
     pinMode(pin, OUTPUT);
-    Serial.println("[Ventilation] enable");
+    Serial.println((String) "[Ventilation] enable, GPIO: " + pin);
   }
 
   ~Ventilation() {

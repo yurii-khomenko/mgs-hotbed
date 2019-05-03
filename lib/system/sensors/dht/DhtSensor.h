@@ -10,6 +10,12 @@ public:
     this->type = type;
     dht = new DHT(pin, type);
     dht->begin();
+
+    Serial.println((String) "[DhtSensor] enabled, GPIO: " + pin);
+  }
+
+  ~DhtSensor() {
+    Serial.println((String) "[DhtSensor] disabled");
   }
 
   real32 temperature() {

@@ -99,7 +99,11 @@ public:
         DynamicJsonDocument config(length * 2);
         deserializeJson(config, message);
 
-        configHumidifier(config); //TODO: BUG: if double disable - device reset
+        //TODO: add DHT
+
+        configDht(config);
+
+        configHumidifier(config); //TODO: BUG: if double disable - device reset for all
         configLighting(config);
         configVentilation(config);
       });
@@ -124,6 +128,13 @@ public:
 
     scheduler.init();
     scheduler.startNow();
+  }
+
+  void configDht(const DynamicJsonDocument &config) {
+    if (!config["sensors"]["dht"].isNull()) {
+      enableDht(DHT_SENSOR_PIN, DHT22);
+    } else
+      delete dhtSensor;
   }
 
   void configHumidifier(const DynamicJsonDocument &config) {
@@ -151,11 +162,8 @@ public:
   }
 
   void enableDht(u8 pin, u8 type) {
-    disableDht();
-    dhtSensor = new DhtSensor(pin, type);
-  }
-  void disableDht() {
     delete dhtSensor;
+    dhtSensor = new DhtSensor(pin, type);
   }
 
   void enableHumidifier(u8 pin, u8 pinState) {

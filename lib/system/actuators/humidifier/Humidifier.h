@@ -9,9 +9,11 @@ public:
   Humidifier(u8 pin, u8 statePin) {
     this->pin = pin;
     this->statePin = statePin;
+
     pinMode(pin, OUTPUT_OPEN_DRAIN);
     pinMode(statePin, INPUT);
-    Serial.println("[Humidifier] enable");
+
+    Serial.println((String) "[Humidifier] enable, GPIO: " + pin);
   }
 
   ~Humidifier() {

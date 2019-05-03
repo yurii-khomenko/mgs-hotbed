@@ -15,7 +15,7 @@ public:
 
     FastLED.addLeds<WS2812, D7, GRB>(leds, ledsNumber);
 
-    Serial.println("[Lighting] enable");
+    Serial.println((String) "[Lighting] enable, GPIO: " + pin);
   }
 
   ~Lighting() {

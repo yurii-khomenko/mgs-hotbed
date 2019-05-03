@@ -1,4 +1,8 @@
 {
+  "sensors": {
+    "dht": {
+    }
+  },
   "actuators": {
     "humidifier": {
       "flow": 0
