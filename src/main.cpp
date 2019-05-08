@@ -2,7 +2,7 @@
 
 System sys({
                "greenhouse", "mgs", "hotbed",
-               "INSIDIUS 2.4GHz", "scalable"
+               "cbi", "gogolang"
            });
 
 const u8 DHT_SENSOR_PIN = D1;
