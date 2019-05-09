@@ -1,6 +1,6 @@
 #include <System.h>
 
-System sys({ "greenhouse", "mgs", "hotbed-test", "INSIDIUS 2.4GHz", "scalable"});
+System sys({ "greenhouse", "mgs", "hotbed", "cbi", "gogolang"});
 
 void setup(void) { sys.setup(); }
 void loop(void)  { sys.loop();  }
